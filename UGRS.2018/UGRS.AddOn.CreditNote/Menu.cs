@@ -64,6 +64,7 @@ namespace UGRS.AddOn.CreditNote
                 if (pVal.BeforeAction && pVal.MenuUID == "UGRS.AddOn.CreditNote.Form1")
                 {
                     frmCreditNote activeForm = new frmCreditNote();
+                    activeForm.UIAPIRawForm.Left = 500;
                     activeForm.Show();
                 }
             }

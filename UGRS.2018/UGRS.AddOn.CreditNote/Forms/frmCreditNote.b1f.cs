@@ -27,6 +27,8 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.btnReport = ((SAPbouiCOM.Button)(this.GetItem("btnReport").Specific));
             this.mtxInv = ((SAPbouiCOM.Matrix)(this.GetItem("mtxInv").Specific));
             this.lblDate = ((SAPbouiCOM.StaticText)(this.GetItem("lblDate").Specific));
+            this.Button0 = ((SAPbouiCOM.Button)(this.GetItem("btnSearch").Specific));
+            this.Button0.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button0_ClickBefore);
             this.OnCustomInitialize();
 
         }
@@ -40,7 +42,7 @@ namespace UGRS.AddOn.CreditNote.Forms
 
         private void OnCustomInitialize()
         {
-
+          
         }
 
         private void SearchValue()
@@ -71,7 +73,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         private void SetDataTableValues()
         {
             DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
-            DateTime lDtmDate = Convert.ToDateTime(txtDate.Value);
+            DateTime lDtmDate = DateTime.Now;// Convert.ToDateTime(txtDate.Value);
            
             DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lDtmDate));
         }
@@ -97,5 +99,13 @@ namespace UGRS.AddOn.CreditNote.Forms
         private SAPbouiCOM.Button btnReport;
         private SAPbouiCOM.Matrix mtxInv;
         private SAPbouiCOM.StaticText lblDate;
+        private SAPbouiCOM.Button Button0;
+
+        private void Button0_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            SearchValue();
+
+        }
     }
 }

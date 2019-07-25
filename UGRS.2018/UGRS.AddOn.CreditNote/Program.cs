@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SAPbouiCOM.Framework;
 using UGRS.Core.SDK.DI;
+using UGRS.Core.SDK.DI.CreditNote;
 
 namespace UGRS.AddOn.CreditNote
 {
@@ -28,6 +29,9 @@ namespace UGRS.AddOn.CreditNote
                 MyMenu.AddMenuItems();
                 oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 DIApplication.DIConnect((SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany());
+                CreditNoteFactory lObjFactory = new CreditNoteFactory();
+                lObjFactory.GetSetupService().InitializeTables();
+
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
                 oApp.Run();
             }
