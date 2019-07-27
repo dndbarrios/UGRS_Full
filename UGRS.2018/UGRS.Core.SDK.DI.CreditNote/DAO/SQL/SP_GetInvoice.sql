@@ -1,14 +1,6 @@
--- ================================================
--- Template generated from Template Explorer using:
--- Create Procedure (New Menu).SQL
---
--- Use the Specify Values for Template Parameters 
--- command (Ctrl-Shift-M) to fill in the parameter 
--- values below.
---
--- This block of comments will not be included in
--- the definition of the procedure.
--- ================================================
+USE [UGRS_20190115]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_Addon_CreditNote]    Script Date: 26-Jul-19 05:14:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18,7 +10,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE SP_Addon_CreditNote
+ALTER PROCEDURE [dbo].[SP_Addon_CreditNote]
 	-- Add the parameters for the stored procedure here
 		@DateFrom datetime,
 		@DateTo datetime
@@ -26,16 +18,17 @@ ALTER PROCEDURE SP_Addon_CreditNote
 AS
 BEGIN
 	SELECT * FROM (--HEMBRAS
-SELECT  T1.CardCode						as 'C_Client'
+SELECT  T1.CardCode						as 'C_CardCode'
 		, T0.CardName					as 'C_CardName'
 		, T0.U_PE_Certificate			as 'C_Cert'
 		, T1.DocEntry					as 'C_DocEntry'
-		, T1.DocNum						as 'C_Inv'
+		, T1.DocNum						as 'C_DocNum'
 		, T8.U_Quantity					as 'C_InvHead'
 		, CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) end
 										as 'C_HeadExp'
 		, T8.U_Quantity- CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END 
 										as 'C_HeadNoC'
+		, '0'							as 'C_Amount'
 		--Amount
 		, T0.DocDate
 		, case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Hembra' then   T8.U_Quantity else 0 END AutHembra
@@ -65,17 +58,17 @@ group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7
 
 --MACHOS
 UNION ALL
-SELECT  T1.CardCode						as 'C_Client'
+SELECT  T1.CardCode						as 'C_CardCode'
 		, T0.CardName					as 'C_CardName'
 		, T0.U_PE_Certificate			as 'C_Cert'
 		, T1.DocEntry					as 'C_DocEntry'
-		, T1.DocNum						as 'C_Inv'
+		, T1.DocNum						as 'C_DocNum'
 		, T8.U_Quantity					as 'C_InvHead'
 		, CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) end
 										as 'C_HeadExp'
 		, T8.U_Quantity- CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END 
 										as 'C_HeadNoC'
-										--Amount
+		, '0'							as 'C_Amount'
 		, T0.DocDate 
 		, case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Macho' then  T8.U_Quantity else 0 END AutMacho
 		, ISNULL(case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Macho' then case when SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END END,0)  CruMacho
@@ -106,14 +99,15 @@ group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7
 
 UNION ALL
 
-SELECT  T1.CardCode						as 'C_Client'
+SELECT  T1.CardCode						as 'C_CardCode'
 		, T0.CardName					as 'C_CardName'
 		, T0.U_PE_Certificate			as 'C_Cert'
 		, T1.DocEntry					as 'C_DocEntry'
-		, T1.DocNum						as 'C_Inv'
+		, T1.DocNum						as 'C_DocNum'
 		, T8.U_Quantity					as 'C_InvHead'
 		, CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) end CruTotal, T8.U_Quantity- CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END 
 										as 'C_HeadNoC'
+		, '0'							as 'C_Amount'
 		, T0.DocDate
 		, case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Equino' then  T8.U_Quantity else 0 END AutEquino
 		, ISNULL(case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Equino' then case when SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END END,0)  CruEquino
@@ -151,4 +145,3 @@ ORDER BY T23.C_Cert ASC
 
 
 END
-GO

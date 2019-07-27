@@ -1,41 +1,68 @@
 ﻿using SAPbobsCOM;
+using SAPbouiCOM;
 using System;
+using System.Collections.Generic;
 using UGRS.Core.SDK.Attributes;
+using UGRS.Core.SDK.DI.CreditNote.DTO;
 using UGRS.Core.SDK.DI.Models;
+using UGRS.Core.SDK.UI;
+using UGRS.Core.Services;
 
 
 namespace UGRS.Core.SDK.DI.CreditNote.DOC
 {
     public class CreditNoteDOC
     {
-        [Table(Name = "NC_Header", Description = "Dispersion Encabezado", Type = BoUTBTableType.bott_NoObjectAutoIncrement)]
-        public class DispersionT : Table
+        /// <summary>
+        /// Crea un pago
+        /// </summary>
+        public bool CreatePayment(CreditNoteDTO pObjCreditNoteDTO)
         {
-            [Field(Description = "DispersionId", Type = BoFieldTypes.db_Alpha, Size = 64)]
-            public string DispId { get; set; }
+            bool lBolIsSuccess = false;
+            try
+            {
 
-            [Field(Description = "Date", Type = BoFieldTypes.db_Date)]
-            public DateTime Date { get; set; }
+                Documents lObjCreditNote = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
 
-            [Field(Description = "Nombre del archivo", Type = BoFieldTypes.db_Alpha, Size = 100)]
-            public string FileName { get; set; }
+               
+                    // SAPbobsCOM.Payments lObjPayment = (SAPbobsCOM.Payments)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oVendorPayments);
+                lObjCreditNote.CardCode = pObjCreditNoteDTO.C_CardCode;
+              
+                //lObjPayment.DocDate = pObjPurchase.DocDate;
+                //lObjCreditNote.TaxDate = pObjPurchase.TaxDate;
+                //lObjCreditNote.DocDate = pObjPurchase.DocDate;
 
-            [Field(Description = "Directorio de guardado", Type = BoFieldTypes.db_Memo, SubType = BoFldSubTypes.st_Link)]
-            public string Path { get; set; }
 
-            [Field(Description = "Estatus", Type = BoFieldTypes.db_Alpha, Size = 2)]
-            public string Status { get; set; }
 
-            [Field(Description = "Total", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
-            public float Total { get; set; }
+                lObjCreditNote.DocTotal = pObjCreditNoteDTO.C_Amount;
 
-            [Field(Description = "Tipo", Type = BoFieldTypes.db_Alpha, Size = 20)]
-            public string Type { get; set; }
+               // lObjCreditNote.CashAccount = pObjPurchase.Account;// lObjPurchasesDAO.GetAccountRefund(pObjPurchase.Area);
 
-            [Field(Description = "Account", Type = BoFieldTypes.db_Alpha, Size = 30)]
-            public string Account { get; set; }
+              
+             
 
+
+
+                if (lObjCreditNote.Add() != 0)
+                {
+                    UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Company.GetLastErrorDescription()));
+                    LogService.WriteError("PaymentDI (CreatePayment) DocEntry:" + pObjCreditNoteDTO + " Mensaje:" + DIApplication.Company.GetLastErrorDescription());
+                }
+                else
+                {
+                    LogService.WriteSuccess("pago creado correctamente: InvoiceDocEntry: " + pObjPurchase.DocEntry);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError("PaymentDI (CancelDocument) InvoiceDocEntry:" + pObjPurchase.DocEntry + " Mensaje:" + ex.Message);
+                LogService.WriteError(ex);
+
+            }
+            return lBolIsSuccess;
         }
+
 
     }
 }
