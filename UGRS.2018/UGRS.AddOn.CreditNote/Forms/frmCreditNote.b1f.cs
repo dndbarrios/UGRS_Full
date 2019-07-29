@@ -6,6 +6,7 @@ using SAPbouiCOM.Framework;
 using UGRS.Core.Services;
 using UGRS.Core.SDK.UI;
 using UGRS.Core.SDK.DI.CreditNote;
+using UGRS.Core.SDK.DI.CreditNote.DTO;
 
 namespace UGRS.AddOn.CreditNote.Forms
 {
@@ -24,6 +25,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             this.txtDate = ((SAPbouiCOM.EditText)(this.GetItem("txtDate").Specific));
             this.btnNC = ((SAPbouiCOM.Button)(this.GetItem("btnNC").Specific));
+            this.btnNC.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnNC_ClickAfter);
             this.btnReport = ((SAPbouiCOM.Button)(this.GetItem("btnReport").Specific));
             this.mtxInv = ((SAPbouiCOM.Matrix)(this.GetItem("mtxInv").Specific));
             this.lblDate = ((SAPbouiCOM.StaticText)(this.GetItem("lblDate").Specific));
@@ -103,6 +105,14 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             BubbleEvent = true;
             SearchValue();
+        }
+
+        private void btnNC_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            CreditNoteDTO lLstCreditNote = new CreditNoteDTO();
+
+            mObjCreditNoteFactory.GetCreditNoteDocService().CreateCreditNote(lLstCreditNote);
+
         }
     }
 }

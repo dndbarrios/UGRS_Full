@@ -1,6 +1,6 @@
 USE [UGRS_20190115]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_Addon_CreditNote]    Script Date: 26-Jul-19 05:14:49 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_Addon_CreditNote]    Script Date: 29-Jul-19 09:51:06 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18,7 +18,10 @@ ALTER PROCEDURE [dbo].[SP_Addon_CreditNote]
 AS
 BEGIN
 	SELECT * FROM (--HEMBRAS
-SELECT  T1.CardCode						as 'C_CardCode'
+SELECT 
+		ROW_NUMBER() 
+		OVER(ORDER BY T1.DocEntry )	as '#'
+		,T1.CardCode					as 'C_CardCode'
 		, T0.CardName					as 'C_CardName'
 		, T0.U_PE_Certificate			as 'C_Cert'
 		, T1.DocEntry					as 'C_DocEntry'
@@ -54,11 +57,14 @@ and T4.Code=2 --Exportación
 and isnull(t2.U_Quantity,0)>0
 and t0.CANCELED='N'
 and (t3.U_DateInsp between @DateFrom and @DateTo)
-group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T1.DocNum
+group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T0.DocEntry, T1.DocNum
 
 --MACHOS
 UNION ALL
-SELECT  T1.CardCode						as 'C_CardCode'
+SELECT  
+		ROW_NUMBER() 
+		OVER(ORDER BY T1.DocEntry )	as '#'
+		,T1.CardCode					as 'C_CardCode'
 		, T0.CardName					as 'C_CardName'
 		, T0.U_PE_Certificate			as 'C_Cert'
 		, T1.DocEntry					as 'C_DocEntry'
@@ -93,13 +99,15 @@ and T4.Code=2 --Exportación
 and isnull(t2.U_Quantity,0)>0
 and t0.CANCELED='N'
 and (t3.U_DateInsp between @DateFrom and @DateTo)
-group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T1.DocNum
+group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T0.DocEntry, T1.DocNum
 
 --EQUINOS
 
 UNION ALL
 
-SELECT  T1.CardCode						as 'C_CardCode'
+SELECT ROW_NUMBER() 
+		OVER(ORDER BY T1.DocEntry )	as '#'
+		, T1.CardCode					as 'C_CardCode'
 		, T0.CardName					as 'C_CardName'
 		, T0.U_PE_Certificate			as 'C_Cert'
 		, T1.DocEntry					as 'C_DocEntry'
@@ -132,7 +140,7 @@ and T4.Code=2 --Exportación
 and isnull(t2.U_Quantity,0)>0
 and t0.CANCELED='N'
 and (t3.U_DateInsp between @DateFrom and @DateTo)
-group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T1.DocNum
+group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T0.DocEntry, T1.DocNum
 ) T23
 
 WHERE T23.AutHembra > 0 --AND

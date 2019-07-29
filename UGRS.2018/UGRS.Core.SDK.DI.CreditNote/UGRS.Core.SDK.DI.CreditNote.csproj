@@ -65,6 +65,7 @@
     <Compile Include="Services\SetupService.cs" />
     <Compile Include="Tables\CreditNoteDet.cs" />
     <Compile Include="Tables\CreditNoteT.cs" />
+    <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
