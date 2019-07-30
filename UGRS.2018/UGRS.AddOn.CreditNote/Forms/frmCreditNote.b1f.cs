@@ -14,11 +14,19 @@ namespace UGRS.AddOn.CreditNote.Forms
     [FormAttribute("UGRS.AddOn.CreditNote.Forms.frmCreditNote", "Forms/frmCreditNote.b1f")]
     class frmCreditNote : UserFormBase
     {
+        #region Properties
         ProgressBarManager mObjProgressBar = null;
         CreditNoteFactory mObjCreditNoteFactory = new CreditNoteFactory();
+        #endregion
+
+        #region Constructor
         public frmCreditNote()
         {
         }
+        #endregion
+
+        #region Initialize
+
 
         /// <summary>
         /// Initialize components. Called by framework after form created.
@@ -50,6 +58,36 @@ namespace UGRS.AddOn.CreditNote.Forms
           
         }
 
+        #endregion
+
+        #region Events
+
+        private void btnSearch_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            SearchValue();
+        }
+
+        private void btnNC_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            try
+            {
+                string pStrId = "";
+                List<CreditNoteDet> lLstCreditNote = GetMatrixData(pStrId);
+                List<CreditNoteDoc> lLstCreditNoteDoc = GetNC_Doc(pStrId, lLstCreditNote);
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError(ex);
+            }
+        }
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Realiza la busqueda
+        /// </summary>
         private void SearchValue()
         {
             try
@@ -72,7 +110,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         }
 
         /// <summary>
-        /// Carga los pagos desde una consulta al datatable
+        /// Carga los datos desde una consulta al datatable
         /// </summary>
         private void SetDataTableValues()
         {
@@ -94,7 +132,9 @@ namespace UGRS.AddOn.CreditNote.Forms
             mtxInv.AutoResizeColumns();
         }
 
-
+        /// <summary>
+        /// Obtener los datos de la matriz
+        /// </summary>
         private List<CreditNoteDet> GetMatrixData(string pStrId)
         {
             List<CreditNoteDet> lLstCN = new List<CreditNoteDet>();
@@ -125,7 +165,9 @@ namespace UGRS.AddOn.CreditNote.Forms
             return lLstCN;
         }
 
-
+        /// <summary>
+        /// Obtener el renglon de la matriz
+        /// </summary>
         private CreditNoteDet GetDTMatrixRow(int pIntRow, string pStrId)
         {
             CreditNoteDet lObjCN_DTO = new CreditNoteDet
@@ -151,37 +193,10 @@ namespace UGRS.AddOn.CreditNote.Forms
             return lObjCN_DTO;
         }
 
-        #region Controls
-        private SAPbouiCOM.DataTable DtMatrix;
-        private SAPbouiCOM.EditText txtDate;
-        private SAPbouiCOM.Button btnNC;
-        private SAPbouiCOM.Button btnReport;
-        private SAPbouiCOM.Matrix mtxInv;
-        private SAPbouiCOM.StaticText lblDate;
-        private SAPbouiCOM.Button btnSearch;
-        private SAPbouiCOM.UserDataSource UD_Date;
-        #endregion
 
-        private void btnSearch_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
-        {
-            BubbleEvent = true;
-            SearchValue();
-        }
-
-        private void btnNC_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
-        {
-            try
-            {
-                string pStrId = "";
-                List<CreditNoteDet> lLstCreditNote = GetMatrixData(pStrId);
-                List<CreditNoteDoc> lLstCreditNoteDoc = GetNC_Doc(pStrId, lLstCreditNote);
-            }
-            catch (Exception ex)
-            {
-                LogService.WriteError(ex);
-            }
-        }
-
+        /// <summary>
+        /// Obtener el docmento ordenado por cardcode
+        /// </summary>
         private List<CreditNoteDoc> GetNC_Doc(string pStrId, List<CreditNoteDet> pLstCreditNoteDet)
         {
             List<CreditNoteDoc> lLstCreditNoteDocuments = new List<CreditNoteDoc>();
@@ -212,7 +227,9 @@ namespace UGRS.AddOn.CreditNote.Forms
             return lLstCreditNoteDocuments;
         }
 
-
+        /// <summary>
+        /// Obtener el encabezado
+        /// </summary>
         private CreditNoteT GetNC_Header(string pStrId, List<CreditNoteDoc> pLstCreditNoteDoc)
         {
             
@@ -236,7 +253,18 @@ namespace UGRS.AddOn.CreditNote.Forms
             return lObjCreditNoteT;
         }
 
+        #endregion
 
+        #region Controls
+        private SAPbouiCOM.DataTable DtMatrix;
+        private SAPbouiCOM.EditText txtDate;
+        private SAPbouiCOM.Button btnNC;
+        private SAPbouiCOM.Button btnReport;
+        private SAPbouiCOM.Matrix mtxInv;
+        private SAPbouiCOM.StaticText lblDate;
+        private SAPbouiCOM.Button btnSearch;
+        private SAPbouiCOM.UserDataSource UD_Date;
+        #endregion
 
     }
 }
