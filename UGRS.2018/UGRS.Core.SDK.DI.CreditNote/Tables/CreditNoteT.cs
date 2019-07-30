@@ -1,11 +1,12 @@
 ﻿using SAPbobsCOM;
 using System;
+using System.Collections.Generic;
 using UGRS.Core.SDK.Attributes;
 using UGRS.Core.SDK.DI.Models;
 
 namespace UGRS.Core.SDK.DI.CreditNote.Tables
 {
-    [Table(Name = "UG_PE_NC", Description = "Nota de credito Permisos", Type = BoUTBTableType.bott_NoObjectAutoIncrement)]
+    [Table(Name = "UG_PE_NC", Description = "Nota de credito Encabezado", Type = BoUTBTableType.bott_NoObjectAutoIncrement)]
     public class CreditNoteT : Table
     {
         [Field(Description = "NcId", Type = BoFieldTypes.db_Alpha, Size = 64)]
@@ -14,23 +15,51 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Date", Type = BoFieldTypes.db_Date)]
         public DateTime Date { get; set; }
 
-        [Field(Description = "Estatus", Type = BoFieldTypes.db_Alpha, Size = 2)]
-        public string Status { get; set; }
-
         [Field(Description = "Total", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float Total { get; set; }
 
-        [Field(Description = "User", Size = 64)]
+        [Field(Description = "User", Size = 32)]
         public string User { get; set; }
 
-        [Field(Description = "Cancelado", Size = 1)]
-        public string Cancleado { get; set; }
+        [Field(Description = "Creation date", Type = BoFieldTypes.db_Date)]
+        public DateTime CreationDate { get; set; }
 
-        [Field(Description = "Date", Type = BoFieldTypes.db_Date)]
-        public DateTime DateSaved { get; set; }
+        [Field(Description = "Creation time", Type = BoFieldTypes.db_Date, SubType = BoFldSubTypes.st_Time)]
+        public string CreationTime { get; set; }
 
-        [Field(Description = "Time", Size = 5)]
-        public string Time { get; set; }
+        [Field(Description = "Modification date", Type = BoFieldTypes.db_Date)]
+        public DateTime ModificationDate { get; set; }
+
+        [Field(Description = "Modification time", Type = BoFieldTypes.db_Date, SubType = BoFldSubTypes.st_Time)]
+        public string ModificationTime { get; set; }
+
+        [Field(Description = "UserMod", Size = 32)]
+        public string UserMod { get; set; }
+
+        [Field(Description = "Autorizado", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string Autorized { get; set; }
+
+        [Field(Description = "Procesado", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string Processed { get; set; } 
+        
+        [Field(Description = "Cancelado", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string Canceled { get; set; }
+
+        [Field(Description = "Adjunto", Type = BoFieldTypes.db_Memo, SubType = BoFldSubTypes.st_Link)]
+        public string Attach  { get; set; }
+
+        [Field(Description = "Qty Documents", Type = BoFieldTypes.db_Numeric)]
+        public int QtyDoc { get; set; }
+
+        [Field(Description = "Qty Invoice", Type = BoFieldTypes.db_Numeric)]
+        public int QtyInv { get; set; }
+
+     
+
+
+        public List<CreditNoteDoc> LstCreditNoteDoc;
+
+
     }
 }
 

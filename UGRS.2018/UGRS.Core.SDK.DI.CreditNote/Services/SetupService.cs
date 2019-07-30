@@ -7,17 +7,20 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
     {
         private TableDAO<CreditNoteT> mObjCreditNoteTDAO;
         private TableDAO<CreditNoteDet> mObjCreditNoteDetailDAO;
+        private TableDAO<CreditNoteDoc> mObjCrediNoteDoc;
 
         public SetupService()
         {
             mObjCreditNoteTDAO = new TableDAO<CreditNoteT>();
             mObjCreditNoteDetailDAO = new TableDAO<CreditNoteDet>();
+            mObjCrediNoteDoc = new TableDAO<CreditNoteDoc>();
         }
 
         public void InitializeTables()
         {
             mObjCreditNoteDetailDAO.Initialize();
             mObjCreditNoteTDAO.Initialize();
+            mObjCrediNoteDoc.Initialize();
         }
 
         

@@ -2,16 +2,14 @@
 using SAPbouiCOM;
 using System;
 using System.Collections.Generic;
-using UGRS.Core.SDK.Attributes;
-using UGRS.Core.SDK.DI.CreditNote.DTO;
-using UGRS.Core.SDK.DI.Models;
+using UGRS.Core.SDK.DI.CreditNote.Tables;
 using UGRS.Core.SDK.UI;
 using UGRS.Core.Services;
 
 
 namespace UGRS.Core.SDK.DI.CreditNote.DOC
 {
-    public class CreditNoteDOC
+    public class CN_Doc
     {
         CreditNoteFactory mObjFactory = new CreditNoteFactory();
 
@@ -19,34 +17,23 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         /// Crea un pago
         /// </summary>
         /// 
-        public bool CreateCreditNote(CreditNoteDTO pObjCreditNoteDTO)
+        public bool CreateCreditNote(CreditNoteDoc pObjCreditNoteDoc)
         {
             bool lBolIsSuccess = false;
             try
             {
-                //pObjCreditNoteDTO = new CreditNoteDTO();
-                //pObjCreditNoteDTO.LstDocEntry = new List<string>();
-                //pObjCreditNoteDTO.LstDocEntry.Add("55");
-                //pObjCreditNoteDTO.LstDocEntry.Add("56");
-                //pObjCreditNoteDTO.LstDocEntry.Add("57");
-                //pObjCreditNoteDTO.LstDocEntry.Add("58");
-                //pObjCreditNoteDTO.LstDocEntry.Add("59");
-                //pObjCreditNoteDTO.LstDocEntry.Add("60");
-                //pObjCreditNoteDTO.LstDocEntry.Add("61");
-                //pObjCreditNoteDTO.LstDocEntry.Add("62");
 
-               // DocRelByUI("337", pObjCreditNoteDTO);
 
                 Documents lObjCreditNote = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
 
                 // SAPbobsCOM.Payments lObjPayment = (SAPbobsCOM.Payments)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oVendorPayments);
-                lObjCreditNote.CardCode =  pObjCreditNoteDTO.C_CardCode;
+                lObjCreditNote.CardCode = pObjCreditNoteDoc.CardCode;
 
                 lObjCreditNote.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
 
                 lObjCreditNote.Lines.ItemCode = mObjFactory.GetCreditNoteService().GetBonusItemCode();
                 lObjCreditNote.Lines.Quantity = 1;
-                lObjCreditNote.Lines.UnitPrice = 100;// pObjCreditNoteDTO.C_Amount;
+                lObjCreditNote.Lines.UnitPrice = pObjCreditNoteDoc.Amount;
                 lObjCreditNote.Lines.Add();
 
                 int intError = lObjCreditNote.Add();
@@ -60,10 +47,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 else
                 {
                     string pStrNewDocEntry = DIApplication.Company.GetNewObjectKey();
-                    DocRelByUI(pStrNewDocEntry, pObjCreditNoteDTO);
+                    DocRelByUI(pStrNewDocEntry, pObjCreditNoteDoc.LstCreditNoteDet);
                     // LogService.WriteSuccess("pago creado correctamente: InvoiceDocEntry: " + pObjPurchase.DocEntry);
                     return true;
                 }
+
             }
             catch (Exception ex)
             {
@@ -74,15 +62,13 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
             return lBolIsSuccess;
         }
 
-        private void DocRelByUI(string pStrDocEntry, CreditNoteDTO pObjCreditNoteDTO)
+        private void DocRelByUI(string pStrDocEntry, List<CreditNoteDet> pObjCreditNoteDet)
         {
             SAPbouiCOM.Form lFrmNC = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm(SAPbouiCOM.BoFormObjectEnum.fo_InvoiceCreditMemo, "", pStrDocEntry);
             lFrmNC.Freeze(true);
             try
             {
                 //open invoice draft form
-             
-
 
                 //Pestaña
                 SAPbouiCOM.Folder lFolderFinances = (SAPbouiCOM.Folder)lFrmNC.Items.Item("138").Specific;
@@ -99,13 +85,12 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 SAPbouiCOM.Matrix lMtxRelation = (SAPbouiCOM.Matrix)lFrmRelation.Items.Item("5").Specific;
 
                 int i = 1;
-                foreach (var item in pObjCreditNoteDTO.LstDocEntry)
+                foreach (var item in pObjCreditNoteDet)
                 {
                     //Combobox Col 1
                     ((SAPbouiCOM.ComboBox)lMtxRelation.Columns.Item("1").Cells.Item(i).Specific).Select("13", BoSearchKey.psk_ByValue); 
                     ((SAPbouiCOM.ComboBox)lMtxRelation.Columns.Item("254000018").Cells.Item(i).Specific).Select("01", BoSearchKey.psk_ByValue);
-                    ((SAPbouiCOM.EditText)lMtxRelation.Columns.Item("3").Cells.Item(i).Specific).Value = item;
-                  
+                    ((SAPbouiCOM.EditText)lMtxRelation.Columns.Item("3").Cells.Item(i).Specific).Value = item.DocNumINV;
                     i++;
                 }
                 //Boton OK

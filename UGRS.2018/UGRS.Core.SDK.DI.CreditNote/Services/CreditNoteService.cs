@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using UGRS.Core.SDK.DI.CreditNote.DAO;
 using UGRS.Core.SDK.DI.CreditNote.DOC;
-using UGRS.Core.SDK.DI.CreditNote.DTO;
+using UGRS.Core.SDK.DI.CreditNote.Tables;
 
 namespace UGRS.Core.SDK.DI.CreditNote.Services
 {
     public class CreditNoteService
     {
         private CreditNoteDAO mObjCreditNoteDAO;
-        private CreditNoteDOC mObjCreditNoteDOC;
+        private CN_Doc mObjCreditNoteDOC;
 
         public CreditNoteService()
         {
             mObjCreditNoteDAO = new CreditNoteDAO();
-            mObjCreditNoteDOC = new CreditNoteDOC();
+            mObjCreditNoteDOC = new CN_Doc();
         }
 
         public string GetInvoiceQuery(DateTime pDtmDate)
@@ -21,9 +22,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
             return mObjCreditNoteDAO.GetInvoicesQuery(pDtmDate);
         }
 
-        public bool GetCreditNoteDOC(CreditNoteDTO pObjCreditNoteDTO)
+        public bool GetCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO)
         {
-            return mObjCreditNoteDOC.CreateCreditNote(pObjCreditNoteDTO);
+            return mObjCreditNoteDOC.CreateCreditNote(pLstCreditNoteDTO);
         }
 
         public string GetBonusItemCode()

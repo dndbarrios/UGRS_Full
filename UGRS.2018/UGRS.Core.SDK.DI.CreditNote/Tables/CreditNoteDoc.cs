@@ -1,12 +1,13 @@
 ﻿using SAPbobsCOM;
 using System;
+using System.Collections.Generic;
 using UGRS.Core.SDK.Attributes;
 using UGRS.Core.SDK.DI.Models;
 
 namespace UGRS.Core.SDK.DI.CreditNote.Tables
 {
-    [Table(Name = "UG_PE_NCDET", Description = "Nota de credito Detalle", Type = BoUTBTableType.bott_NoObjectAutoIncrement)]
-    public class CreditNoteDet : Table
+    [Table(Name = "UG_PE_NCDOC", Description = "Nota de credito documento", Type = BoUTBTableType.bott_NoObjectAutoIncrement)]
+   public  class CreditNoteDoc : Table
     {
         [Field(Description = "NcId", Type = BoFieldTypes.db_Alpha, Size = 16)]
         public string NcId { get; set; }
@@ -17,38 +18,29 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "User", Size = 32)]
         public string User { get; set; }
 
+        [Field(Description = "DocEntry", Type = BoFieldTypes.db_Alpha)]
+        public string DocEntry { get; set; }
+
         [Field(Description = "CardCode", Type = BoFieldTypes.db_Alpha, Size = 16)]
         public string CardCode { get; set; }
 
         [Field(Description = "CardName", Type = BoFieldTypes.db_Alpha, Size = 64)]
         public string CardName { get; set; }
 
-        [Field(Description = "Cert", Type = BoFieldTypes.db_Alpha, Size = 16)]
-        public string Cert { get; set; }
-
-        [Field(Description = "DocEntryINV", Type = BoFieldTypes.db_Numeric)]
-        public int DocEntryINV { get; set; }
-
-        [Field(Description = "DocNumINV", Type = BoFieldTypes.db_Alpha, Size = 16)]
-        public string DocNumINV { get; set; }
-
-        [Field(Description = "QtyInv", Type = BoFieldTypes.db_Numeric)]
-        public int QtyInv { get; set; }
-
-        [Field(Description = "QtyExp", Type = BoFieldTypes.db_Numeric)]
-        public int QtyExp { get; set; }
-
-        [Field(Description = "QtyNoCruz", Type = BoFieldTypes.db_Numeric)]
-        public int QtyNoCruz { get; set; }
-
         [Field(Description = "Amount", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float Amount { get; set; }
+
+        [Field(Description = "IVA", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
+        public float IVA { get; set; }
 
         [Field(Description = "Processed", Type = BoFieldTypes.db_Alpha, Size = 2)]
         public string Processed { get; set; }
 
         [Field(Description = "Cancelado", Type = BoFieldTypes.db_Alpha, Size = 1)]
         public string Canceled { get; set; }
+
+        [Field(Description = "QtyInv", Type = BoFieldTypes.db_Numeric)]
+        public int QtyInv { get; set; }
 
         [Field(Description = "Creation date", Type = BoFieldTypes.db_Date)]
         public DateTime CreationDate { get; set; }
@@ -64,6 +56,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
 
         [Field(Description = "UserMod", Size = 32)]
         public string UserMod { get; set; }
+
+        public List<CreditNoteDet> LstCreditNoteDet;
+
 
     }
 }

@@ -58,16 +58,18 @@
   <ItemGroup>
     <Compile Include="CreditNoteFactory.cs" />
     <Compile Include="DAO\CreditNoteDAO.cs" />
-    <Compile Include="DOC\CreditNoteDOC.cs" />
-    <Compile Include="DTO\CreditNoteDTO.cs" />
+    <Compile Include="DOC\CN_Doc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CreditNoteService.cs" />
     <Compile Include="Services\SetupService.cs" />
     <Compile Include="Tables\CreditNoteDet.cs" />
+    <Compile Include="Tables\CreditNoteDoc.cs" />
     <Compile Include="Tables\CreditNoteT.cs" />
     <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DTO\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\SQL\Exec_Invoices.sql" />
   </ItemGroup>
