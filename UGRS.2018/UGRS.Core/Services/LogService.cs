@@ -54,6 +54,7 @@ namespace UGRS.Core.Services
         {
             if (IsFullLog)
             {
+                WriteError(pObjException.Message);
                 WriteError(pObjException.ToString());
             }
             else
