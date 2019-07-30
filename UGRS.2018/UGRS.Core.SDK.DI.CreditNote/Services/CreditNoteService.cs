@@ -31,6 +31,15 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
         {
             return mObjCreditNoteDAO.GetBonusItemCode();
         }
-       
+
+        public int GetLastCode()
+        {
+            return mObjCreditNoteDAO.GetLastCode();
+        }
+
+        public int GetFirstCode()
+        {
+            return mObjCreditNoteDAO.GetFirstCode();
+        }
     }
 }

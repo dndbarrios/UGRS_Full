@@ -15,9 +15,24 @@ namespace UGRS.Core.SDK.DI.CreditNote
             return new SetupService();
         }
 
-        public  CN_Doc GetCreditNoteDocService()
+        public CN_Doc GetCN_DocService()
         {
             return new CN_Doc();  
+        }
+
+        public CreditNoteTService GetCreditNoteTService()
+        {
+            return new CreditNoteTService();
+        }
+
+        public CreditNoteDocService GetCreditNoteDocService()
+        {
+            return new CreditNoteDocService();
+        }
+
+        public CreditNoteDetService GetCreditNoteDetService()
+        {
+            return new CreditNoteDetService();
         }
     }
 }

@@ -8,6 +8,7 @@ using UGRS.Core.SDK.UI.ProgressBar;
 using UGRS.Core.SDK.DI.CreditNote.Tables;
 using System.Linq;
 using UGRS.Core.SDK.DI;
+using System.Globalization;
 
 namespace UGRS.AddOn.CreditNote.Forms
 {
@@ -72,13 +73,17 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             try
             {
-                string pStrId = "";
-                List<CreditNoteDet> lLstCreditNote = GetMatrixData(pStrId);
-                List<CreditNoteDoc> lLstCreditNoteDoc = GetNC_Doc(pStrId, lLstCreditNote);
+                string pStrId = GetId();
+                List<CreditNoteDet> lLstCreditNoteDet = GetMatrixData(pStrId);
+                List<CreditNoteDoc> lLstCreditNoteDoc = GetNC_Doc(pStrId, lLstCreditNoteDet);
+                CreditNoteT lObjCreditNoteDoc = GetNC_Header(pStrId, lLstCreditNoteDoc);
+
+                SaveInUDT(lObjCreditNoteDoc);
             }
             catch (Exception ex)
             {
                 LogService.WriteError(ex);
+                UIApplication.ShowMessageBox(ex.Message);
             }
         }
         #endregion
@@ -131,6 +136,19 @@ namespace UGRS.AddOn.CreditNote.Forms
             mtxInv.LoadFromDataSource();
             mtxInv.AutoResizeColumns();
         }
+
+
+        /// <summary>
+        /// Obtener los datos de la matriz
+        /// </summary>
+        private string GetId()
+        {
+            string lStrId = "";
+
+            lStrId = string.Format("NC_{0}", mObjCreditNoteFactory.GetCreditNoteService().GetLastCode()+1);
+            return lStrId;
+        }
+
 
         /// <summary>
         /// Obtener los datos de la matriz
@@ -232,11 +250,11 @@ namespace UGRS.AddOn.CreditNote.Forms
         /// </summary>
         private CreditNoteT GetNC_Header(string pStrId, List<CreditNoteDoc> pLstCreditNoteDoc)
         {
-            
             CreditNoteT lObjCreditNoteT = new CreditNoteT
             {
                 NcId = pStrId,
-                Date = Convert.ToDateTime(UD_Date),
+                Date = string.IsNullOrEmpty(txtDate.Value) ? DateTime.Now :
+                                DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None),
                 CreationDate = DateTime.Now,
                 Autorized = "N",
                 Canceled = "N",
@@ -253,6 +271,67 @@ namespace UGRS.AddOn.CreditNote.Forms
             return lObjCreditNoteT;
         }
 
+        /// <summary>
+        /// Obtener el encabezado
+        /// </summary>
+        /// 
+        private void SaveInUDT(CreditNoteT pObjCreditNoteT)
+        {
+            //DIApplication.Company.StartTransaction();
+
+            int lIntResult = mObjCreditNoteFactory.GetCreditNoteTService().Add(pObjCreditNoteT);
+            SaveDocInUDT(pObjCreditNoteT.LstCreditNoteDoc);
+           
+        }
+
+        private void SaveDocInUDT(List<CreditNoteDoc> pLstCreditNoteDoc)
+        {
+            //Test
+            int lIntResult = mObjCreditNoteFactory.GetCreditNoteDocService().Add(pLstCreditNoteDoc.First());
+
+            //foreach (var lObjCreditNoteDoc in pLstCreditNoteDoc)
+            //{
+            //    mObjCreditNoteFactory.GetCreditNoteDocService().Add(pObjCreditNoteT.LstCreditNoteDoc);
+            //}
+
+            SaveDetInUDT(pLstCreditNoteDoc.First().LstCreditNoteDet);
+        }
+
+        private void SaveDetInUDT(List<CreditNoteDet> pLstCreditNoteDet)
+        {
+            int lIntResult = mObjCreditNoteFactory.GetCreditNoteDetService().Add(pLstCreditNoteDet.First());
+        }
+
+
+        private bool CloseTransaction(bool pBolSuccess)
+        {
+            try
+            {
+                if (pBolSuccess)
+                {
+                    DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
+                    pBolSuccess = true;
+                    LogService.WriteSuccess("Generado correctamente");
+                    UIApplication.ShowSuccess("Generado correctamente");
+                   // MenuNewForm();
+                }
+                else
+                {
+                    if (DIApplication.Company.InTransaction)
+                    {
+                        pBolSuccess = false;
+                        DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(ex.Message);
+                LogService.WriteError("(CloseTransaction): " + ex.Message);
+                LogService.WriteError(ex);
+            }
+            return pBolSuccess;
+        }
         #endregion
 
         #region Controls
