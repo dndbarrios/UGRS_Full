@@ -30,6 +30,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Amount", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float Amount { get; set; }
 
+        [Field(Description = "TaxCode", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string TaxCode { get; set; }
+
         [Field(Description = "IVA", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float IVA { get; set; }
 

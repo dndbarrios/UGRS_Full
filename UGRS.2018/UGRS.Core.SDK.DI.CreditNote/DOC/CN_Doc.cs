@@ -22,8 +22,6 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
             bool lBolIsSuccess = false;
             try
             {
-
-
                 Documents lObjCreditNote = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
 
                 // SAPbobsCOM.Payments lObjPayment = (SAPbobsCOM.Payments)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oVendorPayments);
@@ -34,6 +32,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 lObjCreditNote.Lines.ItemCode = mObjFactory.GetCreditNoteService().GetBonusItemCode();
                 lObjCreditNote.Lines.Quantity = 1;
                 lObjCreditNote.Lines.UnitPrice = pObjCreditNoteDoc.Amount;
+                lObjCreditNote.Lines.TaxCode = pObjCreditNoteDoc.TaxCode;
                 lObjCreditNote.Lines.Add();
 
                 int intError = lObjCreditNote.Add();
@@ -65,7 +64,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         private void DocRelByUI(string pStrDocEntry, List<CreditNoteDet> pObjCreditNoteDet)
         {
             SAPbouiCOM.Form lFrmNC = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm(SAPbouiCOM.BoFormObjectEnum.fo_InvoiceCreditMemo, "", pStrDocEntry);
-            lFrmNC.Freeze(true);
+            //lFrmNC.Freeze(true);
             try
             {
                 //open invoice draft form
@@ -110,7 +109,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
             }
             finally
             {
-                lFrmNC.Freeze(false);
+                //lFrmNC.Freeze(false);
             }
         }
 

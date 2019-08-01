@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SAPbouiCOM.Framework;
 using UGRS.Core.SDK.DI;
 using UGRS.Core.SDK.DI.CreditNote;
+using UGRS.Core.Services;
 
 namespace UGRS.AddOn.CreditNote
 {
@@ -25,10 +26,15 @@ namespace UGRS.AddOn.CreditNote
                 {
                     oApp = new Application(args[0]);
                 }
+
+                LogService.Filename("AddOnCompras");
+
                 Menu MyMenu = new Menu();
                 MyMenu.AddMenuItems();
                 oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 DIApplication.DIConnect((SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany());
+               
+                //Inicializando tablas
                 CreditNoteFactory lObjFactory = new CreditNoteFactory();
                 lObjFactory.GetSetupService().InitializeTables();
 

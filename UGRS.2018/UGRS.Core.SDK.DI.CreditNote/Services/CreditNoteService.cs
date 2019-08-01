@@ -41,5 +41,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
         {
             return mObjCreditNoteDAO.GetFirstCode();
         }
+
+        public string GetTaxCode(string pStrRate)
+        {
+            return mObjCreditNoteDAO.GetTaxCode(pStrRate);
+        }
     }
 }

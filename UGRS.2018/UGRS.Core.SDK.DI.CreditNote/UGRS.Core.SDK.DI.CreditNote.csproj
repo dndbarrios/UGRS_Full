@@ -71,7 +71,9 @@
     <Compile Include="Tables\CreditNoteT.cs" />
     <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\SQL\GetTaxCodeAR.sql" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\SQL\Exec_Invoices.sql" />
   </ItemGroup>

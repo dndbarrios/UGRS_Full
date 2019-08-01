@@ -1,0 +1,1 @@
+select Code  from OSTC with (Nolock) where ValidForAR = 'Y' and U_B1SYS_FactorType = 'E' and Rate = '{Rate}'

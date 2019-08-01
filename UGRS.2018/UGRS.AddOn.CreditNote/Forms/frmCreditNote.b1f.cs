@@ -4,11 +4,10 @@ using SAPbouiCOM.Framework;
 using UGRS.Core.Services;
 using UGRS.Core.SDK.UI;
 using UGRS.Core.SDK.DI.CreditNote;
-using UGRS.Core.SDK.UI.ProgressBar;
 using UGRS.Core.SDK.DI.CreditNote.Tables;
 using System.Linq;
 using UGRS.Core.SDK.DI;
-using System.Globalization;
+using UGRS.AddOn.CreditNote.Services;
 
 namespace UGRS.AddOn.CreditNote.Forms
 {
@@ -16,8 +15,8 @@ namespace UGRS.AddOn.CreditNote.Forms
     class frmCreditNote : UserFormBase
     {
         #region Properties
-        ProgressBarManager mObjProgressBar = null;
-        CreditNoteFactory mObjCreditNoteFactory = new CreditNoteFactory();
+       
+        
         #endregion
 
         #region Constructor
@@ -73,12 +72,17 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             try
             {
-                string pStrId = GetId();
-                List<CreditNoteDet> lLstCreditNoteDet = GetMatrixData(pStrId);
-                List<CreditNoteDoc> lLstCreditNoteDoc = GetNC_Doc(pStrId, lLstCreditNoteDet);
-                CreditNoteT lObjCreditNoteDoc = GetNC_Header(pStrId, lLstCreditNoteDoc);
+                GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDate.Value);
+                string pStrId = lObjGetList.GetId();
+                List<CreditNoteDet> lLstCreditNoteDet = lObjGetList.GetMatrixData(pStrId);
+                List<CreditNoteDoc> lLstCreditNoteDoc = lObjGetList.GetNC_Doc(pStrId, lLstCreditNoteDet);
+                CreditNoteT lObjCreditNoteT = lObjGetList.GetNC_Header(pStrId, lLstCreditNoteDoc);
 
-                SaveInUDT(lObjCreditNoteDoc);
+              
+
+                //SaveInUDT(lObjCreditNoteT);
+
+
             }
             catch (Exception ex)
             {
@@ -119,9 +123,10 @@ namespace UGRS.AddOn.CreditNote.Forms
         /// </summary>
         private void SetDataTableValues()
         {
+            CreditNoteFactory lObjCreditNoteFactory = new CreditNoteFactory();
             DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
             DateTime lDtmDate = DateTime.Now;// Convert.ToDateTime(txtDate.Value);
-            DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lDtmDate));
+            DtMatrix.ExecuteQuery(lObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lDtmDate));
         }
 
         /// <summary>
@@ -138,200 +143,10 @@ namespace UGRS.AddOn.CreditNote.Forms
         }
 
 
-        /// <summary>
-        /// Obtener los datos de la matriz
-        /// </summary>
-        private string GetId()
-        {
-            string lStrId = "";
-
-            lStrId = string.Format("NC_{0}", mObjCreditNoteFactory.GetCreditNoteService().GetLastCode()+1);
-            return lStrId;
-        }
+      
 
 
-        /// <summary>
-        /// Obtener los datos de la matriz
-        /// </summary>
-        private List<CreditNoteDet> GetMatrixData(string pStrId)
-        {
-            List<CreditNoteDet> lLstCN = new List<CreditNoteDet>();
-            try
-            {
-             
-                if (DtMatrix != null)
-                {
-                    mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Obtencion de registros", DtMatrix.Rows.Count);
-                    for (int i = 0; i < DtMatrix.Rows.Count; i++)
-                    {
-                        lLstCN.Add(GetDTMatrixRow(i, pStrId));
-                        mObjProgressBar.NextPosition();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LogService.WriteError(ex);
-            }
-            finally
-            {
-                if (mObjProgressBar != null)
-                {
-                    mObjProgressBar.Dispose();
-                }
-            }
-            return lLstCN;
-        }
-
-        /// <summary>
-        /// Obtener el renglon de la matriz
-        /// </summary>
-        private CreditNoteDet GetDTMatrixRow(int pIntRow, string pStrId)
-        {
-            CreditNoteDet lObjCN_DTO = new CreditNoteDet
-            {
-                Amount = float.Parse(DtMatrix.GetValue("C_Amount", pIntRow).ToString()),
-                Canceled = "N",
-                CardCode = DtMatrix.GetValue("C_CardCode", pIntRow).ToString(),
-                CardName = DtMatrix.GetValue("C_CardName", pIntRow).ToString(),
-                Cert = DtMatrix.GetValue("C_Cert", pIntRow).ToString(),
-                CreationDate = DateTime.Now,
-                CreationTime = DateTime.Now.ToString("hhmm"),
-                DocEntryINV = Convert.ToInt32(DtMatrix.GetValue("C_DocEntry", pIntRow)),
-                DocNumINV = DtMatrix.GetValue("C_DocNum", pIntRow).ToString(),
-                Line = pIntRow,
-                NcId = pStrId,
-                Processed = "N",
-                QtyExp = Convert.ToInt32(DtMatrix.GetValue("C_HeadExp", pIntRow).ToString()),
-                QtyNoCruz = Convert.ToInt32(DtMatrix.GetValue("C_HeadNoC", pIntRow).ToString()),
-                QtyInv = Convert.ToInt32(DtMatrix.GetValue("C_InvHead", pIntRow).ToString()),
-            };
-
-
-            return lObjCN_DTO;
-        }
-
-
-        /// <summary>
-        /// Obtener el docmento ordenado por cardcode
-        /// </summary>
-        private List<CreditNoteDoc> GetNC_Doc(string pStrId, List<CreditNoteDet> pLstCreditNoteDet)
-        {
-            List<CreditNoteDoc> lLstCreditNoteDocuments = new List<CreditNoteDoc>();
-            List<CreditNoteDet> lLstCardCode = pLstCreditNoteDet.GroupBy(x => x.CardCode).Select(y => new CreditNoteDet { CardCode = y.First().CardCode }).ToList();
-            int i = 1;
-            foreach (var lObjCardCode in lLstCardCode)
-            {
-                CreditNoteDoc lObjCreditNoteDoc = new CreditNoteDoc
-                {
-                    Amount = pLstCreditNoteDet.Where(y => y.Canceled == "N").Sum(x => x.Amount),
-                    NcId = pStrId,
-                    CardCode = pLstCreditNoteDet.First().CardCode,
-                    CardName = pLstCreditNoteDet.First().CardName,
-                    CreationDate = DateTime.Now,
-                    CreationTime = DateTime.Now.ToString("hhmm"),
-                    DocEntry = "",
-                    IVA = 0,
-                    Line = i,
-                    LstCreditNoteDet = pLstCreditNoteDet,
-                    Processed = "N",
-                    Canceled = "N",
-                    QtyInv = pLstCreditNoteDet.Count(),
-                    User = DIApplication.Company.UserName
-                };
-                lLstCreditNoteDocuments.Add(lObjCreditNoteDoc);
-            }
-
-            return lLstCreditNoteDocuments;
-        }
-
-        /// <summary>
-        /// Obtener el encabezado
-        /// </summary>
-        private CreditNoteT GetNC_Header(string pStrId, List<CreditNoteDoc> pLstCreditNoteDoc)
-        {
-            CreditNoteT lObjCreditNoteT = new CreditNoteT
-            {
-                NcId = pStrId,
-                Date = string.IsNullOrEmpty(txtDate.Value) ? DateTime.Now :
-                                DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None),
-                CreationDate = DateTime.Now,
-                Autorized = "N",
-                Canceled = "N",
-                Processed = "N",
-                CreationTime = DateTime.Now.ToString("hhmm"),
-                QtyDoc = pLstCreditNoteDoc.Count(),
-                QtyInv = pLstCreditNoteDoc.Sum(x => x.LstCreditNoteDet.Count),
-                Total =  pLstCreditNoteDoc.Sum(x => x.Amount),
-                User = DIApplication.Company.UserName,
-                Attach = "",
-                LstCreditNoteDoc = pLstCreditNoteDoc,
-            };
-
-            return lObjCreditNoteT;
-        }
-
-        /// <summary>
-        /// Obtener el encabezado
-        /// </summary>
-        /// 
-        private void SaveInUDT(CreditNoteT pObjCreditNoteT)
-        {
-            //DIApplication.Company.StartTransaction();
-
-            int lIntResult = mObjCreditNoteFactory.GetCreditNoteTService().Add(pObjCreditNoteT);
-            SaveDocInUDT(pObjCreditNoteT.LstCreditNoteDoc);
-           
-        }
-
-        private void SaveDocInUDT(List<CreditNoteDoc> pLstCreditNoteDoc)
-        {
-            //Test
-            int lIntResult = mObjCreditNoteFactory.GetCreditNoteDocService().Add(pLstCreditNoteDoc.First());
-
-            //foreach (var lObjCreditNoteDoc in pLstCreditNoteDoc)
-            //{
-            //    mObjCreditNoteFactory.GetCreditNoteDocService().Add(pObjCreditNoteT.LstCreditNoteDoc);
-            //}
-
-            SaveDetInUDT(pLstCreditNoteDoc.First().LstCreditNoteDet);
-        }
-
-        private void SaveDetInUDT(List<CreditNoteDet> pLstCreditNoteDet)
-        {
-            int lIntResult = mObjCreditNoteFactory.GetCreditNoteDetService().Add(pLstCreditNoteDet.First());
-        }
-
-
-        private bool CloseTransaction(bool pBolSuccess)
-        {
-            try
-            {
-                if (pBolSuccess)
-                {
-                    DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
-                    pBolSuccess = true;
-                    LogService.WriteSuccess("Generado correctamente");
-                    UIApplication.ShowSuccess("Generado correctamente");
-                   // MenuNewForm();
-                }
-                else
-                {
-                    if (DIApplication.Company.InTransaction)
-                    {
-                        pBolSuccess = false;
-                        DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(ex.Message);
-                LogService.WriteError("(CloseTransaction): " + ex.Message);
-                LogService.WriteError(ex);
-            }
-            return pBolSuccess;
-        }
+       
         #endregion
 
         #region Controls
