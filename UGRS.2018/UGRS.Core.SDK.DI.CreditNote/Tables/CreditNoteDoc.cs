@@ -15,11 +15,16 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Line", Type = BoFieldTypes.db_Numeric)]
         public int Line { get; set; }
 
+
+
         [Field(Description = "User", Size = 32)]
         public string User { get; set; }
 
         [Field(Description = "DocEntry", Type = BoFieldTypes.db_Alpha)]
         public string DocEntry { get; set; }
+
+        [Field(Description = "DocEntryDraft", Type = BoFieldTypes.db_Alpha)]
+        public string DocEntryDraft { get; set; }
 
         [Field(Description = "CardCode", Type = BoFieldTypes.db_Alpha, Size = 16)]
         public string CardCode { get; set; }
@@ -30,17 +35,26 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Amount", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float Amount { get; set; }
 
-        [Field(Description = "TaxCode", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        [Field(Description = "TaxCode", Type = BoFieldTypes.db_Alpha, Size = 3)]
         public string TaxCode { get; set; }
 
         [Field(Description = "IVA", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float IVA { get; set; }
 
-        [Field(Description = "Processed", Type = BoFieldTypes.db_Alpha, Size = 2)]
-        public string Processed { get; set; }
+        [Field(Description = "Processed", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string IsProcessed { get; set; }
+
+        [Field(Description = "Draft", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string IsDraft { get; set; }
+
+        [Field(Description = "DocRel", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string IsDocRel { get; set; }
+
+        [Field(Description = "Document", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string IsDocument { get; set; }
 
         [Field(Description = "Cancelado", Type = BoFieldTypes.db_Alpha, Size = 1)]
-        public string Canceled { get; set; }
+        public string IsCanceled { get; set; }
 
         [Field(Description = "QtyInv", Type = BoFieldTypes.db_Numeric)]
         public int QtyInv { get; set; }

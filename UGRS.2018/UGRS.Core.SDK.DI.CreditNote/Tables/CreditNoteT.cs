@@ -37,13 +37,13 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         public string UserMod { get; set; }
 
         [Field(Description = "Autorizado", Type = BoFieldTypes.db_Alpha, Size = 1)]
-        public string Autorized { get; set; }
+        public string IsAutorized { get; set; }
 
         [Field(Description = "Procesado", Type = BoFieldTypes.db_Alpha, Size = 1)]
-        public string Processed { get; set; } 
+        public string IsProcessed { get; set; } 
         
         [Field(Description = "Cancelado", Type = BoFieldTypes.db_Alpha, Size = 1)]
-        public string Canceled { get; set; }
+        public string IsCanceled { get; set; }
 
         [Field(Description = "Adjunto", Type = BoFieldTypes.db_Memo, SubType = BoFldSubTypes.st_Link)]
         public string Attach  { get; set; }

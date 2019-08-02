@@ -44,11 +44,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Amount", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float Amount { get; set; }
 
-        [Field(Description = "Processed", Type = BoFieldTypes.db_Alpha, Size = 2)]
-        public string Processed { get; set; }
+        [Field(Description = "Processed", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string IsProcessed { get; set; }
 
         [Field(Description = "Cancelado", Type = BoFieldTypes.db_Alpha, Size = 1)]
-        public string Canceled { get; set; }
+        public string IsCanceled { get; set; }
 
         [Field(Description = "Creation date", Type = BoFieldTypes.db_Date)]
         public DateTime CreationDate { get; set; }
