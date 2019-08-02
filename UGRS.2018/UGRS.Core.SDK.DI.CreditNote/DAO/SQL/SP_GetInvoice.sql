@@ -1,6 +1,6 @@
 USE [UGRS_20190115]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_Addon_CreditNote]    Script Date: 29-Jul-19 09:51:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_Addon_CreditNote]    Script Date: 01-Aug-19 04:03:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17,139 +17,31 @@ ALTER PROCEDURE [dbo].[SP_Addon_CreditNote]
 		
 AS
 BEGIN
-	SELECT * FROM (--HEMBRAS
-SELECT 
-		ROW_NUMBER() 
-		OVER(ORDER BY T1.DocEntry )	as '#'
-		,T1.CardCode					as 'C_CardCode'
-		, T0.CardName					as 'C_CardName'
-		, T0.U_PE_Certificate			as 'C_Cert'
-		, T1.DocEntry					as 'C_DocEntry'
-		, T1.DocNum						as 'C_DocNum'
-		, T8.U_Quantity					as 'C_InvHead'
-		, CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) end
-										as 'C_HeadExp'
-		, T8.U_Quantity- CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END 
-										as 'C_HeadNoC'
-		, '0'							as 'C_Amount'
-		--Amount
-		, T0.DocDate
-		, case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Hembra' then   T8.U_Quantity else 0 END AutHembra
-		, ISNULL(case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Hembra' then case when SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END END,0) CruHembra
-		, T3.Remark
-		,'Hembra' 'U_Value'
-FROM ORDR T0
-INNER JOIN OINV T1 ON T0.DocEntry = T1.DocEntry
-INNER JOIN [@UG_CU_CERT] T2 ON T2.Name = T0.U_PE_Certificate
-LEFT JOIN (	SELECT S1.U_IDInsp, sum(isnull(s1.U_Quantity,0)) - sum(isnull(s1.U_QuantityNP,0)) - sum(isnull(s1.U_QuantityReject,0))  Cruzadas,  S2.Remark,S1.U_DateInsp 
-			FROM [@UG_CU_OINS] S1 
-			INNER JOIN  NNM1 S2 ON S1.U_Series = S2.Series 
-			WHERE S1.U_IDInsp>0 
-			GROUP BY S1.U_IDInsp, S2.Remark,S1.U_DateInsp  ) AS T3 ON T3.U_IDInsp = T2.U_IdInsp
-LEFT JOIN [@UG_PE_PETY] T4 ON T0.U_PE_IdPermitType= T4.Code
-left JOIN OCRD T5 ON T0.CardCode=T5.CardCode
-left JOIN [@UG_PE_WS_PERE] T6 ON T0.U_PE_FolioUGRS = T6.U_UgrsFolio and t4.Code =t6.U_MobilizationTypeId
-left join [@UG_PE_WS_PRRE] T8 on t6.U_RequestId = t8.U_RequestId
-left JOIN [@UG_PE_WS_PARE] T7 ON T6.U_RequestId = T7.U_RequestId and t7.[U_ParameterId]=14 
-LEFT JOIN [@UG_PE_PRTS] T9 ON T8.U_ParentProductId = T9.U_IdSAGARPA
-WHERE T0.SERIES = 179 
-and T4.Code=2 --Exportación
-and isnull(t2.U_Quantity,0)>0
-and t0.CANCELED='N'
-and (t3.U_DateInsp between @DateFrom and @DateTo)
-group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T0.DocEntry, T1.DocNum
-
---MACHOS
-UNION ALL
-SELECT  
-		ROW_NUMBER() 
-		OVER(ORDER BY T1.DocEntry )	as '#'
-		,T1.CardCode					as 'C_CardCode'
-		, T0.CardName					as 'C_CardName'
-		, T0.U_PE_Certificate			as 'C_Cert'
-		, T1.DocEntry					as 'C_DocEntry'
-		, T1.DocNum						as 'C_DocNum'
-		, T8.U_Quantity					as 'C_InvHead'
-		, CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) end
-										as 'C_HeadExp'
-		, T8.U_Quantity- CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END 
-										as 'C_HeadNoC'
-		, '0'							as 'C_Amount'
-		, T0.DocDate 
-		, case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Macho' then  T8.U_Quantity else 0 END AutMacho
-		, ISNULL(case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Macho' then case when SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END END,0)  CruMacho
-		, T3.Remark
-		,'Macho' 'U_Value'
-FROM ORDR T0
-INNER JOIN OINV T1 ON T0.DocEntry = T1.DocEntry
-INNER JOIN [@UG_CU_CERT] T2 ON T2.Name = T0.U_PE_Certificate
-LEFT JOIN (	SELECT S1.U_IDInsp, sum(isnull(s1.U_Quantity,0)) - sum(isnull(s1.U_QuantityNP,0)) - sum(isnull(s1.U_QuantityReject,0))  Cruzadas,  S2.Remark,S1.U_DateInsp 
-			FROM [@UG_CU_OINS] S1 
-			INNER JOIN  NNM1 S2 ON S1.U_Series = S2.Series 
-			WHERE S1.U_IDInsp>0 
-			GROUP BY S1.U_IDInsp, S2.Remark,S1.U_DateInsp  ) AS T3 ON T3.U_IDInsp = T2.U_IdInsp
-LEFT JOIN [@UG_PE_PETY] T4 ON T0.U_PE_IdPermitType= T4.Code
-left JOIN OCRD T5 ON T0.CardCode=T5.CardCode
-left JOIN [@UG_PE_WS_PERE] T6 ON T0.U_PE_FolioUGRS = T6.U_UgrsFolio and t4.Code =t6.U_MobilizationTypeId
-left join [@UG_PE_WS_PRRE] T8 on t6.U_RequestId = t8.U_RequestId
-left JOIN [@UG_PE_WS_PARE] T7 ON T6.U_RequestId = T7.U_RequestId and t7.[U_ParameterId]=14 
-LEFT JOIN [@UG_PE_PRTS] T9 ON T8.U_ParentProductId = T9.U_IdSAGARPA
-WHERE T0.SERIES = 179 
-and T4.Code=2 --Exportación
-and isnull(t2.U_Quantity,0)>0
-and t0.CANCELED='N'
-and (t3.U_DateInsp between @DateFrom and @DateTo)
-group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T0.DocEntry, T1.DocNum
-
---EQUINOS
-
-UNION ALL
-
-SELECT ROW_NUMBER() 
-		OVER(ORDER BY T1.DocEntry )	as '#'
-		, T1.CardCode					as 'C_CardCode'
-		, T0.CardName					as 'C_CardName'
-		, T0.U_PE_Certificate			as 'C_Cert'
-		, T1.DocEntry					as 'C_DocEntry'
-		, T1.DocNum						as 'C_DocNum'
-		, T8.U_Quantity					as 'C_InvHead'
-		, CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) end CruTotal, T8.U_Quantity- CASE WHEN SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END 
-										as 'C_HeadNoC'
-		, '0'							as 'C_Amount'
-		, T0.DocDate
-		, case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Equino' then  T8.U_Quantity else 0 END AutEquino
-		, ISNULL(case when (CASE WHEN T9.U_IdSAGARPA =105 THEN T9.Name ELSE  T7.U_Value END) = 'Equino' then case when SUM(isnull(t2.U_QtyUsed,0))=0 then  sum(isnull(t3.Cruzadas,0)) else sum(isnull(t2.U_QtyUsed,0)) END END,0)  CruEquino
-		, T3.Remark
-		,'Equino' 'U_Value'
-FROM ORDR T0
-INNER JOIN OINV T1 ON T0.DocEntry = T1.DocEntry
-INNER JOIN [@UG_CU_CERT] T2 ON T2.Name = T0.U_PE_Certificate
-LEFT JOIN (	SELECT S1.U_IDInsp, sum(isnull(s1.U_Quantity,0)) - sum(isnull(s1.U_QuantityNP,0)) - sum(isnull(s1.U_QuantityReject,0))  Cruzadas,  S2.Remark,S1.U_DateInsp 
-			FROM [@UG_CU_OINS] S1 
-			INNER JOIN  NNM1 S2 ON S1.U_Series = S2.Series 
-			WHERE S1.U_IDInsp>0 
-			GROUP BY S1.U_IDInsp, S2.Remark,S1.U_DateInsp  ) AS T3 ON T3.U_IDInsp = T2.U_IdInsp
-LEFT JOIN [@UG_PE_PETY] T4 ON T0.U_PE_IdPermitType= T4.Code
-left JOIN OCRD T5 ON T0.CardCode=T5.CardCode
-left JOIN [@UG_PE_WS_PERE] T6 ON T0.U_PE_FolioUGRS = T6.U_UgrsFolio and t4.Code =t6.U_MobilizationTypeId
-left join [@UG_PE_WS_PRRE] T8 on t6.U_RequestId = t8.U_RequestId
-left JOIN [@UG_PE_WS_PARE] T7 ON T6.U_RequestId = T7.U_RequestId and t7.[U_ParameterId]=14 
-LEFT JOIN [@UG_PE_PRTS] T9 ON T8.U_ParentProductId = T9.U_IdSAGARPA
-WHERE T0.SERIES = 179 
-and T4.Code=2 --Exportación
-and isnull(t2.U_Quantity,0)>0
-and t0.CANCELED='N'
-and (t3.U_DateInsp between @DateFrom and @DateTo)
-group by T1.CardCode, T0.CardName,T0.U_PE_Certificate,T9.U_IdSAGARPA, T9.Name,T7.U_Value,T8.U_Quantity,T3.Remark,T0.DocDate, T1.DocEntry, T0.DocEntry, T1.DocNum
-) T23
-
-WHERE T23.AutHembra > 0 --AND
-
---T23.Cliente like CASE WHEN ('{?CodCte1@ select 'TODOS' union all SELECT  CardName FROM OCRD WHERE CardType = 'C'}' IS NULL OR '{?CodCte1@ select 'TODOS' union all SELECT  CardName FROM OCRD WHERE CardType = 'C'}'= '' OR '{?CodCte1@ select 'TODOS' union all SELECT  CardName FROM OCRD WHERE CardType = 'C'}'='TODOS') THEN T23.Cliente  ELSE  '{?CodCte1@ select 'TODOS' union all SELECT  CardName FROM OCRD WHERE CardType = 'C'}' END
 
 
-
-ORDER BY T23.C_Cert ASC
+  select 
+ B2.cardcode 'C_CardCode', B2.CardName 'C_CardName', b1.Certificado 'C_Cert', b1.DocEntry 'C_DocEntry', 
+        b1.DocNum 'C_DocNum', b1.FolioFac 'C_FolioFac', b1.Quantity 'C_InvHead', b0.Total 'C_HeadExp', 
+    b1.Quantity- b0.Total 'C_HeadNoC', (b1.Quantity- b0.Total) * b1.Price 'C_Amount'
+   from 
+  (select sum(isnull(t0.u_qtyused,0)) Total, T0.NAME Certificado, max(t0.U_UsedDate) UsedDate from [@UG_CU_CERT] T0 group by T0.NAME) B0
+  left join (
+		 select a0.U_PE_Certificate Certificado, SUM(a2.Quantity) Quantity, max(a2.Price) Price, 
+		        a0.docentry DocEntry, max(A0.cardcode) cardcode, max(cast(A0.docentry as nvarchar(30))) FolioFac,
+				A0.DocNum
+		 from oinv A0 
+		 inner join inv1 A2 on a2.DocEntry = a0.DocEntry
+		 inner join (select distinct U_ItemPE from [@UG_CU_CUIT]) A1 on a1.U_ItemPE = a2.ItemCode
+		 where isnull(A0.U_PE_Certificate,'')<>'' and a0.CANCELED='N'
+		 group by a0.U_PE_Certificate,a0.docentry, A0.DocNum
+		 union all
+		 select U_Certificate Certif, U_Quantity Quantity, isnull(U_Price,0) Price, 
+			   u_Docentry DocEntry, Name CardCode, 'Saldo Inicial' FolioFac,
+			   '' DocNum
+		 from [@UG_CU_SICERT] 
+    ) B1 on B1.Certificado=B0.Certificado
+	inner join OCRD B2 on b2.cardcode= b1.cardcode
+	where b1.Quantity- b0.Total >0 and b0.UsedDate between @DateFrom and @DateTo
 
 
 END
