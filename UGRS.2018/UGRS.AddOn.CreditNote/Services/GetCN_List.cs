@@ -25,6 +25,8 @@ namespace UGRS.AddOn.CreditNote.Services
             mStrDate = pStrDate;
         }
 
+
+
         /// <summary>
         /// Obtener los datos de la matriz
         /// </summary>
@@ -123,10 +125,14 @@ namespace UGRS.AddOn.CreditNote.Services
                     TaxCode = lStrTaxCode,
                     Line = i,
                     LstCreditNoteDet = lLstCreditNoteByCardcode,
-                    Processed = "N",
-                    Canceled = "N",
+                    IsCanceled = "N",
+                    IsDraft = "N",
+                    IsDocRel = "N",
+                    IsDocument = "N",
+                    IsProcessed = "N",
                     QtyInv = lLstCreditNoteByCardcode.Count(),
-                    User = DIApplication.Company.UserName
+                    User = DIApplication.Company.UserName,
+                    FolioOrigen =  string.Format("{0}_{1}", pStrId, i)
                 };
                 lLstCreditNoteDocuments.Add(lObjCreditNoteDoc);
             }
@@ -145,9 +151,9 @@ namespace UGRS.AddOn.CreditNote.Services
                 Date = string.IsNullOrEmpty(mStrDate) ? DateTime.Now :
                                 DateTime.ParseExact(mStrDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None),
                 CreationDate = DateTime.Now,
-                Autorized = "N",
-                Canceled = "N",
-                Processed = "N",
+                IsAutorized = "N",
+                IsCanceled = "N",
+                IsProcessed = "N",
                 CreationTime = DateTime.Now.ToString("hhmm"),
                 QtyDoc = pLstCreditNoteDoc.Count(),
                 QtyInv = pLstCreditNoteDoc.Sum(x => x.LstCreditNoteDet.Count),

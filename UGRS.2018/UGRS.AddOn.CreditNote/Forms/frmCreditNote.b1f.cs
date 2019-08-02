@@ -46,6 +46,15 @@ namespace UGRS.AddOn.CreditNote.Forms
 
         }
 
+        private void SBO_Application_MenuEvent(ref SAPbouiCOM.MenuEvent pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            if (pVal.MenuUID == "5907" && pVal.BeforeAction == true) //Duplicar
+            {
+
+            }
+        }
+
         /// <summary>
         /// Initialize form event. Called by framework before form creation.
         /// </summary>
@@ -78,10 +87,11 @@ namespace UGRS.AddOn.CreditNote.Forms
                 List<CreditNoteDoc> lLstCreditNoteDoc = lObjGetList.GetNC_Doc(pStrId, lLstCreditNoteDet);
                 CreditNoteT lObjCreditNoteT = lObjGetList.GetNC_Header(pStrId, lLstCreditNoteDoc);
 
-              
 
-                //SaveInUDT(lObjCreditNoteT);
+                SaveNC_UDT lObjSaveNC = new SaveNC_UDT();
+               // lObjSaveNC.SaveInUDT(lObjCreditNoteT);
 
+                lObjSaveNC.SaveCreditNoteDoc(lObjCreditNoteT.LstCreditNoteDoc);
 
             }
             catch (Exception ex)
