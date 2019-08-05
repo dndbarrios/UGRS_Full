@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using UGRS.Core.SDK.DI;
 using UGRS.Core.SDK.DI.CreditNote;
+using UGRS.Core.SDK.DI.CreditNote.DTO;
 using UGRS.Core.SDK.DI.CreditNote.Tables;
 using UGRS.Core.SDK.UI;
 using UGRS.Core.SDK.UI.ProgressBar;
@@ -25,8 +26,6 @@ namespace UGRS.AddOn.CreditNote.Services
             mStrDate = pStrDate;
         }
 
-
-
         /// <summary>
         /// Obtener los datos de la matriz
         /// </summary>
@@ -37,7 +36,6 @@ namespace UGRS.AddOn.CreditNote.Services
             lStrId = string.Format("NC_{0}", mObjCreditNoteFactory.GetCreditNoteService().GetLastCode() + 1);
             return lStrId;
         }
-
 
         /// <summary>
         /// Obtener los datos de la matriz
@@ -79,7 +77,7 @@ namespace UGRS.AddOn.CreditNote.Services
             CreditNoteDet lObjCN_DTO = new CreditNoteDet
             {
                 Amount = float.Parse(mDtMatrix.GetValue("C_Amount", pIntRow).ToString()),
-                Canceled = "N",
+                IsCanceled = "N",
                 CardCode = mDtMatrix.GetValue("C_CardCode", pIntRow).ToString(),
                 CardName = mDtMatrix.GetValue("C_CardName", pIntRow).ToString(),
                 Cert = mDtMatrix.GetValue("C_Cert", pIntRow).ToString(),
@@ -89,7 +87,7 @@ namespace UGRS.AddOn.CreditNote.Services
                 DocNumINV = mDtMatrix.GetValue("C_DocNum", pIntRow).ToString(),
                 Line = pIntRow,
                 NcId = pStrId,
-                Processed = "N",
+                IsProcessed = "N",
                 QtyExp = Convert.ToInt32(mDtMatrix.GetValue("C_HeadExp", pIntRow).ToString()),
                 QtyNoCruz = Convert.ToInt32(mDtMatrix.GetValue("C_HeadNoC", pIntRow).ToString()),
                 QtyInv = Convert.ToInt32(mDtMatrix.GetValue("C_InvHead", pIntRow).ToString()),
@@ -111,7 +109,13 @@ namespace UGRS.AddOn.CreditNote.Services
             string lStrTaxCode = mObjCreditNoteFactory.GetCreditNoteService().GetTaxCode("0");
             foreach (var lObjCardCode in lLstByCardCode)
             {
-                List<CreditNoteDet> lLstCreditNoteByCardcode = pLstCreditNoteDet.Where(y => y.CardCode == lObjCardCode.CardCode && y.Canceled == "N").ToList();
+                string lStrFolioDoc = string.Format("{0}_{1}", pStrId, i);
+                List<CreditNoteDet> lLstCreditNoteByCardcode = pLstCreditNoteDet.Where(y => y.CardCode == lObjCardCode.CardCode && y.IsCanceled == "N").ToList();
+                foreach (var item in lLstCreditNoteByCardcode)
+                {
+                    item.FolioDoc = lStrFolioDoc;
+                }
+
                 CreditNoteDoc lObjCreditNoteDoc = new CreditNoteDoc
                 {
                     Amount = lLstCreditNoteByCardcode.Sum(x => x.Amount),
@@ -132,9 +136,10 @@ namespace UGRS.AddOn.CreditNote.Services
                     IsProcessed = "N",
                     QtyInv = lLstCreditNoteByCardcode.Count(),
                     User = DIApplication.Company.UserName,
-                    FolioOrigen =  string.Format("{0}_{1}", pStrId, i)
+                    FolioDoc =  string.Format("{0}_{1}", pStrId, i)
                 };
                 lLstCreditNoteDocuments.Add(lObjCreditNoteDoc);
+                i++;
             }
 
             return lLstCreditNoteDocuments;
@@ -162,9 +167,42 @@ namespace UGRS.AddOn.CreditNote.Services
                 Attach = "",
                 LstCreditNoteDoc = pLstCreditNoteDoc,
             };
-
             return lObjCreditNoteT;
         }
-        
+
+       
+        public CreditNoteT GetCreditNoteTSaved(string pStrId)
+        {
+            CreditNoteT lObjCreditNoteT = mObjCreditNoteFactory.GetCreditNoteService().GetCreditNoteTSaved(pStrId);
+            if (lObjCreditNoteT != null)
+            {
+                lObjCreditNoteT.LstCreditNoteDoc = new List<CreditNoteDoc>();
+                lObjCreditNoteT.LstCreditNoteDoc = GetCreditNoteDocSaved(pStrId, GetCreditNoteDetSaved(pStrId));
+            }
+            return lObjCreditNoteT;
+        }
+
+        public List<CreditNoteDoc> GetCreditNoteDocSaved(string pStrId, List<CreditNoteDet> pLstDet)
+        {
+            List<CreditNoteDoc> lLstDoc = new List<CreditNoteDoc>();
+            lLstDoc = mObjCreditNoteFactory.GetCreditNoteService().GetCreditNoteDocSaved(pStrId);
+
+            foreach (CreditNoteDoc lObjDoc in lLstDoc)
+            {
+                lObjDoc.LstCreditNoteDet = new List<CreditNoteDet>();
+                lObjDoc.LstCreditNoteDet.AddRange(pLstDet.Where(x => x.FolioDoc == lObjDoc.FolioDoc));
+            }
+            return lLstDoc;
+        }
+
+        public List<CreditNoteDet> GetCreditNoteDetSaved(string pStrId)
+        {
+            return mObjCreditNoteFactory.GetCreditNoteService().GetCreditNoteDetSaved(pStrId);
+        }
+
+        public List<DraftReferenceDTO> GetDraftReference(string pStrNcId)
+        {
+            return mObjCreditNoteFactory.GetCreditNoteService().GetDraftReference(pStrNcId);
+        }
     }
 }

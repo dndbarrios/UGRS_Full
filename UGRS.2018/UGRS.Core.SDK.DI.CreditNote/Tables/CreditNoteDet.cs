@@ -14,6 +14,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Line", Type = BoFieldTypes.db_Numeric)]
         public int Line { get; set; }
 
+        [Field(Description = "FolioDoc", Type = BoFieldTypes.db_Alpha, Size = 16)]
+        public string FolioDoc { get; set; }
+
         [Field(Description = "User", Size = 32)]
         public string User { get; set; }
 
@@ -53,13 +56,13 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Creation date", Type = BoFieldTypes.db_Date)]
         public DateTime CreationDate { get; set; }
 
-        [Field(Description = "Creation time", Type = BoFieldTypes.db_Date, SubType = BoFldSubTypes.st_Time)]
+        [Field(Description = "Creation time", Type = BoFieldTypes.db_Date)]
         public string CreationTime { get; set; }
 
         [Field(Description = "Modification date", Type = BoFieldTypes.db_Date)]
         public DateTime ModificationDate { get; set; }
 
-        [Field(Description = "Modification time", Type = BoFieldTypes.db_Date, SubType = BoFldSubTypes.st_Time)]
+        [Field(Description = "Modification time", Type = BoFieldTypes.db_Date)]
         public string ModificationTime { get; set; }
 
         [Field(Description = "UserMod", Size = 32)]

@@ -7,6 +7,9 @@ using UGRS.Core.Extension;
 using UGRS.Core.SDK.DI.CreditNote.Utils;
 using UGRS.Core.SDK.UI;
 using UGRS.Core.Utility;
+using UGRS.Core.SDK.DI.CreditNote.Tables;
+using System.Linq;
+using UGRS.Core.SDK.DI.CreditNote.DTO;
 
 namespace UGRS.Core.SDK.DI.CreditNote.DAO
 {
@@ -14,7 +17,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
     {
         QueryManager mObjQueryManager = new QueryManager();
 
-        public string GetInvoicesQuery(DateTime pDtmDateTime)
+        public string GetInvoicesQuery(DateTime pDtmDateTimeFrom, DateTime pDtmDateTimeTo)
         {
             Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
             lLstStrParameters.Add("StartDate", "20190601");// pDtmDateTime.ToString("yyyyMMdd"));
@@ -82,6 +85,69 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
                 MemoryUtility.ReleaseComObject(lObjRecordset);
             }
             return lStrVoucherCode;
+        }
+
+        public CreditNoteT GetCreditNoteTSaved(string pStrId)
+        {
+            return mObjQueryManager.GetObjectsList<CreditNoteT>("U_NcId", pStrId, "[@UG_PE_NC]").First();
+        }
+
+        public List<CreditNoteDoc> GetCreditNoteDocSaved(string pStrId)
+        {
+            return mObjQueryManager.GetObjectsList<CreditNoteDoc>("U_NcId", pStrId, "[@UG_PE_NCDOC]").ToList();
+        }
+
+        public List<CreditNoteDet> GetCreditNoteDetSaved(string pStrId)
+        {
+            return mObjQueryManager.GetObjectsList<CreditNoteDet>("U_NcId", pStrId, "[@UG_PE_NCDET]").ToList();
+        }
+
+        public List<DraftReferenceDTO> GetDraftRelation(string pStrNcId)
+        {
+            SAPbobsCOM.Recordset lObjRecordset = null;
+            List<DraftReferenceDTO> lLstDraftReference = new List<DraftReferenceDTO>();
+            try
+            {
+                Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
+                lLstStrParameters.Add("NcId", pStrNcId);
+                string lStrQuery = this.GetSQL("ValidateDraft").Inject(lLstStrParameters);
+                //this.UIAPIRawForm.DataSources.DataTables.Item("RESULT").ExecuteQuery(lStrQuery);
+
+                lObjRecordset = (SAPbobsCOM.Recordset)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                lObjRecordset.DoQuery(lStrQuery);
+
+                if (lObjRecordset.RecordCount > 0)
+                {
+                    for (int i = 0; i < lObjRecordset.RecordCount; i++)
+                    {
+                        DraftReferenceDTO lObjDraftReference = new DraftReferenceDTO
+                        {
+                            DocEntryDraft = lObjRecordset.Fields.Item("DocEntry").Value.ToString(),
+                            OrigenFolioDet = lObjRecordset.Fields.Item("U_MQ_OrigenFol_Det").Value.ToString(),
+                            RefDocEntr = Convert.ToInt32(lObjRecordset.Fields.Item("RefDocEntr").Value.ToString()),
+                            RefDocNum = lObjRecordset.Fields.Item("RefDocNum").Value.ToString()
+                        };
+                        lObjRecordset.MoveNext();
+                        lLstDraftReference.Add(lObjDraftReference);
+                    }
+                }
+                else
+                {
+                    LogService.WriteError("No se encontraron documentos relacionados ");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                UIApplication.ShowMessageBox(string.Format("InitDataSourcesException: {0}", ex.Message));
+                LogService.WriteError("PurchasesDAO (GetVoucherCode): " + ex.Message);
+                LogService.WriteError(ex);
+            }
+            finally
+            {
+                MemoryUtility.ReleaseComObject(lObjRecordset);
+            }
+            return lLstDraftReference;
         }
     }
 }

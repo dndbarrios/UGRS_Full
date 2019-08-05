@@ -59,13 +59,14 @@
     <Compile Include="CreditNoteFactory.cs" />
     <Compile Include="DAO\CreditNoteDAO.cs" />
     <Compile Include="DOC\CN_Doc.cs" />
+    <Compile Include="DOC\CN_DocUI.cs" />
+    <Compile Include="DTO\DraftReferenceDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CreditNoteDetService.cs" />
     <Compile Include="Services\CreditNoteDocService.cs" />
     <Compile Include="Services\CreditNoteService.cs" />
     <Compile Include="Services\CreditNoteTService.cs" />
     <Compile Include="Services\SetupService.cs" />
-    <Compile Include="Services\TableDAO.cs" />
     <Compile Include="Tables\CreditNoteDet.cs" />
     <Compile Include="Tables\CreditNoteDoc.cs" />
     <Compile Include="Tables\CreditNoteT.cs" />
@@ -97,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\SQL\SP_GetInvoice.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\SQL\ValidateDraft.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

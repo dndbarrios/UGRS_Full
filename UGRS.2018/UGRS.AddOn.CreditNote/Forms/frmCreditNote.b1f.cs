@@ -22,6 +22,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         #region Constructor
         public frmCreditNote()
         {
+
         }
         #endregion
 
@@ -43,17 +44,9 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.btnSearch.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSearch_ClickBefore);
             this.UD_Date = this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Date");
             this.OnCustomInitialize();
-
         }
 
-        private void SBO_Application_MenuEvent(ref SAPbouiCOM.MenuEvent pVal, out bool BubbleEvent)
-        {
-            BubbleEvent = true;
-            if (pVal.MenuUID == "5907" && pVal.BeforeAction == true) //Duplicar
-            {
-
-            }
-        }
+       
 
         /// <summary>
         /// Initialize form event. Called by framework before form creation.
@@ -81,17 +74,41 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             try
             {
-                GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDate.Value);
-                string pStrId = lObjGetList.GetId();
-                List<CreditNoteDet> lLstCreditNoteDet = lObjGetList.GetMatrixData(pStrId);
-                List<CreditNoteDoc> lLstCreditNoteDoc = lObjGetList.GetNC_Doc(pStrId, lLstCreditNoteDet);
-                CreditNoteT lObjCreditNoteT = lObjGetList.GetNC_Header(pStrId, lLstCreditNoteDoc);
-
-
                 SaveNC_UDT lObjSaveNC = new SaveNC_UDT();
-               // lObjSaveNC.SaveInUDT(lObjCreditNoteT);
+                GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDate.Value);
 
-                lObjSaveNC.SaveCreditNoteDoc(lObjCreditNoteT.LstCreditNoteDoc);
+                ////Obtener datos para guardar reporte
+                //string pStrId = lObjGetList.GetId();
+                //List<CreditNoteDet> lLstCreditNoteDet = lObjGetList.GetMatrixData(pStrId);
+                //List<CreditNoteDoc> lLstCreditNoteDoc = lObjGetList.GetNC_Doc(pStrId, lLstCreditNoteDet);
+                //CreditNoteT lObjCreditNoteT = lObjGetList.GetNC_Header(pStrId, lLstCreditNoteDoc);
+
+                ////Guardado de reporte
+                //lObjSaveNC.SaveInUDT(lObjCreditNoteT);
+
+                ////Guardado de borrador
+                //CreditNoteT lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
+                //lObjSaveNC.SaveCreditNoteDoc(lObjCreditNoteTSaved.LstCreditNoteDoc);
+
+                ////Actualizacion de borrador
+                //lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
+                //lObjSaveNC.UpdateDocRel(lObjCreditNoteTSaved.LstCreditNoteDoc);
+
+
+                //Actualiza UDT status 
+                CreditNoteT lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved("NC_4");
+                List<string> lLstError = lObjSaveNC.ValidateDraftRelation(lObjGetList.GetDraftReference("NC_4"), lObjCreditNoteTSaved);
+                if (lLstError.Count() > 0)
+                {
+                   string lStrMessageError = string.Format("Algunas facturas no fueron generadas correctamente: \n{0}",
+                        string.Join("\n", lLstError.Select(x => string.Format("{0}", x)).ToArray()));
+                    LogService.WriteError(lStrMessageError);
+                    Application.SBO_Application.MessageBox(lStrMessageError);
+                }
+              
+
+
+             
 
             }
             catch (Exception ex)
@@ -136,7 +153,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             CreditNoteFactory lObjCreditNoteFactory = new CreditNoteFactory();
             DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
             DateTime lDtmDate = DateTime.Now;// Convert.ToDateTime(txtDate.Value);
-            DtMatrix.ExecuteQuery(lObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lDtmDate));
+            DtMatrix.ExecuteQuery(lObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lDtmDate, lDtmDate));
         }
 
         /// <summary>
@@ -151,6 +168,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             mtxInv.LoadFromDataSource();
             mtxInv.AutoResizeColumns();
         }
+
 
 
       

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UGRS.Core.SDK.DI.CreditNote.DAO;
 using UGRS.Core.SDK.DI.CreditNote.DOC;
+using UGRS.Core.SDK.DI.CreditNote.DTO;
 using UGRS.Core.SDK.DI.CreditNote.Tables;
 
 namespace UGRS.Core.SDK.DI.CreditNote.Services
@@ -10,21 +11,28 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
     {
         private CreditNoteDAO mObjCreditNoteDAO;
         private CN_Doc mObjCreditNoteDOC;
+        private CN_DocUI mObjCreditNoteUI;
 
         public CreditNoteService()
         {
             mObjCreditNoteDAO = new CreditNoteDAO();
             mObjCreditNoteDOC = new CN_Doc();
+             mObjCreditNoteUI = new CN_DocUI();
         }
 
-        public string GetInvoiceQuery(DateTime pDtmDate)
+        public string GetInvoiceQuery(DateTime pDtmDateFrom, DateTime pDtmDateTo )
         {
-            return mObjCreditNoteDAO.GetInvoicesQuery(pDtmDate);
+            return mObjCreditNoteDAO.GetInvoicesQuery(pDtmDateFrom, pDtmDateTo);
         }
 
-        public bool GetCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO)
+        public List<string> CreateCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO, List<string> pLstErrors)
         {
-            return mObjCreditNoteDOC.CreateCreditNote(pLstCreditNoteDTO);
+            return mObjCreditNoteDOC.CreateCreditNote(pLstCreditNoteDTO, pLstErrors);
+        }
+
+        public void UpdateDocRel(CreditNoteDoc pObjCreditNote)
+        {
+            mObjCreditNoteUI.DocRelByUI(pObjCreditNote);
         }
 
         public string GetBonusItemCode()
@@ -46,5 +54,28 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
         {
             return mObjCreditNoteDAO.GetTaxCode(pStrRate);
         }
+
+        public CreditNoteT GetCreditNoteTSaved(string pStrId)
+        {
+            return mObjCreditNoteDAO.GetCreditNoteTSaved(pStrId);
+        }
+
+        public List<CreditNoteDoc> GetCreditNoteDocSaved(string pStrId)
+        {
+            return mObjCreditNoteDAO.GetCreditNoteDocSaved(pStrId);
+        }
+
+        public List<CreditNoteDet> GetCreditNoteDetSaved(string pStrId)
+        {
+            return mObjCreditNoteDAO.GetCreditNoteDetSaved(pStrId);
+        }
+
+        public List<DraftReferenceDTO> GetDraftReference(string pStrNcId)
+        {
+            return mObjCreditNoteDAO.GetDraftRelation(pStrNcId);
+        }
+
+
+
     }
 }
