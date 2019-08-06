@@ -21,7 +21,7 @@ namespace UGRS.AddOn.CreditNote.Services
         /// Guardado en tablas
         /// </summary>
         /// 
-        public void SaveInUDT(CreditNoteT pObjCreditNoteT)
+        public int SaveInUDT(CreditNoteT pObjCreditNoteT)
         {
             DIApplication.Company.StartTransaction();
             int lIntResult = 0;
@@ -53,14 +53,13 @@ namespace UGRS.AddOn.CreditNote.Services
             }
             finally
             {
-              
                 CloseTransaction(lIntResult == 0 ? true : false); 
                 if (mObjProgressBar != null)
                 {
                     mObjProgressBar.Dispose();
                 }
-               
             }
+            return lIntResult;
         }
 
 

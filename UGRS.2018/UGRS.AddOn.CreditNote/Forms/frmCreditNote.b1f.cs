@@ -15,8 +15,8 @@ namespace UGRS.AddOn.CreditNote.Forms
     class frmCreditNote : UserFormBase
     {
         #region Properties
-       
-        
+        CreditNoteT mObjCreditNoteT = new CreditNoteT();
+        CreditNoteFactory mObjCreditNoteFactory = new CreditNoteFactory();
         #endregion
 
         #region Constructor
@@ -46,7 +46,12 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.UD_DateFrom = this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_DateFrm");
             this.txtDateFrom = ((SAPbouiCOM.EditText)(this.GetItem("txtDateFrm").Specific));
             this.lblDateFrom = ((SAPbouiCOM.StaticText)(this.GetItem("lblDateFrm").Specific));
-            this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("lblFolio").Specific));
+            this.lblFolio = ((SAPbouiCOM.StaticText)(this.GetItem("lblFolio").Specific));
+            this.txtFolio = ((SAPbouiCOM.EditText)(this.GetItem("txtFolio").Specific));
+            this.txtFolio.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.txtFolio_KeyDownAfter);
+            this.lblStatus = ((SAPbouiCOM.StaticText)(this.GetItem("lblStatus").Specific));
+            this.btnAttach = ((SAPbouiCOM.Button)(this.GetItem("btnAttach").Specific));
+            this.txtAttach = ((SAPbouiCOM.EditText)(this.GetItem("txtAttach").Specific));
             this.OnCustomInitialize();
 
         }
@@ -84,7 +89,19 @@ namespace UGRS.AddOn.CreditNote.Forms
                 GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDateTo.Value);
                 CreditNoteT lObjCreditNoteTSaved = new CreditNoteT();
 
+                if (btnNC.Item.Enabled && SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea guardar el reporte de Notas de crédito?", 2, "Si", "No", "") == 1)
+                {
+                    if (SaveReport(lObjSaveNC, lObjGetList) == 0)
+                    {
+                        UIApplication.ShowSuccess("Reporte guardado correctamente");
+                    }
+                    else
+                    {
+                        UIApplication.ShowError("No fue posible guardar el reporte favor de revisar el log");
+                    }
+                }
 
+                
             }
             catch (Exception ex)
             {
@@ -92,11 +109,36 @@ namespace UGRS.AddOn.CreditNote.Forms
                 UIApplication.ShowMessageBox(ex.Message);
             }
         }
+
+        private void txtFolio_KeyDownAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            try
+            {
+                this.UIAPIRawForm.Freeze(true);
+                if (pVal.CharPressed == (char)System.Windows.Forms.Keys.Enter)
+                {
+                    LoadReport(txtFolio.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.UIAPIRawForm.Freeze(false);
+                LogService.WriteError(string.Format("txtFolio_KeyDownAfter: {0}", ex.Message));
+                LogService.WriteError(ex);
+                UIApplication.ShowError(string.Format("txtFolio_KeyDownAfter: {0}", ex.Message));
+
+            }
+            finally
+            {
+                this.UIAPIRawForm.Freeze(false);
+            }
+
+        }
         #endregion
 
         #region Methods
 
-        private void SaveReport(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList)
+        private int SaveReport(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList)
         {
             //Obtener datos para guardar reporte
             string pStrId = pObjGetList.GetId();
@@ -105,9 +147,8 @@ namespace UGRS.AddOn.CreditNote.Forms
             CreditNoteT lObjCreditNoteT = pObjGetList.GetNC_Header(pStrId, lLstCreditNoteDoc);
 
             //Guardado de reporte
-            pObjSaveNC.SaveInUDT(lObjCreditNoteT);
+           return pObjSaveNC.SaveInUDT(lObjCreditNoteT);
         }
-
 
         private void SaveDraft(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList, CreditNoteT pObjCreditNoteTSaved, string pStrNcId)
         {
@@ -187,11 +228,11 @@ namespace UGRS.AddOn.CreditNote.Forms
         /// </summary>
         private void SetDataTableValues()
         {
-            CreditNoteFactory lObjCreditNoteFactory = new CreditNoteFactory();
             DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
+            DtMatrix.Rows.Clear();
             string lStrDateFrom = txtDateTo.Value;
             string lStrDateTo = txtDateTo.Value;
-            DtMatrix.ExecuteQuery(lObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lStrDateFrom, lStrDateTo));
+            DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetInvoiceQuery(lStrDateFrom, lStrDateTo));
         }
 
         /// <summary>
@@ -205,6 +246,24 @@ namespace UGRS.AddOn.CreditNote.Forms
             }
             mtxInv.LoadFromDataSource();
             mtxInv.AutoResizeColumns();
+        }
+
+
+        private void LoadReport(string pStrNcId)
+        {
+            GetCN_List lObjNC_List = new GetCN_List(DtMatrix, txtDateFrom.Value);
+            mObjCreditNoteT = lObjNC_List.GetCreditNoteTSaved(pStrNcId);
+            DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
+            DtMatrix.Rows.Clear();
+            DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetReportSavedQuery(pStrNcId));
+            BindMatrix();
+
+            txtDateFrom.Value = mObjCreditNoteT.Date.ToString("yyyyMMdd");
+            txtDateTo.Value = mObjCreditNoteT.Date.ToString("yyyyMMdd");
+            txtDateTo.Item.Enabled = false;
+            txtDateFrom.Item.Enabled = false;
+            btnSearch.Item.Enabled = false;
+
         }
 
         #endregion
@@ -221,8 +280,12 @@ namespace UGRS.AddOn.CreditNote.Forms
         private SAPbouiCOM.UserDataSource UD_DateFrom;
         private SAPbouiCOM.EditText txtDateFrom;
         private SAPbouiCOM.StaticText lblDateFrom;
+        private SAPbouiCOM.StaticText lblFolio;
+        private SAPbouiCOM.EditText txtFolio;
+        private SAPbouiCOM.StaticText lblStatus;
+        private SAPbouiCOM.Button btnAttach;
+        private SAPbouiCOM.EditText txtAttach;
         #endregion
-        private SAPbouiCOM.StaticText StaticText1;
-
+       
     }
 }

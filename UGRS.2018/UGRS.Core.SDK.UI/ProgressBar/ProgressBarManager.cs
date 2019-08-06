@@ -28,6 +28,7 @@ namespace UGRS.Core.SDK.UI.ProgressBar
 
         public ProgressBarManager(SAPbouiCOM.Application pObjApplication, string pStrProgressBarMessage, int pIntMaximumPosition)
         {
+
             this.pObjApplication = pObjApplication;
             this.Message = pStrProgressBarMessage;
             this.MaximumPosition = pIntMaximumPosition;

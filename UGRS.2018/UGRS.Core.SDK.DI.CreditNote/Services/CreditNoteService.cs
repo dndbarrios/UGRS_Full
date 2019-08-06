@@ -25,6 +25,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
             return mObjCreditNoteDAO.GetInvoicesQuery(pStrDateFrom, pStrDateTo);
         }
 
+        public string GetReportSavedQuery(string pNcId)
+        {
+            return mObjCreditNoteDAO.GetReportSavedQuery(pNcId);
+        }
+
         public List<string> CreateCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO, List<string> pLstErrors)
         {
             return mObjCreditNoteDOC.CreateCreditNote(pLstCreditNoteDTO, pLstErrors);

@@ -32,7 +32,7 @@ namespace UGRS.AddOn.CreditNote
                 //  If the manu already exists this code will fail
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception )
+            catch (Exception ex)
             {
 
             }
@@ -45,12 +45,13 @@ namespace UGRS.AddOn.CreditNote
 
                 // Create s sub menu
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
-                oCreationPackage.UniqueID = "UGRS.AddOn.CreditNote";
+                oCreationPackage.UniqueID = "UGRS.AddOn.CreditNoteFrm";
                 oCreationPackage.String = "Nota de crédito";
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception )
+            catch (Exception ex )
             { //  Menu already exists
+                
                 Application.SBO_Application.SetStatusBarMessage("Menu Already Exists", SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
         }
@@ -61,7 +62,7 @@ namespace UGRS.AddOn.CreditNote
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "UGRS.AddOn.CreditNote")
+                if (pVal.BeforeAction && pVal.MenuUID == "UGRS.AddOn.CreditNoteFrm")
                 {
                     frmCreditNote activeForm = new frmCreditNote();
                     activeForm.UIAPIRawForm.Left = 500;

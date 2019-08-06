@@ -27,6 +27,15 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
             return lStrQuery;
         }
 
+        public string GetReportSavedQuery(string pStrNcId)
+        {
+            Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
+            lLstStrParameters.Add("NcId", pStrNcId);
+            string lStrQuery = this.GetSQL("GetNCReportSaved").Inject(lLstStrParameters);
+            LogService.WriteInfo(lStrQuery);
+            return lStrQuery;
+        }
+
         public string GetBonusItemCode()
         {
             return mObjQueryManager.GetValue("U_VALUE", "Name", Constants.STR_ENTRY_BONUS, Constants.STR_CONFIG_TABLE);
