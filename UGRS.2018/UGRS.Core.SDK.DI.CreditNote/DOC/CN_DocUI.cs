@@ -15,6 +15,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
             int n;
             if (!string.IsNullOrEmpty(pObjCreditNoteDoc.DocEntryDraft) && int.TryParse(pObjCreditNoteDoc.DocEntryDraft, out n))
             {
+                string lStrUUID = string.Empty;
                 SAPbouiCOM.Form lFrmNC = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", pObjCreditNoteDoc.DocEntryDraft);
                 //lFrmNC.Freeze(true);
                 try
@@ -37,27 +38,41 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                     SAPbouiCOM.Matrix lMtxRelation = (SAPbouiCOM.Matrix)lFrmRelation.Items.Item("5").Specific;
 
                     int i = 1;
-                    foreach (var item in pObjCreditNoteDoc.LstCreditNoteDet)
+                    foreach (var lObjDet in pObjCreditNoteDoc.LstCreditNoteDet)
                     {
-                        if (item.DocNumINV != "0")
+                        lStrUUID = lObjDet.FolioFiscal;
+                        if (lObjDet.DocNumINV != "0")
                         {
                             //Combobox Col 1
                             ((SAPbouiCOM.ComboBox)lMtxRelation.Columns.Item("1").Cells.Item(i).Specific).Select("13", BoSearchKey.psk_ByValue);
                             ((SAPbouiCOM.ComboBox)lMtxRelation.Columns.Item("254000018").Cells.Item(i).Specific).Select("01", BoSearchKey.psk_ByValue);
-                            ((SAPbouiCOM.EditText)lMtxRelation.Columns.Item("3").Cells.Item(i).Specific).Value = item.DocNumINV;
+
+                            try
+                            {
+                                ((SAPbouiCOM.EditText)lMtxRelation.Columns.Item("3").Cells.Item(i).Specific).Value = lObjDet.DocNumINV;
+                            }
+                            catch (Exception ex)
+                            {
+                                if (!CallCFL(lStrUUID, lMtxRelation, lObjDet.DocNumINV, i, ex))
+                                {
+                                    UIApplication.ShowError(ex.Message);
+                                    LogService.WriteError(ex.Message);
+                                    LogService.WriteError(ex);
+                                }
+                            }
                             i++;
                         }
                     }
                     //Boton OK
-
                     SAPbouiCOM.Button lBtnOK = (SAPbouiCOM.Button)lFrmRelation.Items.Item("540020001").Specific;
                     lBtnOK.Item.Click();
 
-                    string ss = lFrmNC.Menu.GetAsXML();
-                    string sss = lFrmNC.GetAsXML();
 
-                    UIApplication.GetApplication().Menus.Item("5907").Activate();
-                    lFrmNC.Close();
+
+                   
+                        UIApplication.GetApplication().Menus.Item("5907").Activate();
+                        lFrmNC.Close();
+                    
 
                     //if (UIApplication.GetApplication().Forms.ActiveForm.TypeEx == "179")
                     //{
@@ -72,17 +87,100 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 }
                 catch (Exception ex)
                 {
-
-                    UIApplication.ShowMessageBox(ex.Message);
-                    LogService.WriteError(ex.Message);
-                    LogService.WriteError(ex);
-
+                        UIApplication.ShowError(ex.Message);
+                        LogService.WriteError(ex.Message);
+                        LogService.WriteError(ex);
                 }
                 finally
                 {
                     //lFrmNC.Freeze(false);
                 }
             }
+        }
+
+
+        private bool CallCFL(string pStrUUID, Matrix pMtxRelation, string pStrDocNumINV, int pIntRow, Exception ex)
+        {
+            try
+            {
+                if (BugSap(pStrUUID, pMtxRelation, pStrDocNumINV, pIntRow))
+                {
+                    if (SelectCFL(pStrUUID, pMtxRelation, pStrDocNumINV, pIntRow))
+                    {
+                        ((SAPbouiCOM.ComboBox)pMtxRelation.Columns.Item("254000018").Cells.Item(pIntRow).Specific).Select("01", BoSearchKey.psk_ByValue);
+                        if (SelectCFL(pStrUUID, pMtxRelation, pStrDocNumINV, pIntRow))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch (Exception Exception)
+            {
+                UIApplication.ShowError(Exception.Message);
+                LogService.WriteError(Exception.Message);
+                LogService.WriteError(Exception);
+                return false;
+            }
+        }
+
+        //¬¬
+        private bool BugSap(string pStrUUId, Matrix pMtxRelation, string pStrDocNumINV, int pIntRow)
+        {
+            //Bug SAP
+            try
+            {
+                SAPbouiCOM.Form lFrmCFL = UIApplication.GetApplication().Forms.ActiveForm;
+                lFrmCFL.Close();
+                SAPbouiCOM.EditText txtInv = ((SAPbouiCOM.EditText)pMtxRelation.Columns.Item("3").Cells.Item(pIntRow).Specific);
+                txtInv.ClickPicker();
+
+                lFrmCFL = UIApplication.GetApplication().Forms.ActiveForm;
+                SAPbouiCOM.EditText txtSearch = (SAPbouiCOM.EditText)lFrmCFL.Items.Item("6").Specific;
+                txtSearch.Value = pStrDocNumINV;
+                return true;
+            }
+            catch (Exception ex )
+            {
+                UIApplication.ShowError(ex.Message);
+                LogService.WriteError(ex.Message);
+                LogService.WriteError(ex);
+                return false;
+            }
+           
+        }
+
+        private bool SelectCFL(string pStrUUId, Matrix pMtxRelation, string pStrDocNumINV, int pIntRow)
+        {
+            try
+            {
+
+                SAPbouiCOM.Form lFrmCFL = UIApplication.GetApplication().Forms.ActiveForm;
+                SAPbouiCOM.Matrix lMtxCFL = (SAPbouiCOM.Matrix)lFrmCFL.Items.Item("7").Specific;
+                int lIntSelectRow = lMtxCFL.GetNextSelectedRow();
+                for (int i = lIntSelectRow; i < lMtxCFL.RowCount; i++)
+                {
+                    string UUID = ((SAPbouiCOM.EditText)lMtxCFL.Columns.Item("U_FolioFiscal").Cells.Item(i).Specific).Value;
+                    if (pStrUUId == UUID)
+                    {
+                        lMtxCFL.Columns.Item(0).Cells.Item(i).Click();
+                       // lMtxRelation.SelectRow(i, true, false);
+                        //Boton OK
+                        SAPbouiCOM.Button lBtnOK = (SAPbouiCOM.Button)lFrmCFL.Items.Item("1").Specific;
+                        lBtnOK.Item.Click();
+                        return true;;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UIApplication.ShowError(ex.Message);
+                LogService.WriteError(ex.Message);
+                LogService.WriteError(ex);
+            }
+            return false;
+                 
         }
 
         private bool ValidateDocRel(SAPbouiCOM.Form pObjFrmNC, List<CreditNoteDet> pObjCreditNoteDet)

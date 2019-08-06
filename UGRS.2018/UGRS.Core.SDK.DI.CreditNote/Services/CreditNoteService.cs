@@ -75,7 +75,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
             return mObjCreditNoteDAO.GetDraftRelation(pStrNcId);
         }
 
-
+        public int SaveDraftToDocument(int pIntDocEntryDraft)
+        {
+            return mObjCreditNoteDOC.DraftToDocument(pIntDocEntryDraft);
+        }
 
     }
 }

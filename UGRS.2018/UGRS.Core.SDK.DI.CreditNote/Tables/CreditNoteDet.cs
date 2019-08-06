@@ -68,5 +68,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "UserMod", Size = 32)]
         public string UserMod { get; set; }
 
+        [Field(Description = "FolioFiscal", Size = 64)]
+        public string FolioFiscal { get; set; }
+
+
+
     }
 }

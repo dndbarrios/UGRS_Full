@@ -91,6 +91,7 @@ namespace UGRS.AddOn.CreditNote.Services
                 QtyExp = Convert.ToInt32(mDtMatrix.GetValue("C_HeadExp", pIntRow).ToString()),
                 QtyNoCruz = Convert.ToInt32(mDtMatrix.GetValue("C_HeadNoC", pIntRow).ToString()),
                 QtyInv = Convert.ToInt32(mDtMatrix.GetValue("C_InvHead", pIntRow).ToString()),
+                FolioFiscal = mDtMatrix.GetValue("UUID", pIntRow).ToString()
             };
 
 

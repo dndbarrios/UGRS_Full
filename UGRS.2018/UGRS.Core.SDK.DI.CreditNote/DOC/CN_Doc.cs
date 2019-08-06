@@ -109,11 +109,18 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         //}
 
 
-        public void DraftToDocument(int pIntDocEntryDraft)
+        public int DraftToDocument(int pIntDocEntryDraft)
         {
             SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
             lObjDraft.GetByKey(pIntDocEntryDraft);
-            lObjDraft.SaveDraftToDocument();
+
+            lObjDraft.Lines.SetCurrentLine(0);
+            lObjDraft.Lines.WTLiable = SAPbobsCOM.BoYesNoEnum.tNO;
+            lObjDraft.SaveXML(@"C:\sss"); 
+            lObjDraft.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
+            lObjDraft.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerateLater;
+          
+            return lObjDraft.SaveDraftToDocument();
 
         }
 

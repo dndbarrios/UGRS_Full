@@ -76,7 +76,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             {
                 SaveNC_UDT lObjSaveNC = new SaveNC_UDT();
                 GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDate.Value);
-
+                CreditNoteT lObjCreditNoteTSaved = new CreditNoteT();
                 ////Obtener datos para guardar reporte
                 //string pStrId = lObjGetList.GetId();
                 //List<CreditNoteDet> lLstCreditNoteDet = lObjGetList.GetMatrixData(pStrId);
@@ -86,33 +86,38 @@ namespace UGRS.AddOn.CreditNote.Forms
                 ////Guardado de reporte
                 //lObjSaveNC.SaveInUDT(lObjCreditNoteT);
 
-                ////Guardado de borrador
-                //CreditNoteT lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
+                //Guardado de borrador
+                 //lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
                 //lObjSaveNC.SaveCreditNoteDoc(lObjCreditNoteTSaved.LstCreditNoteDoc);
 
-                ////Actualizacion de borrador
-                //lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
-                //lObjSaveNC.UpdateDocRel(lObjCreditNoteTSaved.LstCreditNoteDoc);
+                //Actualizacion de borrador
+                lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved("NC_4");
+                lObjSaveNC.UpdateDocRel(lObjCreditNoteTSaved.LstCreditNoteDoc.Where(x => x.FolioDoc == "NC_4_23").ToList());
 
 
                 //Actualiza UDT status 
-                CreditNoteT lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved("NC_4");
+                 lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved("NC_4");
                 List<string> lLstError = lObjSaveNC.ValidateDraftRelation(lObjGetList.GetDraftReference("NC_4"), lObjCreditNoteTSaved);
                 if (lLstError.Count() > 0)
                 {
-                   string lStrMessageError = string.Format("Algunas facturas no fueron generadas correctamente: \n{0}",
-                        string.Join("\n", lLstError.Select(x => string.Format("{0}", x)).ToArray()));
-                    LogService.WriteError(lStrMessageError);
-                    Application.SBO_Application.MessageBox(lStrMessageError);
+                    ShowMessageboxList("Algunos facturas no fueron relacionadas correctamente:", lLstError);
                 }
-              
+                else
+                {
+                    //Guarda Nota de credito desde borrador
+                    List<string> lLstErrorDoc = lObjSaveNC.SaveDraftToDocument(lObjCreditNoteTSaved);
+                    if (lLstErrorDoc.Count() > 0)
+                    {
+                        ShowMessageboxList("No fue posible generar algunos documentos", lLstErrorDoc);
+                    }
+                }
 
 
              
 
             }
             catch (Exception ex)
-            {
+            { 
                 LogService.WriteError(ex);
                 UIApplication.ShowMessageBox(ex.Message);
             }
@@ -120,6 +125,15 @@ namespace UGRS.AddOn.CreditNote.Forms
         #endregion
 
         #region Methods
+
+        private void ShowMessageboxList(string pStrMessage, List<string> pLstError)
+        {
+            string lStrMessageError = string.Format(pStrMessage + "\n{0}",
+                       string.Join("\n", pLstError.Select(x => string.Format("{0}", x)).ToArray()));
+            LogService.WriteError(lStrMessageError);
+            Application.SBO_Application.MessageBox(lStrMessageError);
+        }
+
 
         /// <summary>
         /// Realiza la busqueda

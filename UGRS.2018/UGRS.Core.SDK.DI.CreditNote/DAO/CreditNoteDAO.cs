@@ -20,8 +20,8 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
         public string GetInvoicesQuery(DateTime pDtmDateTimeFrom, DateTime pDtmDateTimeTo)
         {
             Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
-            lLstStrParameters.Add("StartDate", "20190601");// pDtmDateTime.ToString("yyyyMMdd"));
-            lLstStrParameters.Add("EndDate", "20190730");// pDtmDateTime.ToString("yyyyMMdd"));
+            lLstStrParameters.Add("StartDate", "20190201");// pDtmDateTime.ToString("yyyyMMdd"));
+            lLstStrParameters.Add("EndDate", "20190228");// pDtmDateTime.ToString("yyyyMMdd"));
             string lStrQuery = this.GetSQL("Exec_Invoices").Inject(lLstStrParameters);
             LogService.WriteInfo(lStrQuery);
             return lStrQuery;
