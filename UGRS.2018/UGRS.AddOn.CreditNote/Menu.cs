@@ -21,7 +21,7 @@ namespace UGRS.AddOn.CreditNote
 
             oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_POPUP;
             oCreationPackage.UniqueID = "UGRS.AddOn.CreditNote";
-            oCreationPackage.String = "UGRS.AddOn.CreditNote";
+            oCreationPackage.String = "Nota de crédito";
             oCreationPackage.Enabled = true;
             oCreationPackage.Position = -1;
 
@@ -45,8 +45,8 @@ namespace UGRS.AddOn.CreditNote
 
                 // Create s sub menu
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
-                oCreationPackage.UniqueID = "UGRS.AddOn.CreditNote.Form1";
-                oCreationPackage.String = "Form1";
+                oCreationPackage.UniqueID = "UGRS.AddOn.CreditNote";
+                oCreationPackage.String = "Nota de crédito";
                 oMenus.AddEx(oCreationPackage);
             }
             catch (Exception )
@@ -61,7 +61,7 @@ namespace UGRS.AddOn.CreditNote
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "UGRS.AddOn.CreditNote.Form1")
+                if (pVal.BeforeAction && pVal.MenuUID == "UGRS.AddOn.CreditNote")
                 {
                     frmCreditNote activeForm = new frmCreditNote();
                     activeForm.UIAPIRawForm.Left = 500;

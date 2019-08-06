@@ -17,11 +17,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
     {
         QueryManager mObjQueryManager = new QueryManager();
 
-        public string GetInvoicesQuery(DateTime pDtmDateTimeFrom, DateTime pDtmDateTimeTo)
+        public string GetInvoicesQuery(string pStrDateTimeFrom, string pStrDateTimeTo)
         {
             Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
-            lLstStrParameters.Add("StartDate", "20190201");// pDtmDateTime.ToString("yyyyMMdd"));
-            lLstStrParameters.Add("EndDate", "20190228");// pDtmDateTime.ToString("yyyyMMdd"));
+            lLstStrParameters.Add("StartDate", pStrDateTimeFrom);
+            lLstStrParameters.Add("EndDate", pStrDateTimeTo);
             string lStrQuery = this.GetSQL("Exec_Invoices").Inject(lLstStrParameters);
             LogService.WriteInfo(lStrQuery);
             return lStrQuery;

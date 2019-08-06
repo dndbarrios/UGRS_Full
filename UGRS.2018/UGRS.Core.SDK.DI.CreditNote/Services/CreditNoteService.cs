@@ -20,9 +20,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
              mObjCreditNoteUI = new CN_DocUI();
         }
 
-        public string GetInvoiceQuery(DateTime pDtmDateFrom, DateTime pDtmDateTo )
+        public string GetInvoiceQuery(string pStrDateFrom, string pStrDateTo )
         {
-            return mObjCreditNoteDAO.GetInvoicesQuery(pDtmDateFrom, pDtmDateTo);
+            return mObjCreditNoteDAO.GetInvoicesQuery(pStrDateFrom, pStrDateTo);
         }
 
         public List<string> CreateCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO, List<string> pLstErrors)

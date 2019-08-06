@@ -50,6 +50,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                             try
                             {
                                 ((SAPbouiCOM.EditText)lMtxRelation.Columns.Item("3").Cells.Item(i).Specific).Value = lObjDet.DocNumINV;
+
                             }
                             catch (Exception ex)
                             {
