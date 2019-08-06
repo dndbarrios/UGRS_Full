@@ -8,6 +8,9 @@ using UGRS.Core.SDK.DI.CreditNote.Tables;
 using System.Linq;
 using UGRS.Core.SDK.DI;
 using UGRS.AddOn.CreditNote.Services;
+using UGRS.Core.Utility;
+using System.IO;
+using UGRS.Core.SDK.DI.CreditNote.DOC;
 
 namespace UGRS.AddOn.CreditNote.Forms
 {
@@ -51,12 +54,14 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.txtFolio.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.txtFolio_KeyDownAfter);
             this.lblStatus = ((SAPbouiCOM.StaticText)(this.GetItem("lblStatus").Specific));
             this.btnAttach = ((SAPbouiCOM.Button)(this.GetItem("btnAttach").Specific));
+            this.btnAttach.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnAttach_ClickAfter);
             this.txtAttach = ((SAPbouiCOM.EditText)(this.GetItem("txtAttach").Specific));
+            this.StaticText0 = ((SAPbouiCOM.StaticText)(this.GetItem("lblInfo").Specific));
             this.OnCustomInitialize();
 
         }
 
-       
+
 
         /// <summary>
         /// Initialize form event. Called by framework before form creation.
@@ -67,7 +72,7 @@ namespace UGRS.AddOn.CreditNote.Forms
 
         private void OnCustomInitialize()
         {
-          
+
         }
 
         #endregion
@@ -101,7 +106,7 @@ namespace UGRS.AddOn.CreditNote.Forms
                     }
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -134,6 +139,34 @@ namespace UGRS.AddOn.CreditNote.Forms
             }
 
         }
+
+
+        private void btnAttach_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            try
+            {
+                SelectFileDialogUtility lObjDialog = new SelectFileDialogUtility(Core.Utility.DialogType.OPEN, "", "");
+                lObjDialog.Open();
+                if (!string.IsNullOrEmpty(lObjDialog.SelectedFile))
+                {
+                    string lStrAttach = AttatchFile(lObjDialog.SelectedFile);
+                    if (!string.IsNullOrEmpty(lStrAttach))
+                    {
+                        mObjCreditNoteT.Attach = lStrAttach;
+                        if (mObjCreditNoteFactory.GetCreditNoteTService().Update(mObjCreditNoteT) == 0)
+                        {
+                            txtAttach.Value = lStrAttach;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError(string.Format("btnAttach_ClickAfter: {0}", ex.Message));
+                LogService.WriteError(ex);
+                UIApplication.ShowError(string.Format("btnAttach_ClickAfter: {0}", ex.Message));
+            }
+        }
         #endregion
 
         #region Methods
@@ -147,7 +180,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             CreditNoteT lObjCreditNoteT = pObjGetList.GetNC_Header(pStrId, lLstCreditNoteDoc);
 
             //Guardado de reporte
-           return pObjSaveNC.SaveInUDT(lObjCreditNoteT);
+            return pObjSaveNC.SaveInUDT(lObjCreditNoteT);
         }
 
         private void SaveDraft(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList, CreditNoteT pObjCreditNoteTSaved, string pStrNcId)
@@ -258,12 +291,48 @@ namespace UGRS.AddOn.CreditNote.Forms
             DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetReportSavedQuery(pStrNcId));
             BindMatrix();
 
+            txtAttach.Value = mObjCreditNoteT.Attach;
             txtDateFrom.Value = mObjCreditNoteT.Date.ToString("yyyyMMdd");
             txtDateTo.Value = mObjCreditNoteT.Date.ToString("yyyyMMdd");
+            txtFolio.Item.Click();
             txtDateTo.Item.Enabled = false;
             txtDateFrom.Item.Enabled = false;
             btnSearch.Item.Enabled = false;
+            btnAttach.Item.Enabled = true;
+           
 
+        }
+
+
+
+        private string AttatchFile(string pStrFile)
+        {
+            int lIntAttachement = 0;
+            string lStrAttach = string.Empty;
+            string lStrAttachPath = mObjCreditNoteFactory.GetCreditNoteService().GetAttachPath();
+            if (!string.IsNullOrEmpty(pStrFile))
+            {
+
+                if (!Directory.Exists(lStrAttachPath))
+                {
+                    if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(string.Format("Carpeta {0} \n no accesible es posible que no pueda adjuntar el xml ¿Desea continuar?", lStrAttachPath), 2, "Si", "No", "") == 2)
+                    {
+                        return "";
+                    }
+                }
+            }
+            CN_AttachDI lObjAttachmentDI = new CN_AttachDI();
+            lIntAttachement = lObjAttachmentDI.AttachFile(pStrFile);
+            if (lIntAttachement > 0)
+            {
+                lStrAttach = lStrAttachPath + System.IO.Path.GetFileName(pStrFile);
+            }
+            else
+            {
+                LogService.WriteError("InvoiceDI (AttachDocument) " + DIApplication.Company.GetLastErrorDescription());
+                UIApplication.ShowError(string.Format("InvoiceDI (AttachDocument) : {0}", DIApplication.Company.GetLastErrorDescription()));
+            }
+            return lStrAttach;
         }
 
         #endregion
@@ -286,6 +355,11 @@ namespace UGRS.AddOn.CreditNote.Forms
         private SAPbouiCOM.Button btnAttach;
         private SAPbouiCOM.EditText txtAttach;
         #endregion
-       
+        private SAPbouiCOM.StaticText StaticText0;
+
+
+
+
     }
 }
+  

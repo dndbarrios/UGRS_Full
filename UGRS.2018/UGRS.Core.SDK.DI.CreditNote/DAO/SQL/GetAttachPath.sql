@@ -1,0 +1,1 @@
+select AttachPath from OADP with (Nolock)

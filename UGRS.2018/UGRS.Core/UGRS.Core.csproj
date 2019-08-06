@@ -143,6 +143,7 @@
     <Compile Include="Utility\LogUtility.cs" />
     <Compile Include="Utility\MemoryUtility.cs" />
     <Compile Include="Utility\PathUtility.cs" />
+    <Compile Include="Utility\SelectFileDialogUtility.cs" />
     <Compile Include="Utility\StaticSessionUtility.cs" />
     <Compile Include="Utility\WindowWrapper.cs" />
     <Compile Include="Utility\XmlUtility.cs" />

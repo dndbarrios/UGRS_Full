@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CreditNoteFactory.cs" />
     <Compile Include="DAO\CreditNoteDAO.cs" />
+    <Compile Include="DOC\CN_AttachDI.cs" />
     <Compile Include="DOC\CN_Doc.cs" />
     <Compile Include="DOC\CN_DocUI.cs" />
     <Compile Include="DTO\DraftReferenceDTO.cs" />
@@ -104,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\SQL\GetNCReportSaved.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\SQL\GetAttachPath.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -113,7 +113,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         {
             SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
             lObjDraft.GetByKey(pIntDocEntryDraft);
-
+           
             lObjDraft.Lines.SetCurrentLine(0);
             lObjDraft.Lines.WTLiable = SAPbobsCOM.BoYesNoEnum.tNO;
             lObjDraft.SaveXML(@"C:\sss"); 
