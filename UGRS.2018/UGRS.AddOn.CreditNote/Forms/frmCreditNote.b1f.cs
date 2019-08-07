@@ -23,6 +23,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         CreditNoteT mObjCreditNoteT = new CreditNoteT();
         CreditNoteFactory mObjCreditNoteFactory = new CreditNoteFactory();
         StatusEnum mEnumStatus;
+        int mIntNcCode = 0;
         #endregion
 
         #region Constructor
@@ -60,7 +61,28 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.btnAttach.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnAttach_ClickAfter);
             this.txtAttach = ((SAPbouiCOM.EditText)(this.GetItem("txtAttach").Specific));
             this.lblInfo = ((SAPbouiCOM.StaticText)(this.GetItem("lblInfo").Specific));
+            Core.SDK.UI.UIApplication.GetApplication().MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.TicketFrom_ApplicationMenuEvent);
             this.OnCustomInitialize();
+
+        }
+
+        private void TicketFrom_ApplicationMenuEvent(ref SAPbouiCOM.MenuEvent pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            try
+            {
+                if (!pVal.BeforeAction && UIApplication.GetApplication().Forms.ActiveForm.UniqueID == this.UIAPIRawForm.UniqueID)
+                {
+                    Menu(pVal.MenuUID);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                LogService.WriteError(string.Format("TicketFrom_ApplicationMenuEvent: {0}", ex.Message));
+                LogService.WriteError(ex);
+                UIApplication.ShowError(string.Format("MenuEventException: {0}", ex.Message));
+            }
 
         }
 
@@ -76,6 +98,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         private void OnCustomInitialize()
         {
             mEnumStatus = StatusEnum.PendingReport;
+            loadMenu();
         }
 
         #endregion
@@ -99,7 +122,7 @@ namespace UGRS.AddOn.CreditNote.Forms
 
                 string lStrNcId = txtFolio.Value;
                 switch (mEnumStatus)
-                {  
+                {
                     case StatusEnum.Canceled:
                         UIApplication.ShowMessageBox("Reporte cancelado");
                         break;
@@ -135,13 +158,13 @@ namespace UGRS.AddOn.CreditNote.Forms
                     case StatusEnum.PendignNC:
                         SaveDraftToDocument(lObjSaveNC, lStrNcId);
                         break;
-                        
+
                     case StatusEnum.NcOk:
-                        DeleteDraft();
+                        DeleteDraft(lObjSaveNC, lStrNcId);
                         break;
 
                     case StatusEnum.PendingDelDraft:
-                        DeleteDraft();
+                        DeleteDraft(lObjSaveNC, lStrNcId);
                         break;
 
                     case StatusEnum.DelDraftOK:
@@ -149,12 +172,12 @@ namespace UGRS.AddOn.CreditNote.Forms
                         break;
 
                     case StatusEnum.Processed:
-                         UIApplication.ShowMessageBox("Notas de crédito ya procesadas");
+                        UIApplication.ShowMessageBox("Notas de crédito ya procesadas");
                         break;
                 }
 
 
-               
+
 
 
             }
@@ -195,7 +218,7 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             try
             {
-               
+
                 SelectFileDialogUtility lObjDialog = new SelectFileDialogUtility(Core.Utility.DialogType.OPEN, "", "");
                 lObjDialog.Open();
                 if (!string.IsNullOrEmpty(lObjDialog.SelectedFile))
@@ -221,6 +244,110 @@ namespace UGRS.AddOn.CreditNote.Forms
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Establece el menu
+        /// </summary>
+        private void loadMenu()
+        {
+            this.UIAPIRawForm.EnableMenu("520", true); // Print
+            this.UIAPIRawForm.EnableMenu("6659", false);  // Fax
+            this.UIAPIRawForm.EnableMenu("1281", true); // Search Record
+            this.UIAPIRawForm.EnableMenu("1282", true); // Add New Record
+            this.UIAPIRawForm.EnableMenu("1288", true);  // Next Record
+            this.UIAPIRawForm.EnableMenu("1289", true);  // Pevious Record
+            this.UIAPIRawForm.EnableMenu("1290", true);  // First Record
+            this.UIAPIRawForm.EnableMenu("1291", true);  // Last record
+        }
+
+
+        #region Menu
+        private void Menu(string pStrMenuUID)
+        {
+            txtDateFrom.Item.Click();
+            switch (pStrMenuUID)
+            {
+                case "1281": // Search Record
+                    MenuSearchRecord();
+                    break;
+
+                case "1282": // Add New Record
+                    //MenuNewForm();
+                    break;
+
+                case "1288": // Next Record
+                    MenuNextRecord();
+                    break;
+
+                case "1289": // Preview Record
+                    MenuPreviewRecord();
+                    break;
+
+                case "1290": // First Record
+                    MenuFirstRecord();
+                    break;
+
+                case "1291": // Last record 
+                    MenuLastRecord();
+                    break;
+            }
+        }
+
+
+        private void MenuSearchRecord()
+        {
+            this.UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_VIEW_MODE;
+            txtFolio.Item.Enabled = true;
+            txtFolio.Value = "";
+            txtFolio.Item.Click();
+        }
+
+        private void MenuNextRecord()
+        {
+            txtFolio.Item.Enabled = false;
+            this.UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_VIEW_MODE;
+
+            if ((mIntNcCode + 1) > mObjCreditNoteFactory.GetCreditNoteService().GetLastCode())
+            {
+                UIApplication.ShowWarning(string.Format("Primer registro de datos"));
+                LoadReport("NC_" + mObjCreditNoteFactory.GetCreditNoteService().GetFirstCode());
+            }
+            else
+            {
+                LoadReport("NC_" + (mIntNcCode + 1));
+            }
+        }
+
+        private void MenuPreviewRecord()
+        {
+           
+            txtFolio.Item.Enabled = false;
+            this.UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_VIEW_MODE;
+            if ((mIntNcCode - 1 < mObjCreditNoteFactory.GetCreditNoteService().GetFirstCode()))
+            {
+                UIApplication.ShowWarning(string.Format("Ultimo registro de datos"));
+                LoadReport("NC_" + mObjCreditNoteFactory.GetCreditNoteService().GetLastCode());
+            }
+            else
+            {
+                LoadReport("NC_" + (mIntNcCode - 1));
+            }
+        }
+
+        private void MenuFirstRecord()
+        {
+            txtFolio.Item.Enabled = false;
+            this.UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_VIEW_MODE;
+            LoadReport("NC_" + mObjCreditNoteFactory.GetCreditNoteService().GetFirstCode());
+        }
+
+        private void MenuLastRecord()
+        {
+            txtFolio.Item.Enabled = false;
+            this.UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_VIEW_MODE;
+            LoadReport("NC_" + mObjCreditNoteFactory.GetCreditNoteService().GetLastCode());
+        }
+        #endregion Menu
 
         private void SaveReport(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList)
         {
@@ -262,14 +389,14 @@ namespace UGRS.AddOn.CreditNote.Forms
         }
 
         //Actualiza documentos preliminares
-        private List<string> UpdateDocRel(SaveNC_UDT pObjSaveNC,   string pStrNcId)
+        private List<string> UpdateDocRel(SaveNC_UDT pObjSaveNC, string pStrNcId)
         {
             CreditNoteT lObjCreditNoteTSaved = new CreditNoteT();
             GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDateTo.Value);
 
             lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
             pObjSaveNC.UpdateDocRel(lObjCreditNoteTSaved.LstCreditNoteDoc);
-           
+
             //Verifica DocRel
             lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
             //lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
@@ -300,14 +427,26 @@ namespace UGRS.AddOn.CreditNote.Forms
             else
             {
                 //llama al borrado de preliminares
-                DeleteDraft();
+                DeleteDraft(pObjSaveNC, pStrNcId);
             }
             return lLstErrorDoc;
         }
 
         //Borrado de preliminares
-        private void DeleteDraft()
+        private void DeleteDraft(SaveNC_UDT pObjSaveNC, string pStrNcId)
         {
+            CreditNoteT lObjCreditNoteTSaved = new CreditNoteT();
+            lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
+            List<string> lLstErrorDoc = pObjSaveNC.RemoveDraft(lObjCreditNoteTSaved);
+            if (lLstErrorDoc.Count() > 0)
+            {
+                ShowMessageboxList("No fue posible borrar los documentos preliminar", lLstErrorDoc);
+            }
+            else
+            {
+                //llama al borrado de preliminares
+
+            }
 
         }
 
@@ -379,6 +518,7 @@ namespace UGRS.AddOn.CreditNote.Forms
 
         private void LoadReport(string pStrNcId)
         {
+            mIntNcCode = string.IsNullOrEmpty(pStrNcId) ? 0 : Convert.ToInt32(pStrNcId.Substring(3));
             GetCN_List lObjNC_List = new GetCN_List(DtMatrix, txtDateFrom.Value);
             mObjCreditNoteT = lObjNC_List.GetCreditNoteTSaved(pStrNcId);
             DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
@@ -394,10 +534,12 @@ namespace UGRS.AddOn.CreditNote.Forms
             txtDateFrom.Item.Enabled = false;
             btnSearch.Item.Enabled = false;
             btnAttach.Item.Enabled = true;
+
            
+
             mEnumStatus = SetStatus(mObjCreditNoteT);
             string pStrStatus = mEnumStatus.GetDescription();
-             lblStatus.Caption = string.Format("Estatus: {0}",  pStrStatus);
+            lblStatus.Caption = string.Format("Estatus: {0}", pStrStatus);
         }
 
         private string AttatchFile(string pStrFile)
@@ -437,6 +579,7 @@ namespace UGRS.AddOn.CreditNote.Forms
 
             if (pObjCreditNoteT != null)
             {
+                lEnum = StatusEnum.PendingAutorized;
 
                 //Cancelado
                 if (pObjCreditNoteT.IsCanceled == "Y")

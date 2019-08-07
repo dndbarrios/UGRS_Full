@@ -43,20 +43,20 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
 
         public int GetLastCode()
         {
-            string lStrLastDispId = "0";
-            lStrLastDispId = mObjQueryManager.Max<string>("U_NcId", "[@UG_PE_NC]");
-            lStrLastDispId = string.IsNullOrEmpty(lStrLastDispId) ? "0" : lStrLastDispId.Substring(3);
-            return Convert.ToInt32(lStrLastDispId);
+            string lStrLastNCId = "0";
+            lStrLastNCId = mObjQueryManager.Max<string>("U_NcId", "[@UG_PE_NC]");
+            lStrLastNCId = string.IsNullOrEmpty(lStrLastNCId) ? "0" : lStrLastNCId.Substring(3);
+            return Convert.ToInt32(lStrLastNCId);
 
         }
 
         public int GetFirstCode()
         {
-            string lStrLastDispId = "0";
-            lStrLastDispId = mObjQueryManager.Min<string>("U_NcId", "[@UG_PE_NC]");
-            lStrLastDispId = string.IsNullOrEmpty(lStrLastDispId) ? "0" : lStrLastDispId.Substring(3);
+            string lStrLastNCId = "0";
+            lStrLastNCId = mObjQueryManager.Min<string>("U_NcId", "[@UG_PE_NC]");
+            lStrLastNCId = string.IsNullOrEmpty(lStrLastNCId) ? "0" : lStrLastNCId.Substring(3);
             
-            return Convert.ToInt32(lStrLastDispId);
+            return Convert.ToInt32(lStrLastNCId);
         }
 
         public string GetTaxCode(string pStrRate)

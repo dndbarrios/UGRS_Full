@@ -1,1 +1,1 @@
-SELECT MIN(U_InternalFolio) AS MIN FROM {TableName} 
+SELECT MIN ({FieldName}) AS MIN FROM {TableName} 

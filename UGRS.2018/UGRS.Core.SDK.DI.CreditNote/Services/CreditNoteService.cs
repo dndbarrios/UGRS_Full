@@ -85,6 +85,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
             return mObjCreditNoteDOC.DraftToDocument(pIntDocEntryDraft);
         }
 
+        public int RemoveDraft(int pIntDocEntyDraft)
+        {
+            return mObjCreditNoteDOC.DeleteDraft(pIntDocEntyDraft);
+        }
+        
 
         public string GetAttachPath()
         {

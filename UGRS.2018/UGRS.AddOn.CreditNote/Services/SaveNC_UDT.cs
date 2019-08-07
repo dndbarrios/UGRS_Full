@@ -284,6 +284,34 @@ namespace UGRS.AddOn.CreditNote.Services
              }
             return lLstErrors;
         }
+
+        public List<string> RemoveDraft(CreditNoteT pObjCreditNoteT)
+        {
+            List<string> lLstErrors = new List<string>();
+            try
+            {
+                int i = 0;
+                foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "Y"))
+                {
+                    UIApplication.ShowMessage(string.Format("Borrando preliminar {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
+                    int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().RemoveDraft(Convert.ToInt32(lObjDoc.DocEntryDraft));
+
+                    if (lIntResult != 0)
+                    {
+                        string lStrError = string.Format("Fallo a crear nota de crédito {0} Error: {1}", lObjDoc.DocEntryDraft, DIApplication.Company.GetLastErrorDescription());
+                        LogService.WriteError(lStrError);
+                        lLstErrors.Add(lStrError);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lLstErrors.Add(ex.Message);
+                LogService.WriteError(ex);
+
+            }
+            return lLstErrors;
+        }
        
     }
 }

@@ -124,5 +124,12 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
 
         }
 
+        public int DeleteDraft(int pIntDocEntryDraft)
+        {
+            SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+            lObjDraft.GetByKey(pIntDocEntryDraft);
+            return lObjDraft.Remove();
+        }
+
     }
 }
