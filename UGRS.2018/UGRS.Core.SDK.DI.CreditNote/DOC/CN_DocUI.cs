@@ -13,10 +13,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         public void DocRelByUI(CreditNoteDoc pObjCreditNoteDoc)
         {
             int n;
-            if (!string.IsNullOrEmpty(pObjCreditNoteDoc.DocEntryDraft) && int.TryParse(pObjCreditNoteDoc.DocEntryDraft, out n))
+            if (!string.IsNullOrEmpty(pObjCreditNoteDoc.DocEntry) && int.TryParse(pObjCreditNoteDoc.DocEntry, out n))
             {
                 string lStrUUID = string.Empty;
-                SAPbouiCOM.Form lFrmNC = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", pObjCreditNoteDoc.DocEntryDraft);
+                //draft 112
+                SAPbouiCOM.Form lFrmNC = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)14, "", pObjCreditNoteDoc.DocEntry);
                 //lFrmNC.Freeze(true);
                 try
                 {
@@ -70,27 +71,23 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
 
 
 
-                   
-                        UIApplication.GetApplication().Menus.Item("5907").Activate();
-                        lFrmNC.Close();
-                    
+                    ////SaveAsDraft
+                    //UIApplication.GetApplication().Menus.Item("5907").Activate();
+                    //lFrmNC.Close();
 
-                    //if (UIApplication.GetApplication().Forms.ActiveForm.TypeEx == "179")
-                    //{
-                    //    if (ValidateDocRel(lFrmNC, pObjCreditNoteDet))
-                    //    {
-                    //        SAPbouiCOM.Button lBtnUpdate = (SAPbouiCOM.Button)lFrmNC.Items.Item("1").Specific;
-                    //        lBtnUpdate.Item.Click();
-                    //        mBolQuestionFlag = true;
-                    //    }
-                    //}
 
+                    if (UIApplication.GetApplication().Forms.ActiveForm.TypeEx == "179")
+                    {
+                        SAPbouiCOM.Button lBtnUpdate = (SAPbouiCOM.Button)lFrmNC.Items.Item("1").Specific;
+                        lBtnUpdate.Item.Click();
+                        lBtnUpdate.Item.Click();
+                    }
                 }
                 catch (Exception ex)
                 {
-                        UIApplication.ShowError(ex.Message);
-                        LogService.WriteError(ex.Message);
-                        LogService.WriteError(ex);
+                    UIApplication.ShowError(ex.Message);
+                    LogService.WriteError(ex.Message);
+                    LogService.WriteError(ex);
                 }
                 finally
                 {

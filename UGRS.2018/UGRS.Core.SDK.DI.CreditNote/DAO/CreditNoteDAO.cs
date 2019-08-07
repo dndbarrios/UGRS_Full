@@ -44,7 +44,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
         public int GetLastCode()
         {
             string lStrLastNCId = "0";
-            lStrLastNCId = mObjQueryManager.Max<string>("U_NcId", "[@UG_PE_NC]");
+            string lStrCode = "0";
+            lStrCode = mObjQueryManager.Max<string>("Code", "[@UG_PE_NC]");
+            lStrLastNCId = mObjQueryManager.GetValue("U_NcId", "Code", lStrCode, "[@UG_PE_NC]");
             lStrLastNCId = string.IsNullOrEmpty(lStrLastNCId) ? "0" : lStrLastNCId.Substring(3);
             return Convert.ToInt32(lStrLastNCId);
 
@@ -144,10 +146,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
             return mObjQueryManager.GetObjectsList<CreditNoteDet>("U_NcId", pStrId, "[@UG_PE_NCDET]").ToList();
         }
 
-        public List<DraftReferenceDTO> GetDraftRelation(string pStrNcId)
+        public List<CreditNoteReferenceDTO> GetDraftRelation(string pStrNcId)
         {
             SAPbobsCOM.Recordset lObjRecordset = null;
-            List<DraftReferenceDTO> lLstDraftReference = new List<DraftReferenceDTO>();
+            List<CreditNoteReferenceDTO> lLstDraftReference = new List<CreditNoteReferenceDTO>();
             try
             {
                 Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
@@ -162,9 +164,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
                 {
                     for (int i = 0; i < lObjRecordset.RecordCount; i++)
                     {
-                        DraftReferenceDTO lObjDraftReference = new DraftReferenceDTO
+                        CreditNoteReferenceDTO lObjDraftReference = new CreditNoteReferenceDTO
                         {
-                            DocEntryDraft = lObjRecordset.Fields.Item("DocEntry").Value.ToString(),
+                            DocEntryNC = lObjRecordset.Fields.Item("DocEntry").Value.ToString(),
                             OrigenFolioDet = lObjRecordset.Fields.Item("U_MQ_OrigenFol_Det").Value.ToString(),
                             RefDocEntr = Convert.ToInt32(lObjRecordset.Fields.Item("RefDocEntr").Value.ToString()),
                             RefDocNum = lObjRecordset.Fields.Item("RefDocNum").Value.ToString()

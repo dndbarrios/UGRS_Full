@@ -224,7 +224,7 @@ namespace UGRS.AddOn.CreditNote.Services
         }
 
 
-        public List<string> ValidateDraftRelation(List<DraftReferenceDTO> pLstDraftRefDTO, CreditNoteT pObjCreditNoteT)
+        public List<string> ValidateCreditNoteRelation(List<CreditNoteReferenceDTO> pLstNCRefDTO, CreditNoteT pObjCreditNoteT)
         {
             List<string> lLstResult = new List<string>();
 
@@ -233,7 +233,7 @@ namespace UGRS.AddOn.CreditNote.Services
                 int lIntError = 0;
                 foreach (var lObjDet in lObjDoc.LstCreditNoteDet)
                 {
-                    int i = pLstDraftRefDTO.Where(x => x.DocEntryDraft == lObjDoc.DocEntryDraft && x.RefDocEntr == lObjDet.DocEntryINV).Count();
+                    int i = pLstNCRefDTO.Where(x => x.DocEntryNC == lObjDoc.DocEntry && x.RefDocEntr == lObjDet.DocEntryINV).Count();
                     if (i > 0)
                     {
                         lObjDet.IsProcessed = "Y";
@@ -241,7 +241,7 @@ namespace UGRS.AddOn.CreditNote.Services
                     }
                     else
                     {
-                        lLstResult.Add(string.Format("No se pudo relacionar el documento {0} en el borrador {1}, {2}", lObjDet.DocNumINV, lObjDoc.DocEntryDraft, lObjDoc.FolioDoc));
+                        lLstResult.Add(string.Format("No se pudo relacionar el documento {0} con la nota de credito {1}, {2}", lObjDet.DocNumINV, lObjDoc.DocEntry, lObjDoc.FolioDoc));
                         lIntError++;
                     }
                 }
@@ -256,45 +256,17 @@ namespace UGRS.AddOn.CreditNote.Services
         }
 
 
-        public List<string> SaveDraftToDocument(CreditNoteT pObjCreditNoteT)
+        public List<string> UpdateDocument(CreditNoteT pObjCreditNoteT)
         {
-           
-             List<string> lLstErrors = new List<string>();
-             try
-             {
-                 int i = 0;
-                 foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "N"))
-                 {
-                     UIApplication.ShowMessage(string.Format("Generando documento {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
-                     int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().SaveDraftToDocument(Convert.ToInt32(lObjDoc.DocEntryDraft));
 
-                     if (lIntResult != 0)
-                     {
-                         string lStrError = string.Format("Fallo a crear nota de crédito {0} Error: {1}", lObjDoc.DocEntryDraft, DIApplication.Company.GetLastErrorDescription());
-                         LogService.WriteError(lStrError);
-                         lLstErrors.Add(lStrError);
-                     }
-                 }
-             }
-             catch (Exception ex)
-             {
-                 lLstErrors.Add(ex.Message);
-                 LogService.WriteError(ex);
-
-             }
-            return lLstErrors;
-        }
-
-        public List<string> RemoveDraft(CreditNoteT pObjCreditNoteT)
-        {
             List<string> lLstErrors = new List<string>();
             try
             {
                 int i = 0;
-                foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "Y"))
+                foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "N"))
                 {
-                    UIApplication.ShowMessage(string.Format("Borrando preliminar {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
-                    int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().RemoveDraft(Convert.ToInt32(lObjDoc.DocEntryDraft));
+                    UIApplication.ShowMessage(string.Format("Generando documento {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
+                    int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().UpdateDocument(Convert.ToInt32(lObjDoc.DocEntryDraft));
 
                     if (lIntResult != 0)
                     {
@@ -312,6 +284,34 @@ namespace UGRS.AddOn.CreditNote.Services
             }
             return lLstErrors;
         }
+
+        //public List<string> RemoveDraft(CreditNoteT pObjCreditNoteT)
+        //{
+        //    List<string> lLstErrors = new List<string>();
+        //    try
+        //    {
+        //        int i = 0;
+        //        foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "Y"))
+        //        {
+        //            UIApplication.ShowMessage(string.Format("Borrando preliminar {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
+        //            int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().RemoveDraft(Convert.ToInt32(lObjDoc.DocEntryDraft));
+
+        //            if (lIntResult != 0)
+        //            {
+        //                string lStrError = string.Format("Fallo a crear nota de crédito {0} Error: {1}", lObjDoc.DocEntryDraft, DIApplication.Company.GetLastErrorDescription());
+        //                LogService.WriteError(lStrError);
+        //                lLstErrors.Add(lStrError);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lLstErrors.Add(ex.Message);
+        //        LogService.WriteError(ex);
+
+        //    }
+        //    return lLstErrors;
+        //}
 
 
         //public int CancelReport(CreditNoteT pObjCreditNoteT)

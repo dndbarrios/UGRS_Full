@@ -75,20 +75,20 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
             return mObjCreditNoteDAO.GetCreditNoteDetSaved(pStrId);
         }
 
-        public List<DraftReferenceDTO> GetDraftReference(string pStrNcId)
+        public List<CreditNoteReferenceDTO> GetDraftReference(string pStrNcId)
         {
             return mObjCreditNoteDAO.GetDraftRelation(pStrNcId);
         }
 
-        public int SaveDraftToDocument(int pIntDocEntryDraft)
+        public int UpdateDocument(int pIntDocEntry)
         {
-            return mObjCreditNoteDOC.DraftToDocument(pIntDocEntryDraft);
+            return mObjCreditNoteDOC.UpdateDocument(pIntDocEntry);
         }
 
-        public int RemoveDraft(int pIntDocEntyDraft)
-        {
-            return mObjCreditNoteDOC.DeleteDraft(pIntDocEntyDraft);
-        }
+        //public int RemoveDraft(int pIntDocEntyDraft)
+        //{
+        //    return mObjCreditNoteDOC.DeleteDraft(pIntDocEntyDraft);
+        //}
         
 
         public string GetAttachPath()

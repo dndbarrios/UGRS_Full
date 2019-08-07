@@ -202,7 +202,7 @@ namespace UGRS.AddOn.CreditNote.Services
             return mObjCreditNoteFactory.GetCreditNoteService().GetCreditNoteDetSaved(pStrId);
         }
 
-        public List<DraftReferenceDTO> GetDraftReference(string pStrNcId)
+        public List<CreditNoteReferenceDTO> GetDraftReference(string pStrNcId)
         {
             return mObjCreditNoteFactory.GetCreditNoteService().GetDraftReference(pStrNcId);
         }

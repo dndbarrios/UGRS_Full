@@ -21,20 +21,21 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
             try
             {
                 //Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
-                SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+                SAPbobsCOM.Documents lObjCreditNote = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
                 // SAPbobsCOM.Payments lObjPayment = (SAPbobsCOM.Payments)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oVendorPayments);
-                lObjDraft.CardCode = pObjCreditNoteDoc.CardCode;
-                lObjDraft.UserFields.Fields.Item("U_MQ_OrigenFol").Value = pObjCreditNoteDoc.NcId;
-                lObjDraft.UserFields.Fields.Item("U_MQ_OrigenFol_Det").Value = pObjCreditNoteDoc.FolioDoc;
-                lObjDraft.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
-                lObjDraft.DocObjectCode = SAPbobsCOM.BoObjectTypes.oCreditNotes;
-                lObjDraft.Lines.ItemCode = mObjFactory.GetCreditNoteService().GetBonusItemCode();
-                lObjDraft.Lines.Quantity = 1;
-                lObjDraft.Lines.UnitPrice = pObjCreditNoteDoc.Amount;
-                lObjDraft.Lines.TaxCode = pObjCreditNoteDoc.TaxCode;
-                lObjDraft.Lines.Add();
+                lObjCreditNote.CardCode = pObjCreditNoteDoc.CardCode;
+                lObjCreditNote.UserFields.Fields.Item("U_MQ_OrigenFol").Value = pObjCreditNoteDoc.NcId;
+                lObjCreditNote.UserFields.Fields.Item("U_MQ_OrigenFol_Det").Value = pObjCreditNoteDoc.FolioDoc;
+                lObjCreditNote.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
+                lObjCreditNote.DocObjectCode = SAPbobsCOM.BoObjectTypes.oCreditNotes;
+                lObjCreditNote.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocNotRelevant;
+                lObjCreditNote.Lines.ItemCode = mObjFactory.GetCreditNoteService().GetBonusItemCode();
+                lObjCreditNote.Lines.Quantity = 1;
+                lObjCreditNote.Lines.UnitPrice = pObjCreditNoteDoc.Amount;
+                lObjCreditNote.Lines.TaxCode = pObjCreditNoteDoc.TaxCode;
+                lObjCreditNote.Lines.Add();
 
-                int intError = lObjDraft.Add();
+                int intError = lObjCreditNote.Add();
                 string lStrErrMsg;
                 if (intError != 0)
                 {
@@ -46,8 +47,8 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 else
                 {
                     string pStrNewDocEntry = DIApplication.Company.GetNewObjectKey();
-                    pObjCreditNoteDoc.DocEntryDraft = pStrNewDocEntry;
-                    pObjCreditNoteDoc.IsDraft = "Y";
+                    pObjCreditNoteDoc.DocEntry = pStrNewDocEntry;
+                    pObjCreditNoteDoc.IsDocument = "Y";
                     int i = mObjFactory.GetCreditNoteDocService().Update(pObjCreditNoteDoc);
 
                     //DocRelByUI(pStrNewDocEntry, pObjCreditNoteDoc.LstCreditNoteDet);
@@ -109,39 +110,39 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         //}
 
 
-        public int DraftToDocument(int pIntDocEntryDraft)
+        public int UpdateDocument(int pIntDocEntry)
         {
             
 
             SAPbobsCOM.Documents lObjNC = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
-            lObjNC.GetByKey(507);
+            lObjNC.GetByKey(pIntDocEntry);
             lObjNC.EDocExportFormat.ToString();
             lObjNC.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerate;
-            lObjNC.Update();
+            return lObjNC.Update();
 
 
-            SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
-            lObjDraft.GetByKey(pIntDocEntryDraft);
+            //SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+            //lObjDraft.GetByKey(pIntDocEntryDraft);
            
             
-            //lObjDraft.Lines.SetCurrentLine(0);
-            //lObjDraft.Lines.WTLiable = SAPbobsCOM.BoYesNoEnum.tNO;
+            ////lObjDraft.Lines.SetCurrentLine(0);
+            ////lObjDraft.Lines.WTLiable = SAPbobsCOM.BoYesNoEnum.tNO;
           
-            //lObjDraft.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
-            lObjDraft.EDocExportFormat = 0;
+            ////lObjDraft.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
+            //lObjDraft.EDocExportFormat = 0;
             
-            lObjDraft.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerateLater;
-            lObjDraft.SaveXML(@"C:\sss"); 
-            return lObjDraft.SaveDraftToDocument();
+            //lObjDraft.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerateLater;
+            //lObjDraft.SaveXML(@"C:\sss"); 
+           // return lObjDraft.SaveDraftToDocument();
 
         }
 
-        public int DeleteDraft(int pIntDocEntryDraft)
-        {
-            SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
-            lObjDraft.GetByKey(pIntDocEntryDraft);
-            return lObjDraft.Remove();
-        }
+        //public int DeleteDraft(int pIntDocEntryDraft)
+        //{
+        //    SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+        //    lObjDraft.GetByKey(pIntDocEntryDraft);
+        //    return lObjDraft.Remove();
+        //}
 
     }
 }

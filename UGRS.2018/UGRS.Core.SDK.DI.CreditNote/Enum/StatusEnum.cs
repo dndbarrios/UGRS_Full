@@ -19,28 +19,18 @@ namespace UGRS.Core.SDK.DI.CreditNote.Enum
         [Description("Procesado")] //U_IsProcessed = Y
         Processed = 4,
 
-        [Description("Pendiente generar borradores")] //List U_IsDraft = Y con algunos N
-        PendingDraft = 5,
-
-        [Description("Borradores ok")] // List U_IsDraft = Y
-        DraftOk = 6,
-
         [Description("Pendiente actualizar documentos relacionados")] //List U_IsDocRel = Y con algunos N
-        PendignDocRel = 7,
+        PendignDocRel = 5,
 
         [Description("Documentos relacionados ok")] //List U_IsDocRel = Y
-        DocRelOk = 8,
+        DocRelOk = 6,
 
         [Description("Pendiente Nota de credito")] //List U_IsDocument = Y con algunos N
-        PendignNC = 9,
+        PendignNC = 7,
 
         [Description("Nota de credito ok")] //List U_IsDocument = Y
-        NcOk = 10,
+        NcOk = 8,
 
-        [Description("Pendiente Borrar borrador")] //List U_IsDraftDel = Y con algunos N
-        PendingDelDraft = 11,
-
-        [Description("Pendiente Borrar borrador")] //List U_IsDraftDel = Y
-        DelDraftOK = 12
+        
     }
 }
