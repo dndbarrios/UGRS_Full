@@ -155,7 +155,7 @@ namespace UGRS.AddOn.CreditNote.Forms
                         break;
 
                     case StatusEnum.DocRelOk:
-                       // SaveDraftToDocument(lObjSaveNC, lStrNcId);
+                        SaveDraftToDocument(lObjSaveNC, lStrNcId);
                         break;
 
                     case StatusEnum.Processed:
@@ -395,29 +395,29 @@ namespace UGRS.AddOn.CreditNote.Forms
             else
             {
                 //llama el guardado de preliminares a nc
-               // SaveDraftToDocument(pObjSaveNC, pStrNcId);
+                SaveDraftToDocument(pObjSaveNC, pStrNcId);
             }
             return lLstError;
         }
 
-        ////Guarda preliminares a nota de credito
-        //private List<string> SaveDraftToDocument(SaveNC_UDT pObjSaveNC, string pStrNcId)
-        //{
-        //    CreditNoteT lObjCreditNoteTSaved = new CreditNoteT();
-        //    lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
-        //    //Guarda Nota de credito desde borrador
-        //    List<string> lLstErrorDoc = pObjSaveNC.SaveDraftToDocument(lObjCreditNoteTSaved);
-        //    if (lLstErrorDoc.Count() > 0)
-        //    {
-        //        ShowMessageboxList("No fue posible generar algunos documentos", lLstErrorDoc);
-        //    }
-        //    else
-        //    {
-        //        //llama al borrado de preliminares
-        //        DeleteDraft(pObjSaveNC, pStrNcId);
-        //    }
-        //    return lLstErrorDoc;
-        //}
+        //Actualiza Notas de credito a relevante
+        private List<string> SaveDraftToDocument(SaveNC_UDT pObjSaveNC, string pStrNcId)
+        {
+            CreditNoteT lObjCreditNoteTSaved = new CreditNoteT();
+            lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
+            //Guarda Nota de credito desde borrador
+            List<string> lLstErrorDoc = pObjSaveNC.UpdateDocument(lObjCreditNoteTSaved);
+            if (lLstErrorDoc.Count() > 0)
+            {
+                ShowMessageboxList("No fue posible generar algunos documentos", lLstErrorDoc);
+            }
+            else
+            {
+                //llama al borrado de preliminares
+               // DeleteDraft(pObjSaveNC, pStrNcId);
+            }
+            return lLstErrorDoc;
+        }
 
         //Borrado de preliminares
         //private void DeleteDraft(SaveNC_UDT pObjSaveNC, string pStrNcId)
