@@ -135,6 +135,7 @@ namespace UGRS.AddOn.CreditNote.Services
                     IsDocRel = "N",
                     IsDocument = "N",
                     IsProcessed = "N",
+                    IsDelDraft = "N",
                     QtyInv = lLstCreditNoteByCardcode.Count(),
                     User = DIApplication.Company.UserName,
                     FolioDoc =  string.Format("{0}_{1}", pStrId, i)

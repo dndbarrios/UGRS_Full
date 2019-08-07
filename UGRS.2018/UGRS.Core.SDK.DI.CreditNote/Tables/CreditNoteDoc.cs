@@ -57,6 +57,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Cancelado", Type = BoFieldTypes.db_Alpha, Size = 1)]
         public string IsCanceled { get; set; }
 
+        [Field(Description = "Preliminar borrado", Type = BoFieldTypes.db_Alpha, Size = 1)]
+        public string IsDelDraft { get; set; }
+
         [Field(Description = "QtyInv", Type = BoFieldTypes.db_Numeric)]
         public int QtyInv { get; set; }
 

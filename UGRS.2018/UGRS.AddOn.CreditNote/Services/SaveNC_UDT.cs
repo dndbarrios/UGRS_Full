@@ -130,13 +130,13 @@ namespace UGRS.AddOn.CreditNote.Services
             return lIntResult;
         }
 
-        public void SaveCreditNoteDoc(List<CreditNoteDoc> pLstCreditNoteDoc)
+        public int SaveCreditNoteDoc(List<CreditNoteDoc> pLstCreditNoteDoc)
         {
             UIApplication.ShowSuccess("Guardando documentos preliminares en UDT");
             mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guadado preliminares", pLstCreditNoteDoc.Count);
             List<string> lLstError = new List<string>();
             int i = 1;
-            foreach (CreditNoteDoc lObjCreditNoteDoc in pLstCreditNoteDoc)
+            foreach (CreditNoteDoc lObjCreditNoteDoc in pLstCreditNoteDoc.Where(x => x.IsDraft == "N"))
             {
                 UIApplication.ShowSuccess(string.Format("Guardando {0} de {1}", i, pLstCreditNoteDoc.Count));
                 lLstError.AddRange(mObjCreditNoteFactory.GetCreditNoteService().CreateCreditNoteDOC(lObjCreditNoteDoc, lLstError));
@@ -152,13 +152,13 @@ namespace UGRS.AddOn.CreditNote.Services
             }
             else
             {
-
                 UIApplication.ShowSuccess("Documentos preliminares Guardados correctamente");
             }
             if (mObjProgressBar != null)
             {
                 mObjProgressBar.Dispose();
             }
+            return lLstError.Count;
         }
 
 
@@ -171,7 +171,7 @@ namespace UGRS.AddOn.CreditNote.Services
             int i = 1;
             try
             {
-                foreach (var lObjCN in pLstCreditNoteDoc)
+                foreach (var lObjCN in pLstCreditNoteDoc.Where(x => x.IsDocRel == "N"))
                 {
                     UIApplication.ShowSuccess(string.Format("Actualizado {0} de {1}", i, pLstCreditNoteDoc.Count));
                     mObjCreditNoteFactory.GetCreditNoteService().UpdateDocRel(lObjCN);
@@ -263,7 +263,7 @@ namespace UGRS.AddOn.CreditNote.Services
              try
              {
                  int i = 0;
-                 foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc)
+                 foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "N"))
                  {
                      UIApplication.ShowMessage(string.Format("Generando documento {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
                      int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().SaveDraftToDocument(Convert.ToInt32(lObjDoc.DocEntryDraft));
