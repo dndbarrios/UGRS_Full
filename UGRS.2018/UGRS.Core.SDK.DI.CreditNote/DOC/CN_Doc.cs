@@ -111,15 +111,27 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
 
         public int DraftToDocument(int pIntDocEntryDraft)
         {
+            
+
+            SAPbobsCOM.Documents lObjNC = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
+            lObjNC.GetByKey(507);
+            lObjNC.EDocExportFormat.ToString();
+            lObjNC.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerate;
+            lObjNC.Update();
+
+
             SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
             lObjDraft.GetByKey(pIntDocEntryDraft);
            
-            lObjDraft.Lines.SetCurrentLine(0);
-            lObjDraft.Lines.WTLiable = SAPbobsCOM.BoYesNoEnum.tNO;
-            lObjDraft.SaveXML(@"C:\sss"); 
-            lObjDraft.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
-            lObjDraft.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerateLater;
+            
+            //lObjDraft.Lines.SetCurrentLine(0);
+            //lObjDraft.Lines.WTLiable = SAPbobsCOM.BoYesNoEnum.tNO;
           
+            //lObjDraft.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
+            lObjDraft.EDocExportFormat = 0;
+            
+            lObjDraft.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocGenerateLater;
+            lObjDraft.SaveXML(@"C:\sss"); 
             return lObjDraft.SaveDraftToDocument();
 
         }

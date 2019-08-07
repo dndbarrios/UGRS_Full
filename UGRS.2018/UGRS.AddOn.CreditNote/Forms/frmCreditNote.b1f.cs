@@ -61,7 +61,10 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.btnAttach.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnAttach_ClickAfter);
             this.txtAttach = ((SAPbouiCOM.EditText)(this.GetItem("txtAttach").Specific));
             this.lblInfo = ((SAPbouiCOM.StaticText)(this.GetItem("lblInfo").Specific));
-            Core.SDK.UI.UIApplication.GetApplication().MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.TicketFrom_ApplicationMenuEvent);
+            UGRS.Core.SDK.UI.UIApplication.GetApplication().MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.TicketFrom_ApplicationMenuEvent);
+            this.lblProgress = ((SAPbouiCOM.StaticText)(this.GetItem("lblProgres").Specific));
+            this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
+            this.btnCancel.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnCancel_ClickAfter);
             this.OnCustomInitialize();
 
         }
@@ -665,6 +668,14 @@ namespace UGRS.AddOn.CreditNote.Forms
         private SAPbouiCOM.EditText txtAttach;
         private SAPbouiCOM.StaticText lblInfo;
         #endregion
+        private SAPbouiCOM.StaticText lblProgress;
+        private SAPbouiCOM.Button btnCancel;
+
+        private void btnCancel_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            
+
+        }
 
 
 

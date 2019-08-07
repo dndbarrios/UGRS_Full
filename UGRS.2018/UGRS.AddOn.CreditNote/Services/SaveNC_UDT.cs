@@ -312,6 +312,25 @@ namespace UGRS.AddOn.CreditNote.Services
             }
             return lLstErrors;
         }
+
+
+        //public int CancelReport(CreditNoteT pObjCreditNoteT)
+        //{
+        //    try
+        //    {
+        //        DIApplication.Company.StartTransaction();
+
+        //        //foreach (var lObjDoc in collection)
+        //        //{
+
+        //        //}
+        //    }
+        //    catch (Exception)
+        //    {
+                
+        //        throw;
+        //    }
+        //}
        
     }
 }
