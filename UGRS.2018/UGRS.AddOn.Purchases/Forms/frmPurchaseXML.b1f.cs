@@ -1401,6 +1401,7 @@ namespace UGRS.AddOn.Purchases.Forms {
                 SAPbouiCOM.Column lObjColumnAccount = mtxXML.Columns.Item("C_Account");
                 lObjColumnAccount.DataBind.SetBound(true, "", "CFL_Acc");
                 lObjColumnAccount.ChooseFromListUID = "CFL_Acc";
+                lObjColumnAccount.ChooseFromListAlias = "AcctCode";
 
                 SAPbouiCOM.Column lObjColumn = mtxXML.Columns.Item("C_Area");
                 lObjColumn.DataBind.SetBound(true, "", "CFL_AreaMx");

@@ -465,6 +465,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                 txtEmploye.DataBind.SetBound(true, "", "CFL_Employ");
                 txtEmploye.ChooseFromListUID = "CFL_Employ";
+                txtEmploye.ChooseFromListAlias = "lastName";
             }
             catch (Exception ex)
             {

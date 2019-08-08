@@ -508,9 +508,11 @@ namespace UGRS.AddOn.Purchases.Forms
             {
                 txtProject.DataBind.SetBound(true, "", "CFL_Pro");
                 txtProject.ChooseFromListUID = "CFL_Pro";
+                txtProject.ChooseFromListAlias = "PrjCode";
 
                 txtArea.DataBind.SetBound(true, "", "CFL_Area");
                 txtArea.ChooseFromListUID = "CFL_Area";
+                txtArea.ChooseFromListAlias = "PrcCode";
                 this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Area").ValueEx = mObjVouchers.Area;
                 AddConditionAssets(mObjCFLAsset);
                 AddConditionChoseFromListProject(mObjCFLProject);
@@ -518,6 +520,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                 txtAF.DataBind.SetBound(true, "", "CFL_Asset");
                 txtAF.ChooseFromListUID = "CFL_Asset";
+                txtAF.ChooseFromListAlias = "PrcCode";
 
                 txtCredit.Value = mStrAffectable;
 
@@ -526,9 +529,11 @@ namespace UGRS.AddOn.Purchases.Forms
 
                 txtAccount.DataBind.SetBound(true, "", "CFL_Acc");
                 txtAccount.ChooseFromListUID = "CFL_Acc";
+                txtAccount.ChooseFromListAlias = "AcctCode";
 
                 txtAux.DataBind.SetBound(true, "", "CFL_Aux");
                 txtAux.ChooseFromListUID = "CFL_Aux";
+                txtAux.ChooseFromListAlias = "lastName";
 
                 txtAGL.DataBind.SetBound(true, "", "CFL_AGL");
                 txtAGL.ChooseFromListUID = "CFL_AGL";
@@ -537,7 +542,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                 txtLinea.DataBind.SetBound(true, "", "CFL_Line");
                 txtLinea.ChooseFromListUID = "CFL_Line";
-                txtLinea.ChooseFromListAlias = "PrcName";
+                txtLinea.ChooseFromListAlias = "PrcCode";
             }
             catch (Exception ex)
             {
