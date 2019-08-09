@@ -111,7 +111,7 @@ namespace UGRS.AddOn.Transports
                 lObjBtnFreight = ((SAPbouiCOM.Button)mObjSOForm.Items.Item("btnFrgh").Specific);
                 lObjBtnFreight.Caption = "Fletes";
                 lObjBtnFreight.Item.Enabled = false;
-                //lObjBtnFreight.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.lObjBtnFreight_ClickBefore);
+                lObjBtnFreight.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.lObjBtnFreight_ClickBefore);
 
             }
         }
@@ -356,7 +356,7 @@ namespace UGRS.AddOn.Transports
         private void lObjBtnFreight_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            //LoadFreight();
+            LoadFreight();
             
         }
 
