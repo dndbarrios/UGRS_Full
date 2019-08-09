@@ -2021,6 +2021,9 @@ namespace UGRS.AddOn.Transports.Forms
             {
                 if (btnUpdate.Item.Enabled)
                 {
+                    SetKmAmounts();
+                    SetCashAmounts();
+
                     switch (btnUpdate.Caption)
                     {
                         case "Nuevo":
@@ -2086,6 +2089,9 @@ namespace UGRS.AddOn.Transports.Forms
             bool lBolSuccess = false;
             try
             {
+                SetKmAmounts();
+                SetCashAmounts();
+
                 DIApplication.Company.StartTransaction();
                 if (CreateJournal())
                 {
