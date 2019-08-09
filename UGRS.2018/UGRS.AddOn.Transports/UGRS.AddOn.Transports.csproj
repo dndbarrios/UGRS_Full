@@ -91,6 +91,7 @@
     <Compile Include="ModalForms\mfrmCFL.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ModalForms\mfrmFreights.cs" />
     <Compile Include="ModalForms\mfrmRouteFinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Menu.cs" />
@@ -128,15 +129,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ModalForms\frmMCFL.xml" />
-    <EmbeddedResource Include="ModalForms\frmMRouteFinder.xml">
+    <Content Include="ModalForms\frmMCFL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Content>
+    <Content Include="ModalForms\frmMRouteFinder.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon\Trans.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ModalForms\frmMFreight.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
