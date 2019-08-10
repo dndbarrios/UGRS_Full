@@ -125,6 +125,9 @@
     <Compile Include="Forms\frmCheeckingCosts.b1f.cs">
       <DependentUpon>frmCheeckingCosts.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmModalAF.b1f.cs">
+      <DependentUpon>frmModalAF.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmPurchaseNotes.b1f.cs">
       <DependentUpon>frmPurchaseNotes.b1f</DependentUpon>
     </Compile>
@@ -146,10 +149,14 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Services\ReadXMLService.cs" />
+    <Compile Include="Utilities\UIUtility.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Forms\frmCheeckingCosts.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\frmModalAF.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="Forms\frmPurchaseNotes.b1f">

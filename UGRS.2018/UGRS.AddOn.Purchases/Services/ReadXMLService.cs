@@ -542,6 +542,7 @@ namespace UGRS.AddOn.Purchases.Services {
                 var pacConfDTO = new PurchaseXmlService().GetConfigurationPac();
                 var mObjTimbradorp = new servTim.PadeTimbradoServiceClient();
                 var resultXML = mObjTimbradorp.consultarEstatusComprobante(pacConfDTO.Contract, pacConfDTO.User, pacConfDTO.Pass, lObjPurchaseXML.FolioFiscal, lObjPurchaseXML.RFCProvider, lObjPurchaseXML.RFCReceptor, lObjPurchaseXML.Total, null);
+                //var resultXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><servicioConsultaComprobante><consultaOk>true</consultaOk><codigo>91</codigo><codigoEstatus>S - Comprobante obtenido satisfactoriamente.</codigoEstatus><esCancelable>Cancelable sin aceptación</esCancelable><estado>Vigente</estado><estatusCfdi>4</estatusCfdi></servicioConsultaComprobante>";
                 var statusXML = XDocument.Parse(resultXML)
                                          .Document.Descendants("servicioConsultaComprobante")
                                          .Select(p => new VoucherStatusDTO {

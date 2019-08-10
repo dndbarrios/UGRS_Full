@@ -13,6 +13,7 @@ using UGRS.Core.SDK.DI.Purchases;
 using UGRS.Core.SDK.DI.Purchases.Tables;
 using UGRS.Core.Services;
 using UGRS.Core.SDK.DI;
+using UGRS.AddOn.Purchases.Utilities;
 
 namespace UGRS.AddOn.Purchases.Forms
 {
@@ -39,6 +40,7 @@ namespace UGRS.AddOn.Purchases.Forms
         ChooseFromList mObjCFLAux;
         TypeEnum.Type mNoteType;
         string mStrLine;
+        private frmModalAF mObjModalAF = null;
         #endregion
 
         #region Constructor
@@ -54,13 +56,13 @@ namespace UGRS.AddOn.Purchases.Forms
                 //mStrCodeVoucher = pObjVouchers.RowCode; //Codigointerno
                 mBolIsCheeckingCost = pBolIsCheeckingCost;
                 //mStrCodeMov = pObjVouchers.CodeMov; // MQ_Folio
-               // mStrAuxCode = pObjVouchers.Employee;
+                // mStrAuxCode = pObjVouchers.Employee;
                 //mStrAuxCodeAfectable = pObjVouchers.Employee;
                 lblAux.Item.Visible = false;
                 txtAux.Item.Visible = false;
                 mNoteType = pNoteType;
-                
-                
+
+
                 cboType.Select("Gastos/Costos");
                 cboMovement.Item.Visible = false;
                 lblCodeMov.Item.Visible = false;
@@ -109,6 +111,7 @@ namespace UGRS.AddOn.Purchases.Forms
             this.txtAccount = ((SAPbouiCOM.EditText)(this.GetItem("txtAccount").Specific));
             this.txtArea = ((SAPbouiCOM.EditText)(this.GetItem("txtArea").Specific));
             this.txtAF = ((SAPbouiCOM.EditText)(this.GetItem("txtAF").Specific));
+            this.txtAF.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.txtAF_KeyDownAfter);
             this.txtProject = ((SAPbouiCOM.EditText)(this.GetItem("txtProject").Specific));
             this.txtAmount = ((SAPbouiCOM.EditText)(this.GetItem("txtAmount").Specific));
             this.txtAttach = ((SAPbouiCOM.EditText)(this.GetItem("txtAttach").Specific));
@@ -126,7 +129,7 @@ namespace UGRS.AddOn.Purchases.Forms
             this.txtTotal = ((SAPbouiCOM.EditText)(this.GetItem("Item_1").Specific));
             this.lblTotal = ((SAPbouiCOM.StaticText)(this.GetItem("lblTotal").Specific));
             UGRS.Core.SDK.UI.UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
-            //           UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
+            //UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
             this.lblType = ((SAPbouiCOM.StaticText)(this.GetItem("lblType").Specific));
             this.cboType = ((SAPbouiCOM.ComboBox)(this.GetItem("cboType").Specific));
             this.cboType.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cboType_ComboSelectAfter);
@@ -192,6 +195,26 @@ namespace UGRS.AddOn.Purchases.Forms
                                 break;
                             case BoEventTypes.et_COMBO_SELECT:
                                 AddConditionAssets(mObjCFLAsset);
+                                break;
+                        }
+                    }
+                }
+
+                if (pVal.FormTypeEx.Equals("UGRS.AddOn.Purchases.Forms.frmModalAF"))
+                {
+                    if (!pVal.BeforeAction)
+                    {
+                        switch (pVal.EventType)
+                        {
+                            case SAPbouiCOM.BoEventTypes.et_FORM_CLOSE:
+                                if (mObjModalAF != null)
+                                {
+                                    if (string.IsNullOrEmpty(mObjModalAF.mStrAFCode))
+                                        return;
+
+                                    txtAF.Value = mObjModalAF.mStrAFCode;
+                                    mObjModalAF = null;
+                                }
                                 break;
                         }
                     }
@@ -262,7 +285,7 @@ namespace UGRS.AddOn.Purchases.Forms
                             {
                                 UIAPIRawForm.Freeze(false);
                             }
-                           
+
 
                         }
                         else
@@ -295,7 +318,7 @@ namespace UGRS.AddOn.Purchases.Forms
                     if (lBolSuccess)
                     {
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
-                      
+
                         UIApplication.ShowMessageBox("Asiento guardado correctamente");
                         LogService.WriteSuccess("Asiento guardado correctamente Folio: " + mObjVouchers.RowCode);
                         this.UIAPIRawForm.Close();
@@ -360,6 +383,29 @@ namespace UGRS.AddOn.Purchases.Forms
             {
                 LogService.WriteError("frmPurchaseNote (btnRemove_ClickBefore) " + ex.Message);
                 LogService.WriteError(ex);
+            }
+        }
+
+        private void txtAF_KeyDownAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (pVal.CharPressed == 13)
+                {
+                    if (UIUtility.IsFormOpen("UGRS.AddOn.Purchases.Forms.frmModalAF"))
+                    {
+                        UIApplication.GetApplication().Forms.Item("frmMdlAF").Close();
+                    }
+
+                    mObjModalAF = new frmModalAF(txtArea.Value, txtAF.Value);
+                    mObjModalAF.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError(ex.Message);
+                LogService.WriteError(ex);
+                UIApplication.ShowMessageBox(ex.Message);
             }
         }
 
@@ -475,7 +521,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 ChooseFromList lObjCFLProjectArea = InitChooseFromLists(false, "61", "CFL_Area", this.UIAPIRawForm.ChooseFromLists);
                 AddConditionChoseFromListCostCenter(lObjCFLProjectArea, "1");
 
-                mObjCFLAsset = InitChooseFromLists(false, "61", "CFL_Asset", this.UIAPIRawForm.ChooseFromLists);
+                //mObjCFLAsset = InitChooseFromLists(false, "61", "CFL_Asset", this.UIAPIRawForm.ChooseFromLists);
 
 
                 ChooseFromList lOBjCFLAccount = InitChooseFromLists(false, "1", "CFL_Acc", this.UIAPIRawForm.ChooseFromLists);
@@ -518,9 +564,9 @@ namespace UGRS.AddOn.Purchases.Forms
                 AddConditionChoseFromListProject(mObjCFLProject);
                 AddConditionAuxiliar(mObjCFLAux, mObjPurchaseServiceFactory.GetPurchaseService().GetDepartment(txtArea.Value));
 
-                txtAF.DataBind.SetBound(true, "", "CFL_Asset");
-                txtAF.ChooseFromListUID = "CFL_Asset";
-                txtAF.ChooseFromListAlias = "PrcCode";
+                //txtAF.DataBind.SetBound(true, "", "CFL_Asset");
+                //txtAF.ChooseFromListUID = "CFL_Asset";
+                //txtAF.ChooseFromListAlias = "PrcCode";
 
                 txtCredit.Value = mStrAffectable;
 
@@ -822,7 +868,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                         if (lObjDataTable.UniqueID == "CFL_Aux")
                         {
-                            mObjVouchers.Employee  = System.Convert.ToString(lObjDataTable.GetValue(0, 0));
+                            mObjVouchers.Employee = System.Convert.ToString(lObjDataTable.GetValue(0, 0));
                             this.UIAPIRawForm.DataSources.UserDataSources.Item(lObjDataTable.UniqueID).ValueEx = System.Convert.ToString(lObjDataTable.GetValue(1, 0) + System.Convert.ToString(lObjDataTable.GetValue(2, 0)));
                             LoadCboMovementPayment(mObjVouchers.Employee);
                             cboMovement.Item.Visible = true;
@@ -858,7 +904,7 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             try
             {
-                
+
                 this.UIAPIRawForm.DataSources.DataTables.Add("TransactionsResult");
                 DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("TransactionsResult");
                 DtMatrix.Columns.Add("C_CodeVoucher", SAPbouiCOM.BoFieldsType.ft_AlphaNumeric);
@@ -908,7 +954,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 mtxNotes.Columns.Item("C_AuxName").DataBind.Bind("TransactionsResult", "C_AuxName");
                 mtxNotes.Columns.Item("C_AGL").DataBind.Bind("TransactionsResult", "C_AGL");
                 mtxNotes.Columns.Item("C_Line").DataBind.Bind("TransactionsResult", "C_Line");
-               
+
 
                 mtxNotes.LoadFromDataSource();
             }

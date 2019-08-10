@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using UGRS.AddOn.Purchases.Services;
+using UGRS.AddOn.Purchases.Utilities;
 using UGRS.Core.SDK.DI;
 using UGRS.Core.SDK.DI.Purchases;
 using UGRS.Core.SDK.DI.Purchases.DTO;
@@ -15,9 +16,11 @@ using UGRS.Core.SDK.UI;
 using UGRS.Core.Services;
 using UGRS.Core.Utility;
 
-namespace UGRS.AddOn.Purchases.Forms {
+namespace UGRS.AddOn.Purchases.Forms
+{
     [FormAttribute("UGRS.AddOn.Purchases.Forms.frmPurchaseXML", "Forms/frmPurchaseXML.b1f")]
-    class frmPurchaseXML : UserFormBase {
+    class frmPurchaseXML : UserFormBase
+    {
         #region Propieties
         PurchasesServiceFactory mObjPurchaseServiceFactory = new PurchasesServiceFactory();
         string mStrFileName = "";
@@ -35,6 +38,7 @@ namespace UGRS.AddOn.Purchases.Forms {
         string mStrType = String.Empty;
         DateTime mDtmDate = DateTime.Now;
         Vouchers mObjVoucher = new Vouchers();
+        private frmModalAF mObjModalAF = null;
 
 
         PurchaseXMLDTO mObjPurchaseXMLDTO = new PurchaseXMLDTO();
@@ -77,7 +81,8 @@ namespace UGRS.AddOn.Purchases.Forms {
             }
         }
 
-        public frmPurchaseXML() {
+        public frmPurchaseXML()
+        {
             mFlagPurshaseAddon = false;
             mStrArea = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetCostCenter();
             SetChooseToTxt();
@@ -89,14 +94,17 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Initialize form event. Called by framework before form creation.
         /// </summary>
-        public override void OnInitializeFormEvents() {
+        public override void OnInitializeFormEvents()
+        {
             this.RightClickAfter += new SAPbouiCOM.Framework.FormBase.RightClickAfterHandler(this.Form_RightClickAfter);
             this.CloseAfter += new CloseAfterHandler(this.Form_CloseAfter);
 
         }
 
-        private void OnCustomInitialize() {
-            try {
+        private void OnCustomInitialize()
+        {
+            try
+            {
                 LoadChoseFromList();
 
                 UIAPIRawForm.EnableMenu("1293", true);//Borrar
@@ -104,9 +112,10 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                 txtCantD.Value = "1";
                 AddComboboxMQ();
-              
+
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(OnCustomInitialize): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -123,6 +132,7 @@ namespace UGRS.AddOn.Purchases.Forms {
             this.btnSave = ((SAPbouiCOM.Button)(this.GetItem("btnSave").Specific));
             this.btnXML = ((SAPbouiCOM.Button)(this.GetItem("btnXML").Specific));
             this.txtAF = ((SAPbouiCOM.EditText)(this.GetItem("txtAF").Specific));
+            this.txtAF.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.txtAF_KeyDownAfter);
             this.txtArea = ((SAPbouiCOM.EditText)(this.GetItem("txtArea").Specific));
             this.txtBP = ((SAPbouiCOM.EditText)(this.GetItem("txtBP").Specific));
             this.txtCurren = ((SAPbouiCOM.EditText)(this.GetItem("txtCurren").Specific));
@@ -141,6 +151,7 @@ namespace UGRS.AddOn.Purchases.Forms {
             this.txtTotal = ((SAPbouiCOM.EditText)(this.GetItem("txtTotal").Specific));
             this.txtXML = ((SAPbouiCOM.EditText)(this.GetItem("txtXML").Specific));
             this.mtxXML = ((SAPbouiCOM.Matrix)(this.GetItem("mtxXML").Specific));
+            this.mtxXML.KeyDownAfter += new SAPbouiCOM._IMatrixEvents_KeyDownAfterEventHandler(this.mtxXML_KeyDownAfter);
             this.lblAF = ((SAPbouiCOM.StaticText)(this.GetItem("lblAF").Specific));
             this.lblArea = ((SAPbouiCOM.StaticText)(this.GetItem("lblArea").Specific));
             this.lblBP = ((SAPbouiCOM.StaticText)(this.GetItem("lblBP").Specific));
@@ -169,22 +180,24 @@ namespace UGRS.AddOn.Purchases.Forms {
             this.btnPDF.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnPDF_ClickBefore);
             this.btnSave.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSave_ClickBefore);
             this.btnXML.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnXML_ClickBefore);
-            UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
-            UIApplication.GetApplication().MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.SBO_Application_MenuEvent);
+            UGRS.Core.SDK.UI.UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
+            // SAPbouiCOM.Framework.Application.SBO_Application.ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
+            UGRS.Core.SDK.UI.UIApplication.GetApplication().MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.SBO_Application_MenuEvent);
+            // SAPbouiCOM.Framework.Application.SBO_Application.MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(SBO_Application_MenuEvent);
             this.btnItem.Item.Visible = true;
             this.btnBP.Item.Visible = false;
             this.lblSub = ((SAPbouiCOM.StaticText)(this.GetItem("lblSub").Specific));
             this.cboSubida = ((SAPbouiCOM.ComboBox)(this.GetItem("cboSubida").Specific));
             this.lblDesc = ((SAPbouiCOM.StaticText)(this.GetItem("lblDesc").Specific));
             this.txtDesc = ((SAPbouiCOM.EditText)(this.GetItem("txtDesc").Specific));
-            //           try
-            //           {
-            //       }
-            //       catch (Exception ex)
-            //       {
-            //           LogService.WriteError("(OnInitializeComponent): " + ex.Message);
-            //           LogService.WriteError(ex);
-            //       }
+            //             try
+            //             {
+            //         }
+            //         catch (Exception ex)
+            //         {
+            //             LogService.WriteError("(OnInitializeComponent): " + ex.Message);
+            //             LogService.WriteError(ex);
+            //         }
             this.lblDate = ((SAPbouiCOM.StaticText)(this.GetItem("lblDate").Specific));
             this.txtDate = ((SAPbouiCOM.EditText)(this.GetItem("txtDate").Specific));
             this.lblItem = ((SAPbouiCOM.StaticText)(this.GetItem("lblItem").Specific));
@@ -194,6 +207,7 @@ namespace UGRS.AddOn.Purchases.Forms {
             this.lblAdminOper = ((SAPbouiCOM.StaticText)(this.GetItem("lblAdmOper").Specific));
             this.cboAdminOper = ((SAPbouiCOM.ComboBox)(this.GetItem("cboAdmOper").Specific));
             this.OnCustomInitialize();
+
         }
         #endregion
 
@@ -202,72 +216,122 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Eventos de la aplicacion
         /// </summary>
-        private void SBO_Application_ItemEvent(string FormUID, ref ItemEvent pVal, out bool BubbleEvent) {
+        private void SBO_Application_ItemEvent(string FormUID, ref ItemEvent pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            try {
-                if(FormUID.Equals(this.UIAPIRawForm.UniqueID)) {
-                    if(pVal.EventType == BoEventTypes.et_FORM_CLOSE) {
+            try
+            {
+                if (FormUID.Equals(this.UIAPIRawForm.UniqueID))
+                {
+                    if (pVal.EventType == BoEventTypes.et_FORM_CLOSE)
+                    {
                         UIApplication.GetApplication().ItemEvent -= new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
                         UIApplication.GetApplication().MenuEvent -= new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.SBO_Application_MenuEvent);
 
                     }
 
-                    if(!pVal.BeforeAction) {
-                        switch(pVal.EventType) {
+                    if (!pVal.BeforeAction)
+                    {
+                        switch (pVal.EventType)
+                        {
                             case BoEventTypes.et_CHOOSE_FROM_LIST:
-                            ChooseFromListAfterEvent(pVal);
-                            break;
+                                ChooseFromListAfterEvent(pVal);
+                                break;
                             case BoEventTypes.et_COMBO_SELECT:
-                            if(pVal.ItemUID == "cboSubida") {
-                                this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
-                                List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                                if(string.IsNullOrEmpty(cboSubida.Value)) {
-                                    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                                if (pVal.ItemUID == "cboSubida")
+                                {
+                                    this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
+                                    List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
+                                    if (string.IsNullOrEmpty(cboSubida.Value))
+                                    {
+                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                                    }
+                                    else
+                                    {
+                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
+                                    }
+                                    AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
                                 }
-                                else {
-                                    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
+                                else
+                                {
+                                    SelectCombobox(pVal);
                                 }
-                                AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
-                            }
-                            else {
-                                SelectCombobox(pVal);
-                            }
-                            break;
+                                break;
                         }
                     }
-                    else {
-                        switch(pVal.EventType) {
+                    else
+                    {
+                        switch (pVal.EventType)
+                        {
                             case BoEventTypes.et_CHOOSE_FROM_LIST:
-                            ChooseFromListBeforeEvent(pVal);
-                            break;
+                                ChooseFromListBeforeEvent(pVal);
+                                break;
                             case BoEventTypes.et_RIGHT_CLICK:
-                            mtxXML.SelectRow(pVal.Row, true, false);
-                            break;
+                                mtxXML.SelectRow(pVal.Row, true, false);
+                                break;
+                        }
+                    }
+                }
+
+
+                if (pVal.FormTypeEx.Equals("UGRS.AddOn.Purchases.Forms.frmModalAF"))
+                {
+                    if (!pVal.BeforeAction)
+                    {
+                        switch (pVal.EventType)
+                        {
+                            case SAPbouiCOM.BoEventTypes.et_FORM_CLOSE:
+                                if (mObjModalAF != null)
+                                {
+                                    if (string.IsNullOrEmpty(mObjModalAF.mStrAFCode))
+                                        return;
+
+                                    if (!mObjModalAF.mBolForMatrix)
+                                    {
+                                        txtAF.Value = mObjModalAF.mStrAFCode;
+                                    }
+                                    else
+                                    {
+                                        this.UIAPIRawForm.Freeze(true);
+                                        //string lStrAF = (mtxXML.Columns.Item("C_AF").Cells.Item(mIntRowSelected).Specific as EditText).Value;
+                                        DtMatrix.SetValue("C_AF", mIntRowSelected - 1, mObjModalAF.mStrAFCode);
+                                        mtxXML.LoadFromDataSource();
+                                        this.UIAPIRawForm.Freeze(false);
+                                    }
+                                    mObjModalAF = null;
+                                }
+                                break;
                         }
                     }
                 }
 
 
 
-                if(mFlagSaveItem && FormUID.Equals(mFormItem.UniqueID) && pVal.EventType == SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED) {
+                if (mFlagSaveItem && FormUID.Equals(mFormItem.UniqueID) && pVal.EventType == SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED)
+                {
                     mFormItem.Close();
                     mFlagSaveItem = false;
                 }
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowError(string.Format("ItemEventException: {0}", ex.Message));
                 LogService.WriteError("(SBO_Application_ItemEvent): " + ex.Message);
                 LogService.WriteError(ex);
             }
         }
 
-        private void SBO_Application_FormDataEvent(ref BusinessObjectInfo BusinessObjectInfo, out bool BubbleEvent) {
+        private void SBO_Application_FormDataEvent(ref BusinessObjectInfo BusinessObjectInfo, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            try {
-                if(BusinessObjectInfo.EventType != BoEventTypes.et_FORM_ACTIVATE) {
-                    if(mFormItem.UniqueID == BusinessObjectInfo.FormUID && !BusinessObjectInfo.BeforeAction &&
-                        (BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD || BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE)) {
+            try
+            {
+                if (BusinessObjectInfo.EventType != BoEventTypes.et_FORM_ACTIVATE)
+                {
+                    if (mFormItem.UniqueID == BusinessObjectInfo.FormUID && !BusinessObjectInfo.BeforeAction &&
+                        (BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD || BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE))
+                    {
                         string lStrItemCode = ((SAPbouiCOM.EditText)(mFormItem.Items.Item("5").Specific)).Value;
                         string lStrItemName = ((SAPbouiCOM.EditText)(mFormItem.Items.Item("7").Specific)).Value;
 
@@ -280,7 +344,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(SBO_Application_FormDataEvent): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -290,10 +355,13 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         ///Evento de matriz para ver si se habilita el boton de item
         /// </summary>
-        private void mtxXML_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void mtxXML_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            try {
-                if(pVal.Row > 0) {
+            try
+            {
+                if (pVal.Row > 0)
+                {
                     mtxXML.SelectRow(pVal.Row, true, false);
                     mIntRowSelected = pVal.Row;
 
@@ -315,7 +383,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                     //}
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowError(ex.Message);
                 LogService.WriteError("(SBO_Application_ItemEvent): " + ex.Message);
                 LogService.WriteError(ex);
@@ -327,16 +396,20 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Boton PDF
         /// </summary>
-        private void btnPDF_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void btnPDF_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            try {
+            try
+            {
                 mStrFileName = "PDF";
                 CreateFolderBroserThread();
-                if(mStrFileName != "") {
+                if (mStrFileName != "")
+                {
                     txtPDF.Value = mStrFileName;
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowError(ex.Message);
                 LogService.WriteError("(btnPDF_ClickBefore): " + ex.Message);
                 LogService.WriteError(ex);
@@ -346,28 +419,35 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Boton xml
         /// </summary>
-        private void btnXML_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void btnXML_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
 
 
             BubbleEvent = true;
             mStrFileName = "XML";
             CreateFolderBroserThread();
 
-            if(mStrFileName != "") {
-                try {
+            if (mStrFileName != "")
+            {
+                try
+                {
                     this.UIAPIRawForm.Freeze(true);
                     txtXML.Value = mStrFileName;
                     ReadXMLService lObjReadXMLService = new ReadXMLService();
                     PurchaseXMLDTO lObjPurchaseXML = lObjReadXMLService.ReadXML(mStrFileName);
                     mObjPurchaseXMLDTO = lObjPurchaseXML;
 
-                    if(lObjPurchaseXML != null) {
-                        if(lObjPurchaseXML.ConceptLines != null && lObjPurchaseXML.ConceptLines.Count > 0 && lObjReadXMLService.CheckVoucherStatus(lObjPurchaseXML)) {
+                    if (lObjPurchaseXML != null)
+                    {
+                        if (lObjPurchaseXML.ConceptLines != null && lObjPurchaseXML.ConceptLines.Count > 0 && lObjReadXMLService.CheckVoucherStatus(lObjPurchaseXML))
+                        {
 
-                            if(DtMatrix == null) {
+                            if (DtMatrix == null)
+                            {
                                 CreateDatatableMatrix();
                             }
-                            else {
+                            else
+                            {
                                 DtMatrix.Rows.Clear();
                             }
                             FillMatrix(lObjPurchaseXML);
@@ -377,19 +457,22 @@ namespace UGRS.AddOn.Purchases.Forms {
                             LoadXMLData(lObjPurchaseXML);
                         }
                     }
-                    else {
+                    else
+                    {
                         ClearControls();
                     }
                 }
 
-                catch(Exception ex) {
+                catch (Exception ex)
+                {
 
                     this.UIAPIRawForm.Freeze(false);
                     UIApplication.ShowMessageBox(ex.Message);
                     LogService.WriteError("(btnXML_ClickBefore): " + ex.Message);
                     LogService.WriteError(ex);
                 }
-                finally {
+                finally
+                {
                     this.UIAPIRawForm.Freeze(false);
                 }
             }
@@ -399,7 +482,8 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Abrir Ventana de Socios
         /// </summary>
-        private void btnBP_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void btnBP_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
             OpenFormBP();
         }
@@ -407,15 +491,19 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Eventos del menu de duplicar y eliminar registros de la matriz
         /// </summary>
-        private void SBO_Application_MenuEvent(ref MenuEvent pVal, out bool BubbleEvent) {
+        private void SBO_Application_MenuEvent(ref MenuEvent pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            try {
+            try
+            {
 
-                if(pVal.MenuUID == "1294" && pVal.BeforeAction == true) //Duplicar
+                if (pVal.MenuUID == "1294" && pVal.BeforeAction == true) //Duplicar
                 {
-                    if(mtxXML.IsRowSelected(mIntRowSelected)) {
+                    if (mtxXML.IsRowSelected(mIntRowSelected))
+                    {
                         int lIntQtyD = Convert.ToInt32(txtCantD.Value);
-                        for(int i = 1; i <= lIntQtyD; i++) {
+                        for (int i = 1; i <= lIntQtyD; i++)
+                        {
                             DuplicateLine(pVal);
                         }
 
@@ -423,45 +511,54 @@ namespace UGRS.AddOn.Purchases.Forms {
                         SetTotal();
                     }
                 }
-                if(pVal.MenuUID == "1293" && pVal.BeforeAction == true)//Borrar
+                if (pVal.MenuUID == "1293" && pVal.BeforeAction == true)//Borrar
                 {
-                    if(SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea elimiar el item seleccionado?", 2, "Si", "No", "") == 1) {
-                        try {
+                    if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea elimiar el item seleccionado?", 2, "Si", "No", "") == 1)
+                    {
+                        try
+                        {
                             this.UIAPIRawForm.Freeze(true);
                             DtMatrix.Rows.Remove(mIntRowSelected - 1);
                             SetTotal();
                             UIAPIRawForm.EnableMenu("8801", false);
                         }
-                        catch(Exception ex) {
+                        catch (Exception ex)
+                        {
                             this.UIAPIRawForm.Freeze(false);
                             LogService.WriteError("(SBO_Application_MenuEvent 1293 true): " + ex.Message);
                             LogService.WriteError(ex);
                         }
-                        finally {
+                        finally
+                        {
                             this.UIAPIRawForm.Freeze(false);
                         }
                     }
-                    else {
+                    else
+                    {
                         BubbleEvent = false;
                     }
                 }
-                if(pVal.MenuUID == "1293" && pVal.BeforeAction == false) //Borrar
+                if (pVal.MenuUID == "1293" && pVal.BeforeAction == false) //Borrar
                 {
-                    try {
+                    try
+                    {
                         this.UIAPIRawForm.Freeze(true);
                         mtxXML.LoadFromDataSource();
                     }
-                    catch(Exception ex) {
+                    catch (Exception ex)
+                    {
                         this.UIAPIRawForm.Freeze(false);
                         LogService.WriteError("(SBO_Application_MenuEvent 1293 false): " + ex.Message);
                         LogService.WriteError(ex);
                     }
-                    finally {
+                    finally
+                    {
                         this.UIAPIRawForm.Freeze(false);
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(SBO_Application_MenuEvent): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -470,12 +567,15 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Abrir Ventana de Articulos
         /// </summary>
-        private void btnItem_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void btnItem_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            if(mIntRowSelected > 0) {
+            if (mIntRowSelected > 0)
+            {
                 OpenFormItem();
             }
-            else {
+            else
+            {
                 UIApplication.ShowMessageBox("Favor de seleccionar un item");
             }
         }
@@ -484,16 +584,19 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Guardar documento y generar la factura y el pago
         /// </summary>
-        private void btnSave_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void btnSave_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
             bool lBolSuccess = false;
             string lStrDocEntry = String.Empty;
 
-            try {
+            try
+            {
                 InvoiceDI lObjInvioceDI = new InvoiceDI();
 
                 //if(ValidateTotals()){ Cambio por factura preliminar
-                if(true) {
+                if (true)
+                {
                     PurchaseXMLDTO lObjPurchaseXmlDTO = GetInvoiceInfo();
                     lObjPurchaseXmlDTO.Folio = txtFolio.Value;
 
@@ -507,17 +610,20 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                     //}
 
-                    if(!string.IsNullOrEmpty(lObjPurchaseXmlDTO.CodeVoucher) || Convert.ToInt32(lObjPurchaseXmlDTO.CodeVoucher) > 0 || !mFlagPurshaseAddon) {
+                    if (!string.IsNullOrEmpty(lObjPurchaseXmlDTO.CodeVoucher) || Convert.ToInt32(lObjPurchaseXmlDTO.CodeVoucher) > 0 || !mFlagPurshaseAddon)
+                    {
 
 
                         lObjPurchaseXmlDTO.Type = mStrType;
                         lBolSuccess = lObjInvioceDI.CreateDocument(lObjPurchaseXmlDTO, mFlagPurshaseAddon);
 
 
-                        if(lBolSuccess) {
+                        if (lBolSuccess)
+                        {
                             LogService.WriteSuccess("Factura generada correctamente");
                             lStrDocEntry = lObjPurchaseXmlDTO.DocEntry.ToString();
-                            if(mFlagPurshaseAddon) {
+                            if (mFlagPurshaseAddon)
+                            {
 
                                 //SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
                                 //lObjDocInvoice.GetByKey(Convert.ToInt32(lObjPurchaseXmlDTO.DocEntry));
@@ -526,33 +632,40 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                             }
 
-                            if(!lBolSuccess) {
+                            if (!lBolSuccess)
+                            {
                                 UIApplication.ShowWarning("No fue posible guardar el detalle del comprobante debido a un error interno favor de intentarlo de nuevo o revisar el log");
                                 LogService.WriteError("(btnSave_ClickBefore): " + "No fue posible guardar el detalle del comprobante: " + lObjPurchaseXmlDTO.CodeVoucher);
                             }
                         }
-                        else {
+                        else
+                        {
                             UIApplication.ShowWarning("No fue posible crear la factura debido a un error interno favor de intentarlo de nuevo o revisar el log");
                             LogService.WriteError("(btnSave_ClickBefore): " + " No fue posible crear la factura: " + lObjPurchaseXmlDTO.CodeVoucher);
                             lBolSuccess = false;
                         }
                     }
-                    else {
+                    else
+                    {
                         UIApplication.ShowWarning(" No fue posible crear el comprobante debido a un error interno favor de intentarlo de nuevo o revisar el log");
                         LogService.WriteError("(btnSave_ClickBefore): " + " No fue posible crear el comprobante: " + lObjPurchaseXmlDTO.CodeVoucher);
                         lBolSuccess = false;
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(btnSave_ClickBefore): " + ex.Message);
                 LogService.WriteError(ex);
                 lBolSuccess = false;
 
             }
-            finally {
-                try {
-                    if(lBolSuccess) {
+            finally
+            {
+                try
+                {
+                    if (lBolSuccess)
+                    {
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
                         UIApplication.ShowMessageBox(string.Format("Documento realizado correctamente"));
 
@@ -561,15 +674,18 @@ namespace UGRS.AddOn.Purchases.Forms {
                         this.UIAPIRawForm.Close();
 
                     }
-                    else {
+                    else
+                    {
                         //mStrCodeVoucher = string.Empty;
-                        if(DIApplication.Company.InTransaction) {
+                        if (DIApplication.Company.InTransaction)
+                        {
                             DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
                         }
                     }
 
                 }
-                catch(Exception ex) {
+                catch (Exception ex)
+                {
                     UIApplication.ShowMessageBox(ex.Message);
                     LogService.WriteError("(btnSave_ClickBefore): " + ex.Message);
                     LogService.WriteError(ex);
@@ -583,11 +699,14 @@ namespace UGRS.AddOn.Purchases.Forms {
         private void mtxXML_ValidateAfter(object sboObject, SBOItemEventArg pVal)//, out bool BubbleEvent)
         {
             // BubbleEvent = true;
-            try {
+            try
+            {
 
 
-                if(pVal.ColUID == "C_Cant" || pVal.ColUID == "C_Price") {
-                    try {
+                if (pVal.ColUID == "C_Cant" || pVal.ColUID == "C_Price")
+                {
+                    try
+                    {
                         this.UIAPIRawForm.Freeze(true);
                         double lDblQuantity = Convert.ToDouble((mtxXML.Columns.Item("C_Cant").Cells.Item(pVal.Row).Specific as EditText).Value.Trim());
                         double lDblPrice = Convert.ToDouble((mtxXML.Columns.Item("C_Price").Cells.Item(pVal.Row).Specific as EditText).Value.Trim());
@@ -606,19 +725,23 @@ namespace UGRS.AddOn.Purchases.Forms {
                         mtxXML.LoadFromDataSource();
                         SetTotal();
                     }
-                    catch(Exception ex) {
+                    catch (Exception ex)
+                    {
                         this.UIAPIRawForm.Freeze(false);
                         UIApplication.ShowError(ex.Message);
                         LogService.WriteError("(mtxXML_ValidateBefore C_Cant): " + ex.Message);
                         LogService.WriteError(ex);
                     }
-                    finally {
+                    finally
+                    {
                         this.UIAPIRawForm.Freeze(false);
                     }
 
                 }
-                if(pVal.ColUID == "C_Total") {
-                    try {
+                if (pVal.ColUID == "C_Total")
+                {
+                    try
+                    {
                         this.UIAPIRawForm.Freeze(true);
                         double lDblTotal = Convert.ToDouble((mtxXML.Columns.Item("C_Total").Cells.Item(pVal.Row).Specific as EditText).Value.Trim());
                         DtMatrix.SetValue("C_Total", pVal.Row - 1, lDblTotal);
@@ -626,19 +749,47 @@ namespace UGRS.AddOn.Purchases.Forms {
                         mtxXML.LoadFromDataSource();
                         //SetTotal();
                     }
-                    catch(Exception ex) {
+                    catch (Exception ex)
+                    {
                         this.UIAPIRawForm.Freeze(false);
                         UIApplication.ShowError(ex.Message);
                         LogService.WriteError("(mtxXML_ValidateBefore C_Total): " + ex.Message);
                         LogService.WriteError(ex);
                     }
-                    finally {
+                    finally
+                    {
+                        this.UIAPIRawForm.Freeze(false);
+                    }
+
+                }
+                if (pVal.ColUID == "C_AF")
+                {
+                    try
+                    {
+                        this.UIAPIRawForm.Freeze(true);
+                        string lStrAF = (mtxXML.Columns.Item("C_AF").Cells.Item(pVal.Row).Specific as EditText).Value;
+                        DtMatrix.SetValue("C_AF", pVal.Row - 1, lStrAF);
+
+                        mtxXML.LoadFromDataSource();
+
+                        //SetTotal();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.UIAPIRawForm.Freeze(false);
+                        UIApplication.ShowError(ex.Message);
+                        LogService.WriteError("(mtxXML_ValidateBefore C_AF): " + ex.Message);
+                        LogService.WriteError(ex);
+                    }
+                    finally
+                    {
                         this.UIAPIRawForm.Freeze(false);
                     }
 
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(mtxXML_ValidateBefore): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -648,85 +799,94 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Evento de choosefromlist
         /// </summary>
-        private void ChooseFromListAfterEvent(ItemEvent pObjValEvent) {
-            try {
-                if(pObjValEvent.Action_Success) {
+        private void ChooseFromListAfterEvent(ItemEvent pObjValEvent)
+        {
+            try
+            {
+                if (pObjValEvent.Action_Success)
+                {
                     SAPbouiCOM.IChooseFromListEvent lObjCFLEvento = (SAPbouiCOM.IChooseFromListEvent)pObjValEvent;
-                    if(lObjCFLEvento.SelectedObjects != null) {
+                    if (lObjCFLEvento.SelectedObjects != null)
+                    {
                         SAPbouiCOM.DataTable lObjDataTable = lObjCFLEvento.SelectedObjects;
 
-                        if(lObjDataTable != null) {
+                        if (lObjDataTable != null)
+                        {
                             this.UIAPIRawForm.DataSources.UserDataSources.Item(lObjDataTable.UniqueID).ValueEx = System.Convert.ToString(lObjDataTable.GetValue(0, 0));
 
-                            switch(lObjDataTable.UniqueID) {
+                            switch (lObjDataTable.UniqueID)
+                            {
 
                                 case "CFL_BP":
-                                txtName.Value = System.Convert.ToString(lObjDataTable.GetValue(1, 0));
-                                txtRFC.Value = System.Convert.ToString(lObjDataTable.GetValue(23, 0));
-                                break;
+                                    txtName.Value = System.Convert.ToString(lObjDataTable.GetValue(1, 0));
+                                    txtRFC.Value = System.Convert.ToString(lObjDataTable.GetValue(23, 0));
+                                    break;
 
                                 case "CFL_Area":
-                                //txtArea.Value = lObjDataTable.GetValue(0, 0).ToString();
-                                this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
-                                List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                                if(string.IsNullOrEmpty(cboSubida.Value)) {
-                                    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
-                                }
-                                else {
-                                    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
-                                }
-                                AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
-                                AddConditionChoseFromListProject(mObjCFLProject);
-                                break;
+                                    //txtArea.Value = lObjDataTable.GetValue(0, 0).ToString();
+                                    this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
+                                    List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
+                                    if (string.IsNullOrEmpty(cboSubida.Value))
+                                    {
+                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                                    }
+                                    else
+                                    {
+                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
+                                    }
+                                    AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
+                                    AddConditionChoseFromListProject(mObjCFLProject);
+                                    break;
 
                                 case "CFL_AreaMx":
-                                string lStrCostCenter = lObjDataTable.GetValue(0, 0).ToString();
-                                DtMatrix.SetValue("C_Area", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
-                                DtMatrix.SetValue("C_AF", pObjValEvent.Row - 1, "");
-                                DtMatrix.SetValue("C_Whs", pObjValEvent.Row - 1, mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetWhouse(lObjDataTable.GetValue(0, 0).ToString()));
-                                mtxXML.LoadFromDataSource();
-                                break;
+                                    string lStrCostCenter = lObjDataTable.GetValue(0, 0).ToString();
+                                    DtMatrix.SetValue("C_Area", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
+                                    DtMatrix.SetValue("C_AF", pObjValEvent.Row - 1, "");
+                                    DtMatrix.SetValue("C_Whs", pObjValEvent.Row - 1, mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetWhouse(lObjDataTable.GetValue(0, 0).ToString()));
+                                    mtxXML.LoadFromDataSource();
+                                    break;
 
                                 case "CFL_AssetM":
-                                DtMatrix.SetValue("C_AF", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
-                                mtxXML.LoadFromDataSource();
-                                break;
+                                    DtMatrix.SetValue("C_AF", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
+                                    mtxXML.LoadFromDataSource();
+                                    break;
 
                                 case "CFL_C_Item":
-                                DtMatrix.SetValue("C_Item", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
-                                DtMatrix.SetValue("C_ItemSAP", pObjValEvent.Row - 1, lObjDataTable.GetValue(1, 0));
-                                VerifyInvntItems();
-                                mtxXML.LoadFromDataSource();
-                                break;
+                                    DtMatrix.SetValue("C_Item", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
+                                    DtMatrix.SetValue("C_ItemSAP", pObjValEvent.Row - 1, lObjDataTable.GetValue(1, 0));
+                                    VerifyInvntItems();
+                                    mtxXML.LoadFromDataSource();
+                                    break;
 
                                 case "CFL_Acc":
-                                DtMatrix.SetValue("C_Account", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
-                                mtxXML.LoadFromDataSource();
-                                break;
+                                    DtMatrix.SetValue("C_Account", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
+                                    mtxXML.LoadFromDataSource();
+                                    break;
 
                                 case "CFL_C_Pro":
-                                //string ss = lObjDataTable.GetValue(0, 0).ToString();
-                                DtMatrix.SetValue("C_Project", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
-                                mtxXML.LoadFromDataSource();
-                                break;
+                                    //string ss = lObjDataTable.GetValue(0, 0).ToString();
+                                    DtMatrix.SetValue("C_Project", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
+                                    mtxXML.LoadFromDataSource();
+                                    break;
 
                                 case "CFL_C_AGL":
-                                string sss = lObjDataTable.GetValue(0, 0).ToString();
-                                DtMatrix.SetValue("C_AGL", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
-                                mtxXML.LoadFromDataSource();
-                                break;
+                                    string sss = lObjDataTable.GetValue(0, 0).ToString();
+                                    DtMatrix.SetValue("C_AGL", pObjValEvent.Row - 1, lObjDataTable.GetValue(0, 0));
+                                    mtxXML.LoadFromDataSource();
+                                    break;
 
                                 case "CFL_Item":
-                                // txtItem.Value = System.Convert.ToString(lObjDataTable.GetValue(0, 0));
-                                lblItemName.Caption = System.Convert.ToString(lObjDataTable.GetValue(1, 0));
-                                break;
+                                    // txtItem.Value = System.Convert.ToString(lObjDataTable.GetValue(0, 0));
+                                    lblItemName.Caption = System.Convert.ToString(lObjDataTable.GetValue(1, 0));
+                                    break;
 
                             }
                         }
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(ChooseFromListAfterEvent): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -735,41 +895,50 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Carga de choosefromlist antes de abrir
         /// </summary>
-        private void ChooseFromListBeforeEvent(ItemEvent pObjValEvent) {
-            try {
+        private void ChooseFromListBeforeEvent(ItemEvent pObjValEvent)
+        {
+            try
+            {
                 SAPbouiCOM.IChooseFromListEvent lObjCFLEvento = (SAPbouiCOM.IChooseFromListEvent)pObjValEvent;
                 string lStrCflUID = lObjCFLEvento.ChooseFromListUID;
                 ChooseFromList lObjChooseFromList = UIAPIRawForm.ChooseFromLists.Item(lStrCflUID);
                 //AddConditionItems(lObjChooseFromList);
-                if(lStrCflUID == "CFL_AssetM") {
+                if (lStrCflUID == "CFL_AssetM")
+                {
                     List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                    if(string.IsNullOrEmpty(cboSubida.Value)) {
+                    if (string.IsNullOrEmpty(cboSubida.Value))
+                    {
                         lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(DtMatrix.GetValue("C_Area", pObjValEvent.Row - 1).ToString()).ToList();
                     }
-                    else {
+                    else
+                    {
                         lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
                     }
                     AddConditionAssets(lObjChooseFromList, lLstAssetsDTO);
                 }
 
-                if(lStrCflUID == "CFL_C_Item") {
+                if (lStrCflUID == "CFL_C_Item")
+                {
 
                     /*List<ItemDTO> lLstItemDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetItems().ToList();
 
                     AddConditionItems(lObjChooseFromList, lLstItemDTO);*/
                 }
 
-                if(lStrCflUID == "CFL_C_Pro") {
+                if (lStrCflUID == "CFL_C_Pro")
+                {
                     AddConditionChoseFromListProject(lObjChooseFromList);
                 }
-                if(lStrCflUID == "CFL_Item") {
+                if (lStrCflUID == "CFL_Item")
+                {
                     List<ItemDTO> lLstItemDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetItems().ToList();
                     AddConditionItems(lObjChooseFromList, lLstItemDTO);
                 }
 
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(ChooseFromListBeforeEvent): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -778,17 +947,20 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         ///Cerrar ventana
         /// </summary>
-        private void btnCancel_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
+        private void btnCancel_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
             BubbleEvent = true;
             this.UIAPIRawForm.Close();
         }
         #endregion
 
         #region Load & Unload Events
-        private void LoadEvents() {
+        private void LoadEvents()
+        {
             SAPbouiCOM.Framework.Application.SBO_Application.ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
         }
-        private void UnLoadEvents() {
+        private void UnLoadEvents()
+        {
             SAPbouiCOM.Framework.Application.SBO_Application.ItemEvent -= new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
         }
         #endregion
@@ -798,14 +970,16 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Carga los ChooseFromList
         /// <summary>
-        private void LoadChoseFromList() {
-            try {
+        private void LoadChoseFromList()
+        {
+            try
+            {
                 mObjCFLProject = InitChooseFromLists(false, "63", "CFL_Pro", this.UIAPIRawForm.ChooseFromLists);
 
                 ChooseFromList lObjCFLProjectArea = InitChooseFromLists(false, "61", "CFL_Area", this.UIAPIRawForm.ChooseFromLists);
                 AddConditionChoseFromListArea(lObjCFLProjectArea);
 
-                mObjCFLAsset = InitChooseFromLists(false, "61", "CFL_Asset", this.UIAPIRawForm.ChooseFromLists);
+                //mObjCFLAsset = InitChooseFromLists(false, "61", "CFL_Asset", this.UIAPIRawForm.ChooseFromLists);
 
 
                 ChooseFromList lObjCFLBP = InitChooseFromLists(false, "2", "CFL_BP", this.UIAPIRawForm.ChooseFromLists);
@@ -839,7 +1013,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(LoadChoseFromList): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -848,8 +1023,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Establece los txt a los ChooseFromList
         /// <summary>
-        private void SetChooseToTxt() {
-            try {
+        private void SetChooseToTxt()
+        {
+            try
+            {
                 txtProject.DataBind.SetBound(true, "", "CFL_Pro");
                 txtProject.ChooseFromListUID = "CFL_Pro";
                 txtProject.ChooseFromListAlias = "PrjCode";
@@ -859,13 +1036,13 @@ namespace UGRS.AddOn.Purchases.Forms {
                 txtArea.ChooseFromListAlias = "PrcCode";
 
                 this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Area").ValueEx = mStrArea;
-                List<AssetsDTO> lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
-                AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
+                //List<AssetsDTO> lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                //AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
                 AddConditionChoseFromListProject(mObjCFLProject);
 
-                txtAF.DataBind.SetBound(true, "", "CFL_Asset");
-                txtAF.ChooseFromListUID = "CFL_Asset";
-                txtAF.ChooseFromListAlias = "PrcCode";
+                //txtAF.DataBind.SetBound(true, "", "CFL_Asset");
+                //txtAF.ChooseFromListUID = "CFL_Asset";
+                //txtAF.ChooseFromListAlias = "PrcCode";
 
                 txtBP.DataBind.SetBound(true, "", "CFL_BP");
                 txtBP.ChooseFromListUID = "CFL_BP";
@@ -877,7 +1054,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(SetChooseToTxt): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -887,8 +1065,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Condiciones de chooseFromList
         /// <summary>
-        private void AddConditionChoseFromListProject(ChooseFromList pCFL) {
-            try {
+        private void AddConditionChoseFromListProject(ChooseFromList pCFL)
+        {
+            try
+            {
                 SAPbouiCOM.Condition lObjCon = null;
                 SAPbouiCOM.Conditions lObjCons = new Conditions();
 
@@ -906,7 +1086,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                 pCFL.SetConditions(lObjCons);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddConditionChoseFromListProject): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -915,8 +1096,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Condiciones de chooseFromList
         /// <summary>
-        private void AddConditionChoseFromListArea(ChooseFromList pCFL) {
-            try {
+        private void AddConditionChoseFromListArea(ChooseFromList pCFL)
+        {
+            try
+            {
                 SAPbouiCOM.Condition lObjCon = null;
                 SAPbouiCOM.Conditions lObjCons = null;
                 lObjCons = pCFL.GetConditions();
@@ -941,7 +1124,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                 pCFL.SetConditions(lObjCons);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddConditionChoseFromListArea): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -950,26 +1134,32 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Condiciones de chooseFromList
         /// <summary>
-        private void AddConditionAssets(ChooseFromList pCFL, List<AssetsDTO> pLstAssetsDTO) {
-            try {
+        private void AddConditionAssets(ChooseFromList pCFL, List<AssetsDTO> pLstAssetsDTO)
+        {
+            try
+            {
                 SAPbouiCOM.Condition lObjCon = null;
                 SAPbouiCOM.Conditions lObjCons = new Conditions();
                 pCFL.SetConditions(lObjCons);
                 int i = 1;
-                if(pLstAssetsDTO.Count() > 0) {
-                    foreach(AssetsDTO lObjAssetDTO in pLstAssetsDTO) {
+                if (pLstAssetsDTO.Count() > 0)
+                {
+                    foreach (AssetsDTO lObjAssetDTO in pLstAssetsDTO)
+                    {
                         lObjCon = lObjCons.Add();
                         lObjCon.Alias = "PrcCode";
                         lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
                         lObjCon.CondVal = lObjAssetDTO.PrcCode;
 
-                        if(pLstAssetsDTO.Count() > i) {
+                        if (pLstAssetsDTO.Count() > i)
+                        {
                             lObjCon.Relationship = BoConditionRelationship.cr_OR;
                         }
                         i++;
                     }
                 }
-                else {
+                else
+                {
                     lObjCon = lObjCons.Add();
                     lObjCon.Alias = "PrcCode";
                     lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
@@ -977,7 +1167,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 }
                 pCFL.SetConditions(lObjCons);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddConditionAssets): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -986,8 +1177,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Condiciones de chooseFromList
         /// <summary>
-        private void AddConditionItems(ChooseFromList pCFL, List<ItemDTO> pLstItemDTO) {
-            try {
+        private void AddConditionItems(ChooseFromList pCFL, List<ItemDTO> pLstItemDTO)
+        {
+            try
+            {
 
 
                 SAPbouiCOM.Condition lObjCon = null;
@@ -996,20 +1189,24 @@ namespace UGRS.AddOn.Purchases.Forms {
                 int i = 1;
 
 
-                if(pLstItemDTO.Count() > 0) {
-                    foreach(ItemDTO lObjItemDTO in pLstItemDTO) {
+                if (pLstItemDTO.Count() > 0)
+                {
+                    foreach (ItemDTO lObjItemDTO in pLstItemDTO)
+                    {
                         lObjCon = lObjCons.Add();
                         lObjCon.Alias = "ItemCode";
                         lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
                         lObjCon.CondVal = lObjItemDTO.ItemCode;
 
-                        if(pLstItemDTO.Count() > i) {
+                        if (pLstItemDTO.Count() > i)
+                        {
                             lObjCon.Relationship = BoConditionRelationship.cr_OR;
                         }
                         i++;
                     }
                 }
-                else {
+                else
+                {
                     lObjCon = lObjCons.Add();
                     lObjCon.Alias = "ItemCode";
                     lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
@@ -1021,7 +1218,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 //string ss = lObjColumnItem.ChooseFromListAlias;
                 //lObjColumnItem.ChooseFromListAlias = "ItemCode";
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddConditionItems): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -1030,8 +1228,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Condiciones de chooseFromList
         /// <summary>
-        private void AddConditionBP(ChooseFromList pCFL) {
-            try {
+        private void AddConditionBP(ChooseFromList pCFL)
+        {
+            try
+            {
                 SAPbouiCOM.Condition lObjCon = null;
                 SAPbouiCOM.Conditions lObjCons = null;
                 lObjCons = pCFL.GetConditions();
@@ -1044,14 +1244,17 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                 pCFL.SetConditions(lObjCons);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddConditionBP): " + ex.Message);
                 LogService.WriteError(ex);
             }
         }
 
-        private void AddContitionsAccount(ChooseFromList pCFL) {
-            try {
+        private void AddContitionsAccount(ChooseFromList pCFL)
+        {
+            try
+            {
                 SAPbouiCOM.Condition lObjCon = null;
                 SAPbouiCOM.Conditions lObjCons = null;
                 lObjCons = pCFL.GetConditions();
@@ -1085,7 +1288,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                 pCFL.SetConditions(lObjCons);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("frmPurchaseNote (AddContitionsAccount) " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -1099,7 +1303,8 @@ namespace UGRS.AddOn.Purchases.Forms {
         public ChooseFromList InitChooseFromLists(bool pbolMultiselecction, string pStrType, string pStrID, SAPbouiCOM.ChooseFromListCollection pObjCFLs) //
         {
             SAPbouiCOM.ChooseFromList lObjoCFL = null;
-            try {
+            try
+            {
                 SAPbouiCOM.ChooseFromListCreationParams oCFLCreationParams = null;
                 oCFLCreationParams = (SAPbouiCOM.ChooseFromListCreationParams)UIApplication.GetApplication().CreateObject(SAPbouiCOM.BoCreatableObjectType.cot_ChooseFromListCreationParams);
 
@@ -1111,7 +1316,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                 this.UIAPIRawForm.DataSources.UserDataSources.Add(pStrID, SAPbouiCOM.BoDataType.dt_SHORT_TEXT, 254);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowMessageBox(string.Format("InitCustomerChooseFromListException: {0}", ex.Message));
                 LogService.WriteError("(InitChooseFromLists): " + ex.Message);
                 LogService.WriteError(ex);
@@ -1127,23 +1333,29 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Crea hilo para abrir carpeta 
         /// </summary>
-        private void CreateFolderBroserThread() {
-            try {
+        private void CreateFolderBroserThread()
+        {
+            try
+            {
                 Thread ShowFolderBroserThread = new Thread(OpenFileBrowser);
-                if(ShowFolderBroserThread.ThreadState == System.Threading.ThreadState.Unstarted) {
+                if (ShowFolderBroserThread.ThreadState == System.Threading.ThreadState.Unstarted)
+                {
                     ShowFolderBroserThread.SetApartmentState(System.Threading.ApartmentState.STA);
                     ShowFolderBroserThread.Start();
                 }
-                else {
+                else
+                {
                     ShowFolderBroserThread.Start();
                     ShowFolderBroserThread.Join();
 
                 }
-                while(ShowFolderBroserThread.ThreadState == System.Threading.ThreadState.Running) {
+                while (ShowFolderBroserThread.ThreadState == System.Threading.ThreadState.Running)
+                {
                     System.Windows.Forms.Application.DoEvents();
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowMessageBox(ex.Message);
                 LogService.WriteError("(CreateFolderBroserThread): " + ex.Message);
                 LogService.WriteError(ex);
@@ -1153,7 +1365,8 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Abre dialogo de seleccionar archivo
         /// </summary>
-        private void OpenFileBrowser() {
+        private void OpenFileBrowser()
+        {
             mStrFileName = ShowFolderBrowser();
 
         }
@@ -1161,10 +1374,13 @@ namespace UGRS.AddOn.Purchases.Forms {
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
-        public string ShowFolderBrowser() {
+        public string ShowFolderBrowser()
+        {
             string lStrfileName = "";
-            using(System.Windows.Forms.OpenFileDialog lObjFile = new System.Windows.Forms.OpenFileDialog()) {
-                try {
+            using (System.Windows.Forms.OpenFileDialog lObjFile = new System.Windows.Forms.OpenFileDialog())
+            {
+                try
+                {
                     IntPtr sapProc = GetForegroundWindow();
                     WindowWrapper MyWindow = null;
 
@@ -1173,23 +1389,27 @@ namespace UGRS.AddOn.Purchases.Forms {
                     lObjFile.Multiselect = false;
                     //GetFileDialogFilter(pStrBank, lObjFile);
                     //oFile.Filter = "Archivos Excel(*.xls)|*.xls|Archivos TXT(*.txt)|*.txt|Archivos CSV(*.csv)|*.csv";
-                    if(mStrFileName == "PDF") {
+                    if (mStrFileName == "PDF")
+                    {
                         lObjFile.Filter = "Archivos PDF|*.PDF";
                         lObjFile.Title = "Selecciona el archivo PDF";
                     }
-                    if(mStrFileName == "XML") {
+                    if (mStrFileName == "XML")
+                    {
                         lObjFile.Filter = "Archivos XML|*.XML";
                         lObjFile.Title = "Selecciona el archivo XML";
                     }
                     lObjFile.RestoreDirectory = true;
                     var dialogResult = lObjFile.ShowDialog(MyWindow);
 
-                    if(dialogResult == System.Windows.Forms.DialogResult.OK) {
+                    if (dialogResult == System.Windows.Forms.DialogResult.OK)
+                    {
                         lStrfileName = lObjFile.FileName;
                         LogService.WriteSuccess("(ShowFolderBrowser): Archivo " + lStrfileName + " Cargado correctamente");
                     }
                 }
-                catch(Exception ex) {
+                catch (Exception ex)
+                {
                     UIApplication.ShowMessageBox(ex.Message);
                     LogService.WriteError("(ShowFolderBrowser): " + ex.Message);
                     LogService.WriteError(ex);
@@ -1204,14 +1424,17 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Duplica una linea en la Matriz
         /// <summary>
-        private void DuplicateLine(MenuEvent pVal) {
-            try {
+        private void DuplicateLine(MenuEvent pVal)
+        {
+            try
+            {
                 this.UIAPIRawForm.Freeze(true);
                 mtxXML.LoadFromDataSource();
 
                 DtMatrix.Rows.Add();
                 int i = 0;
-                foreach(var item in DtMatrix.Columns) {
+                foreach (var item in DtMatrix.Columns)
+                {
 
                     DtMatrix.SetValue(i, DtMatrix.Rows.Count - 1, DtMatrix.GetValue(i, mIntRowSelected - 1));
                     i++;
@@ -1219,20 +1442,23 @@ namespace UGRS.AddOn.Purchases.Forms {
                 DtMatrix.SetValue(i, DtMatrix.Rows.Count - 1, DtMatrix.GetValue(i, mIntRowSelected - 1));
 
 
-                for(int j = 0; j < DtMatrix.Rows.Count; j++) {
+                for (int j = 0; j < DtMatrix.Rows.Count; j++)
+                {
                     DtMatrix.SetValue("#", j, j + 1);
                 }
 
                 mtxXML.LoadFromDataSource();
                 SetTotal();
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 this.UIAPIRawForm.Freeze(false);
                 LogService.WriteError("(DuplicateLine): " + ex.Message);
                 LogService.WriteError(ex);
 
             }
-            finally {
+            finally
+            {
                 this.UIAPIRawForm.Freeze(false);
             }
         }
@@ -1240,8 +1466,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Carga los datos del XML en el formulario
         /// <summary>
-        private void LoadXMLData(PurchaseXMLDTO pObjPurchaseXML) {
-            try {
+        private void LoadXMLData(PurchaseXMLDTO pObjPurchaseXML)
+        {
+            try
+            {
                 txtCurren.Value = pObjPurchaseXML.CurrencyDocument;
                 txtName.Value = pObjPurchaseXML.BPName;
                 txtRFC.Value = pObjPurchaseXML.RFCProvider;
@@ -1256,17 +1484,20 @@ namespace UGRS.AddOn.Purchases.Forms {
                 SetTotal();
 
                 string lStrBP = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetBussinesPartner(pObjPurchaseXML.RFCProvider);
-                if(lStrBP == "") {
+                if (lStrBP == "")
+                {
                     btnBP.Item.Visible = true;
                 }
-                else {
+                else
+                {
                     btnBP.Item.Visible = false;
                 }
                 this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_BP").ValueEx = lStrBP;
                 mObjPurchaseXMLDTO.CardCode = lStrBP;
                 mObjPurchaseXMLDTO.CodeVoucher = mStrCodeVoucher;
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(LoadXMLData): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -1275,8 +1506,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Abre ventana de socios de negocio y se envian los datos
         /// <summary>
-        private void OpenFormBP() {
-            try {
+        private void OpenFormBP()
+        {
+            try
+            {
                 SAPbouiCOM.Framework.Application.SBO_Application.ActivateMenuItem("2561");
                 mFormBP = SAPbouiCOM.Framework.Application.SBO_Application.Forms.GetFormByTypeAndCount(134, -1);
                 SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventBP);
@@ -1294,7 +1527,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 txtProviderRFC.Value = txtRFC.Value;
                 txtProviderName.Value = txtName.Value;
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(ex.Message);
                 LogService.WriteError("(OpenFormBP): " + ex.Message);
                 LogService.WriteError(ex);
@@ -1302,12 +1536,16 @@ namespace UGRS.AddOn.Purchases.Forms {
             }
         }
 
-        private void SBO_Application_FormDataEventBP(ref BusinessObjectInfo BusinessObjectInfo, out bool BubbleEvent) {
+        private void SBO_Application_FormDataEventBP(ref BusinessObjectInfo BusinessObjectInfo, out bool BubbleEvent)
+        {
             BubbleEvent = true;
-            try {
-                if(BusinessObjectInfo.EventType != BoEventTypes.et_FORM_ACTIVATE) {
-                    if(mFormBP.UniqueID == BusinessObjectInfo.FormUID && !BusinessObjectInfo.BeforeAction &&
-                        (BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD || BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE)) {
+            try
+            {
+                if (BusinessObjectInfo.EventType != BoEventTypes.et_FORM_ACTIVATE)
+                {
+                    if (mFormBP.UniqueID == BusinessObjectInfo.FormUID && !BusinessObjectInfo.BeforeAction &&
+                        (BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD || BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE))
+                    {
                         string lStrBPCode = ((SAPbouiCOM.EditText)(mFormBP.Items.Item("5").Specific)).Value;
                         string lStrBPName = ((SAPbouiCOM.EditText)(mFormBP.Items.Item("7").Specific)).Value;
                         string lStrBPRFC = ((SAPbouiCOM.EditText)(mFormBP.Items.Item("41").Specific)).Value;
@@ -1322,7 +1560,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(SBO_Application_FormDataEvent): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -1331,8 +1570,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Abre ventana de  Articulos y se envian los datos
         /// <summary>
-        private void OpenFormItem() {
-            try {
+        private void OpenFormItem()
+        {
+            try
+            {
                 SAPbouiCOM.Framework.Application.SBO_Application.ActivateMenuItem("3073");
                 mFormItem = SAPbouiCOM.Framework.Application.SBO_Application.Forms.GetFormByTypeAndCount(150, -1);
                 //mFormItem.
@@ -1346,7 +1587,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 txtItemClassificationCode.Value = DtMatrix.GetValue("C_CodCla", mIntRowSelected - 1).ToString();
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(OpenFormItem): " + ex.Message);
                 LogService.WriteError(ex);
                 UIApplication.ShowError(ex.Message);
@@ -1356,8 +1598,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Crea las columnas que tendra el DataTable
         /// <summary>
-        private void CreateDatatableMatrix() {
-            try {
+        private void CreateDatatableMatrix()
+        {
+            try
+            {
                 this.UIAPIRawForm.DataSources.DataTables.Add("XmlConcepts");
                 DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("XmlConcepts");
                 DtMatrix.Columns.Add("#", SAPbouiCOM.BoFieldsType.ft_ShortNumber);
@@ -1393,10 +1637,10 @@ namespace UGRS.AddOn.Purchases.Forms {
                 lObjColumnItem.ChooseFromListUID = "CFL_C_Item";
                 lObjColumnItem.ChooseFromListAlias = "ItemCode";
 
-                SAPbouiCOM.Column lObjColumnAsset = mtxXML.Columns.Item("C_AF");
-                lObjColumnAsset.DataBind.SetBound(true, "", "CFL_AssetM");
-                lObjColumnAsset.ChooseFromListUID = "CFL_AssetM";
-                lObjColumnAsset.ChooseFromListAlias = "PrcCode";
+                //SAPbouiCOM.Column lObjColumnAsset = mtxXML.Columns.Item("C_AF");
+                //lObjColumnAsset.DataBind.SetBound(true, "", "CFL_AssetM");
+                //lObjColumnAsset.ChooseFromListUID = "CFL_AssetM";
+                //lObjColumnAsset.ChooseFromListAlias = "PrcCode";
 
                 SAPbouiCOM.Column lObjColumnAccount = mtxXML.Columns.Item("C_Account");
                 lObjColumnAccount.DataBind.SetBound(true, "", "CFL_Acc");
@@ -1420,7 +1664,8 @@ namespace UGRS.AddOn.Purchases.Forms {
 
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(CreateDatatableMatrix): " + ex.Message);
                 LogService.WriteError(ex);
             }
@@ -1429,18 +1674,23 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Llena el Datatable y llena la matrix con los datos
         /// <summary>
-        private void FillMatrix(PurchaseXMLDTO pObjXML) {
-            try {
+        private void FillMatrix(PurchaseXMLDTO pObjXML)
+        {
+            try
+            {
                 int i = 0;
                 string lStrTaxCode;
                 mLstWithholdingTax = new List<TaxesXMLDTO>();
-                foreach(ConceptsXMLDTO lObjConcepts in pObjXML.ConceptLines) {
+                foreach (ConceptsXMLDTO lObjConcepts in pObjXML.ConceptLines)
+                {
 
                     i = DtMatrix.Rows.Count;
 
                     double lDblRate = 0;
-                    if(lObjConcepts.LstTaxes != null && lObjConcepts.LstTaxes.Count > 0) {
-                        if(lObjConcepts.LstTaxes.Where(x => x.Tax == "002").Count() > 0) {
+                    if (lObjConcepts.LstTaxes != null && lObjConcepts.LstTaxes.Count > 0)
+                    {
+                        if (lObjConcepts.LstTaxes.Where(x => x.Tax == "002").Count() > 0)
+                        {
                             string lStrRate = lObjConcepts.LstTaxes.Where(x => x.Tax == "002").FirstOrDefault().Rate;
                             lDblRate = string.IsNullOrEmpty(lStrRate) ? 0 : Convert.ToDouble(lStrRate);
                         }
@@ -1457,14 +1707,16 @@ namespace UGRS.AddOn.Purchases.Forms {
                     string lStrTax = string.Empty;
 
 
-                    if(lObjConcepts.LstTaxes != null && lObjConcepts.LstTaxes.Count > 0) {
+                    if (lObjConcepts.LstTaxes != null && lObjConcepts.LstTaxes.Count > 0)
+                    {
 
                         DtMatrix.SetValue("C_Tasa", i, lObjConcepts.LstTaxes.Select(x => x.Rate).First().ToString());
                         lStrTax = lObjConcepts.LstTaxes.Where(y => y.Tax != "003").Where(y => y.Amount != "").Sum(x => Convert.ToDecimal(x.Amount)).ToString();
                         DtMatrix.SetValue("C_Tax", i, string.IsNullOrEmpty(lStrTax) ? "0" : lStrTax);
                         List<TaxesXMLDTO> lLstTaxesIEPS = new List<TaxesXMLDTO>();
                         lLstTaxesIEPS = lObjConcepts.LstTaxes.Where(x => x.Tax == "003").ToList();
-                        if(lLstTaxesIEPS.Count() > 0) {
+                        if (lLstTaxesIEPS.Count() > 0)
+                        {
                             AddIepsToDT(lLstTaxesIEPS);
                         }
                     }
@@ -1487,33 +1739,39 @@ namespace UGRS.AddOn.Purchases.Forms {
                     DtMatrix.SetValue("C_HasWth", i, lObjConcepts.LstWithholdingTax != null && lObjConcepts.LstWithholdingTax.Count > 0 ? "Y" : "N");
 
                     DtMatrix.SetValue("C_Whs", i, GetWhs(lObjConcepts.CodeItmProd, txtArea.Value));
-                    if(lObjConcepts.AdmOper == "O") {
+                    if (lObjConcepts.AdmOper == "O")
+                    {
 
                         DtMatrix.SetValue("C_Account", i, mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetCostAccount(lObjConcepts.CodeItmProd));
                     }
                     //List<ItemDTO> lLstItemDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetItems().ToList();
                     List<ItemDTO> lLstItemDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetItems(DtMatrix.GetValue("C_CodCla", i).ToString()).ToList();
-                    if(lLstItemDTO.Count == 1) {
+                    if (lLstItemDTO.Count == 1)
+                    {
                         DtMatrix.SetValue("C_Item", i, lLstItemDTO[0].ItemCode);
                         DtMatrix.SetValue("C_ItemSAP", i, lLstItemDTO[0].ItemName);
                     }
-                    else {
+                    else
+                    {
                         DtMatrix.SetValue("C_Item", i, txtItem.Value);
                         DtMatrix.SetValue("C_ItemSAP", i, lblItemName.Caption);
                     }
                     //(mtxXML.Columns.Item("C_Area").Cells.Item(0).Specific as EditText).Value = "OG_AUINT";
 
                     i++;
-                    if(lObjConcepts.LstWithholdingTax != null && lObjConcepts.LstWithholdingTax.Count() > 0) {
+                    if (lObjConcepts.LstWithholdingTax != null && lObjConcepts.LstWithholdingTax.Count() > 0)
+                    {
                         mLstWithholdingTax.AddRange(lObjConcepts.LstWithholdingTax);
                     }
 
                 }
 
-                if(pObjXML.LstLocalTax != null && pObjXML.LstLocalTax.Count() > 0) {
+                if (pObjXML.LstLocalTax != null && pObjXML.LstLocalTax.Count() > 0)
+                {
                     List<TaxesXMLDTO> lLstTaxesLocal = new List<TaxesXMLDTO>();
                     lLstTaxesLocal = pObjXML.LstLocalTax.Where(x => x.Tax == "ISH").ToList();
-                    if(lLstTaxesLocal.Count() > 0) {
+                    if (lLstTaxesLocal.Count() > 0)
+                    {
                         AddLocalTax(lLstTaxesLocal);
                     }
                 }
@@ -1545,7 +1803,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 LogService.WriteSuccess("(FillMatrix): Carga de datos de manera correcta");
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
 
                 UIApplication.ShowMessageBox(ex.Message);
                 LogService.WriteError("(FillMatrix): " + ex.Message);
@@ -1553,15 +1812,19 @@ namespace UGRS.AddOn.Purchases.Forms {
             }
         }
 
-        private void AddIepsToDT(List<TaxesXMLDTO> lLstTaxesIEPS) {
-            try {
+        private void AddIepsToDT(List<TaxesXMLDTO> lLstTaxesIEPS)
+        {
+            try
+            {
                 string lStrItemCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetItemIEPS();
 
 
-                if(!string.IsNullOrEmpty(lStrItemCode)) {
+                if (!string.IsNullOrEmpty(lStrItemCode))
+                {
                     int i = DtMatrix.Rows.Count;
 
-                    foreach(TaxesXMLDTO lObjTaxes in lLstTaxesIEPS) {
+                    foreach (TaxesXMLDTO lObjTaxes in lLstTaxesIEPS)
+                    {
                         string lStrTaxCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetTaxCode((Convert.ToDouble(lObjTaxes.Rate) * 100).ToString()); //
                         //if (!string.IsNullOrEmpty(lStrTaxCode))
                         //{
@@ -1586,26 +1849,32 @@ namespace UGRS.AddOn.Purchases.Forms {
 
                     }
                 }
-                else {
+                else
+                {
                     UIApplication.ShowMessageBox("No se encontro el articulo IEPS");
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddIepsToDT): " + ex.Message);
                 LogService.WriteError(ex);
             }
         }
 
-        private void AddLocalTax(List<TaxesXMLDTO> pLstTaxesLocal) {
-            try {
+        private void AddLocalTax(List<TaxesXMLDTO> pLstTaxesLocal)
+        {
+            try
+            {
                 string lStrItemCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetLocalTaxt();
 
 
-                if(!string.IsNullOrEmpty(lStrItemCode)) {
+                if (!string.IsNullOrEmpty(lStrItemCode))
+                {
 
                     int i = DtMatrix.Rows.Count;
 
-                    foreach(TaxesXMLDTO lObjTaxes in pLstTaxesLocal) {
+                    foreach (TaxesXMLDTO lObjTaxes in pLstTaxesLocal)
+                    {
                         string lStrTaxCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetTaxCode((Convert.ToDouble(lObjTaxes.Rate) * 100).ToString()); //
 
                         DtMatrix.Rows.Add();
@@ -1630,41 +1899,52 @@ namespace UGRS.AddOn.Purchases.Forms {
                         i++;
                     }
                 }
-                else {
+                else
+                {
                     UIApplication.ShowMessageBox("No se encontro el articulo IEPS");
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddIepsToDT): " + ex.Message);
                 LogService.WriteError(ex);
             }
         }
 
 
-        private string GetWhs(string pStrItemCode, string pStrArea) {
+        private string GetWhs(string pStrItemCode, string pStrArea)
+        {
             string lStrWhsMQ = "";
-            if(!string.IsNullOrEmpty(cboSubida.Value)) {
+            if (!string.IsNullOrEmpty(cboSubida.Value))
+            {
                 lStrWhsMQ = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetMQWhs(pStrItemCode);
             }
 
-            if(string.IsNullOrEmpty(lStrWhsMQ)) {
+            if (string.IsNullOrEmpty(lStrWhsMQ))
+            {
                 return mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetWhouse(pStrArea);
             }
-            else {
+            else
+            {
                 return lStrWhsMQ;
             }
 
         }
 
-        private void VerifyInvntItems() {
-            if(mFlagPurshaseAddon) {
-                try {
+        private void VerifyInvntItems()
+        {
+            if (mFlagPurshaseAddon)
+            {
+                try
+                {
                     this.UIAPIRawForm.Freeze(true);
                     string lStrCodeItmProd;
                     string lStrWhsCodeDropShip;
-                    for(int i = 0; i < DtMatrix.Rows.Count; i++) {
+                    for (int i = 0; i < DtMatrix.Rows.Count; i++)
+                    {
                         lStrCodeItmProd = DtMatrix.GetValue("C_Item", i).ToString();
-                        if(mObjPurchaseServiceFactory.GetPurchaseXmlService().IsInvntItem(lStrCodeItmProd)) {
+                        if (mObjPurchaseServiceFactory.GetPurchaseXmlService().IsInvntItem(lStrCodeItmProd))
+                        {
                             SAPbouiCOM.CommonSetting lObjRowCtrl;
                             lObjRowCtrl = mtxXML.CommonSetting;
                             lObjRowCtrl.SetCellEditable(i + 1, 7, false);
@@ -1674,24 +1954,30 @@ namespace UGRS.AddOn.Purchases.Forms {
                             lStrWhsCodeDropShip = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetWhsDropShip();
                             //DtMatrix.SetValue("C_Account", i, "5010020003000");// modificar esto
                             string lStrWhsMQ = "";
-                            if(!string.IsNullOrEmpty(cboSubida.Value)) {
+                            if (!string.IsNullOrEmpty(cboSubida.Value))
+                            {
                                 lStrWhsMQ = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetMQWhs(lStrCodeItmProd);
                             }
 
-                            if(!string.IsNullOrEmpty(lStrWhsMQ)) {
+                            if (!string.IsNullOrEmpty(lStrWhsMQ))
+                            {
                                 DtMatrix.SetValue("C_Whs", i, lStrWhsMQ);
                             }
-                            else {
-                                if(!string.IsNullOrEmpty(lStrWhsCodeDropShip)) {
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(lStrWhsCodeDropShip))
+                                {
                                     DtMatrix.SetValue("C_Whs", i, lStrWhsCodeDropShip);
                                 }
-                                else {
+                                else
+                                {
                                     UIApplication.ShowMessageBox("No se encotro el almacen de entrega directa");
                                     LogService.WriteError("No se encontro el almacen de entrega directa");
                                 }
                             }
                         }
-                        else {
+                        else
+                        {
 
                             SAPbouiCOM.CommonSetting lObjRowCtrl;
                             lObjRowCtrl = mtxXML.CommonSetting;
@@ -1706,10 +1992,12 @@ namespace UGRS.AddOn.Purchases.Forms {
                     mtxXML.LoadFromDataSource();
 
                 }
-                catch(Exception ex) {
+                catch (Exception ex)
+                {
                     LogService.WriteError("frmPurchaseXML (VerifyInvntItems)" + ex.Message);
                 }
-                finally {
+                finally
+                {
                     this.UIAPIRawForm.Freeze(false);
                 }
             }
@@ -1720,35 +2008,43 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Valores validos del combobox 
         /// <summary>
-        private void AddComboboxAdmin() {
-            try {
+        private void AddComboboxAdmin()
+        {
+            try
+            {
                 SAPbouiCOM.Column lObjColumn = (SAPbouiCOM.Column)mtxXML.Columns.Item("C_Admin");
                 SAPbouiCOM.Cells lObjCells = lObjColumn.Cells;
 
-                if(lObjColumn.ValidValues.Count == 0) {
+                if (lObjColumn.ValidValues.Count == 0)
+                {
                     lObjColumn.ValidValues.Add("A", "Administración");
                     lObjColumn.ValidValues.Add("O", "Operativo");
                     lObjColumn.DisplayDesc = true;
                 }
                 lObjColumn.ComboSelectAfter += lObjColumn_ComboSelectAfter;
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("(AddComboboxAdmin): " + ex.Message);
                 LogService.WriteError(ex);
             }
         }
 
-        private void AddComboboxMQ() {
-            try {
+        private void AddComboboxMQ()
+        {
+            try
+            {
                 List<string> lLstStringRises = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetMqSubidas();
                 cboSubida.ValidValues.Add("", "");
-                foreach(string lStrIdRise in lLstStringRises) {
+                foreach (string lStrIdRise in lLstStringRises)
+                {
                     cboSubida.ValidValues.Add(lStrIdRise, "");
                 }
                 cboSubida.ExpandType = BoExpandType.et_ValueOnly;
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
 
                 LogService.WriteError("(AddComboboxMQ): " + ex.Message);
                 LogService.WriteError(ex);
@@ -1756,24 +2052,30 @@ namespace UGRS.AddOn.Purchases.Forms {
         }
 
 
-        private void lObjColumn_ComboSelectAfter(object sboObject, SBOItemEventArg pVal) {
-            try {
+        private void lObjColumn_ComboSelectAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
                 this.UIAPIRawForm.Freeze(true);
 
                 string lStrAdminOper = DtMatrix.GetValue("C_Admin", pVal.Row - 1).ToString();
-                if(lStrAdminOper == "O") {
+                if (lStrAdminOper == "O")
+                {
                     string lStrItemCode = DtMatrix.GetValue("C_Item", pVal.Row - 1).ToString();
                     DtMatrix.SetValue("C_Account", pVal.Row - 1, mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetCostAccount(lStrItemCode));
                 }
-                else {
+                else
+                {
                     DtMatrix.SetValue("C_Account", pVal.Row - 1, "");
                 }
                 mtxXML.LoadFromDataSource();
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("frmPurchaseXML (lObjColumn_ComboSelectAfter): " + ex.Message);
             }
-            finally {
+            finally
+            {
                 this.UIAPIRawForm.Freeze(false);
             }
         }
@@ -1781,10 +2083,13 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Guarda el valor seleccionado  del combobox en DataTable 
         /// <summary>
-        private void SelectCombobox(ItemEvent pObjValEvent) {
+        private void SelectCombobox(ItemEvent pObjValEvent)
+        {
 
-            try {
-                if(pObjValEvent.ItemUID == "mtxXML") {
+            try
+            {
+                if (pObjValEvent.ItemUID == "mtxXML")
+                {
                     SAPbouiCOM.Cell lObjCell = mtxXML.Columns.Item("C_Admin").Cells.Item(pObjValEvent.Row);
                     SAPbouiCOM.ComboBox lObjCombobox = ((SAPbouiCOM.ComboBox)(lObjCell.Specific));
 
@@ -1796,13 +2101,15 @@ namespace UGRS.AddOn.Purchases.Forms {
 
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 this.UIAPIRawForm.Freeze(false);
                 UIApplication.ShowMessageBox(ex.Message);
                 LogService.WriteError("(SelectCombobox): " + ex.Message);
                 LogService.WriteError(ex);
             }
-            finally {
+            finally
+            {
                 this.UIAPIRawForm.Freeze(false);
             }
 
@@ -1811,25 +2118,29 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Seleccionar un renglon de la matriz
         /// <summary>
-        private void SelectRow(int pIntRow, string pStrColumnID) {
+        private void SelectRow(int pIntRow, string pStrColumnID)
+        {
             //string lStrLineStatus = mObjQueryManager.GetValue("LineStatus", "DocEntry", mDBDataSourceD.GetValue("DocEntry", i), "RDR1");
             //if (lStrLineStatus == "C")
             //{
             //    DisableRow(i);
             //}
 
-            try {
+            try
+            {
                 this.UIAPIRawForm.Freeze(true);
 
                 mtxXML.SelectRow(pIntRow, true, false);
 
             }
-            catch(Exception lObjException) {
+            catch (Exception lObjException)
+            {
                 UIApplication.ShowError(string.Format("Matriz: {0}", lObjException.Message));
                 LogService.WriteError("(SelectRow): " + lObjException.Message);
                 LogService.WriteError(lObjException);
             }
-            finally {
+            finally
+            {
                 this.UIAPIRawForm.Freeze(false);
             }
         }
@@ -1838,25 +2149,31 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Valida los totales de la matriz
         /// <summary>
-        private bool ValidateTotals() {
-            try {
+        private bool ValidateTotals()
+        {
+            try
+            {
                 double lDblTotal = Double.Parse(txtTotal.Value, System.Globalization.NumberStyles.Currency);
-                if(mDblTotal != lDblTotal && mDblTotal != lDblTotal + 0.01 && mDblTotal != lDblTotal - 0.01) {
+                if (mDblTotal != lDblTotal && mDblTotal != lDblTotal + 0.01 && mDblTotal != lDblTotal - 0.01)
+                {
                     UIApplication.ShowMessageBox("El total no es igual al del xml cargado: " + mDblTotal.ToString("C") + "\n Diferencia: " + (Convert.ToDecimal(mDblTotal) - Convert.ToDecimal(lDblTotal)).ToString());
                     return false;
                 }
-                else {
+                else
+                {
                     txtTotal.Value = mDblTotal.ToString();
                 }
 
-                if(string.IsNullOrEmpty(txtDate.Value)) {
+                if (string.IsNullOrEmpty(txtDate.Value))
+                {
                     UIApplication.ShowMessageBox("Favor de capturar la fecha de vencimiento");
 
                     return false;
                 }
 
 
-                for(int i = 0; i < DtMatrix.Rows.Count; i++) {
+                for (int i = 0; i < DtMatrix.Rows.Count; i++)
+                {
                     string lStrCodeItmProd = DtMatrix.GetValue("C_Item", i).ToString();
                     //if (mObjPurchaseServiceFactory.GetPurchaseXmlService().IsInvntItem(lStrCodeItmProd) && string.IsNullOrEmpty(DtMatrix.GetValue("C_Account", i).ToString()))
                     //{
@@ -1866,7 +2183,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 }
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowMessageBox("Ocurrio un error al momento de validar los totales");
                 LogService.WriteError("(ValidateTotals): " + ex.Message);
                 LogService.WriteError(ex);
@@ -1881,8 +2199,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Obtiene los datos de la matriz
         /// <summary>
-        private PurchaseXMLDTO GetInvoiceInfo() {
-            try {
+        private PurchaseXMLDTO GetInvoiceInfo()
+        {
+            try
+            {
 
                 mObjPurchaseXMLDTO.Area = txtArea.Value;
                 mObjPurchaseXMLDTO.Employee = mStrEmployee;
@@ -1911,8 +2231,10 @@ namespace UGRS.AddOn.Purchases.Forms {
                 mObjPurchaseXMLDTO.DocDate = mDtmDate;
 
                 List<ConceptsXMLDTO> lLstObjConceptsXML = new List<ConceptsXMLDTO>();
-                for(int i = 0; i < DtMatrix.Rows.Count; i++) {
-                    ConceptsXMLDTO lObjConceptsDTO = new ConceptsXMLDTO() {
+                for (int i = 0; i < DtMatrix.Rows.Count; i++)
+                {
+                    ConceptsXMLDTO lObjConceptsDTO = new ConceptsXMLDTO()
+                    {
                         TaxCode = DtMatrix.GetValue("C_TaxCode", i).ToString(),
                         TaxRate = DtMatrix.GetValue("C_TaxRate", i).ToString(),
                         CodeItmProd = DtMatrix.GetValue("C_Item", i).ToString(),
@@ -1938,7 +2260,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 }
                 mObjPurchaseXMLDTO.ConceptLines = lLstObjConceptsXML;
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowMessageBox(ex.Message);
                 LogService.WriteError("(ReadDataTable): " + ex.Message);
                 LogService.WriteError(ex);
@@ -1949,8 +2272,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Carga el total en los EditText
         /// <summary>
-        private void SetTotal() {
-            try {
+        private void SetTotal()
+        {
+            try
+            {
                 double lDblRetIva = 0;
                 double lDblRet4 = 0;
                 double lDblRetISR = 0;
@@ -1959,12 +2284,15 @@ namespace UGRS.AddOn.Purchases.Forms {
                 double lDblIeps = 0;
                 double lDblDesc = 0;
                 double lDblSubTotal = 0;
-                for(int i = 0; i < DtMatrix.Rows.Count; i++) {
+                for (int i = 0; i < DtMatrix.Rows.Count; i++)
+                {
                     string lStrItemSAP = DtMatrix.GetValue("C_ItemSAP", i).ToString();
-                    if(lStrItemSAP.Equals("IEPS")) {
+                    if (lStrItemSAP.Equals("IEPS"))
+                    {
                         lDblIeps += Convert.ToDouble(DtMatrix.GetValue("C_Total", i));
                     }
-                    else {
+                    else
+                    {
                         lDblTotal += Convert.ToDouble(DtMatrix.GetValue("C_Total", i));
                         lDblSubTotal += Convert.ToDouble(DtMatrix.GetValue("C_SubTotal", i));
                     }
@@ -2001,7 +2329,8 @@ namespace UGRS.AddOn.Purchases.Forms {
                 double ss = lDblTax + lDblTotal + lDblIeps - lDblRetIva - lDblRet4 - lDblRetISR;// -lDblDesc;
                 txtTotal.Value = (lDblTax + lDblSubTotal + lDblIeps - lDblRetIva - lDblRet4 - lDblRetISR - lDblDesc).ToString();
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowMessageBox(ex.Message);
                 LogService.WriteError("(SetTotal): " + ex.Message);
                 LogService.WriteError(ex);
@@ -2012,10 +2341,13 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Limpia los controles del formulario
         /// <summary>
-        private void ClearControls() {
-            try {
+        private void ClearControls()
+        {
+            try
+            {
                 this.UIAPIRawForm.Freeze(true);
-                if(txtBP != null) {
+                if (txtBP != null)
+                {
                     txtBP.Value = string.Empty;
                     txtName.Value = string.Empty;
                     txtRFC.Value = string.Empty;
@@ -2026,18 +2358,21 @@ namespace UGRS.AddOn.Purchases.Forms {
                     txtXML.Value = string.Empty;
                     txtPDF.Value = string.Empty;
 
-                    if(DtMatrix != null) {
+                    if (DtMatrix != null)
+                    {
                         DtMatrix.Rows.Clear();
                         mtxXML.LoadFromDataSource();
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 this.UIAPIRawForm.Freeze(false);
                 LogService.WriteError("(ClearControls): " + ex.Message);
                 LogService.WriteError(ex);
             }
-            finally {
+            finally
+            {
                 this.UIAPIRawForm.Freeze(false);
 
             }
@@ -2050,8 +2385,10 @@ namespace UGRS.AddOn.Purchases.Forms {
         /// <summary>
         /// Agregar detalles al comprobante
         /// </summary>
-        private bool AddVoucherDetail(PurchaseXMLDTO pObjDocument) {
-            try {
+        private bool AddVoucherDetail(PurchaseXMLDTO pObjDocument)
+        {
+            try
+            {
                 //Cambio factura preliminar
                 /* string lStrDocNum = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetDocNum(pObjDocument.DocEntry.ToString());
 
@@ -2087,25 +2424,30 @@ namespace UGRS.AddOn.Purchases.Forms {
                 lObjVouchersDetail.UserCode = UIApplication.GetCompany().UserName;
                 lObjVouchersDetail.Line = pObjDocument.RowLine;
 
-                if(mObjPurchaseServiceFactory.GetVouchersDetailService().Add(lObjVouchersDetail) == 0) {
+                if (mObjPurchaseServiceFactory.GetVouchersDetailService().Add(lObjVouchersDetail) == 0)
+                {
                     LogService.WriteSuccess("InvoiceDI AddDetail" + lObjVouchersDetail.DocNum);
 
 
-                    if(mObjPurchaseServiceFactory.GetVouchersService().UpdateTotal(pObjDocument.CodeVoucher) != 0) {
+                    if (mObjPurchaseServiceFactory.GetVouchersService().UpdateTotal(pObjDocument.CodeVoucher) != 0)
+                    {
                         string lstr = DIApplication.Company.GetLastErrorDescription();
                         LogService.WriteError("InvoiceDI (UpdateTotal) " + DIApplication.Company.GetLastErrorDescription());
                     }
-                    else {
+                    else
+                    {
                         LogService.WriteSuccess("InvoiceDI UpdateTotal" + lObjVouchersDetail.DocNum);
                         return true;
                     }
                 }
-                else {
+                else
+                {
                     UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Company.GetLastErrorDescription()));
                     LogService.WriteError("InvoiceDI (AddVoucherDetail) " + DIApplication.Company.GetLastErrorDescription());
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 UIApplication.ShowMessageBox(ex.Message);
                 LogService.WriteError("InvoiceDI (CreateDocument) " + ex.Message);
                 LogService.WriteError(ex);
@@ -2225,30 +2567,87 @@ namespace UGRS.AddOn.Purchases.Forms {
         private SAPbouiCOM.EditText txtItemClassificationCode;
 
         private StaticText lblSub;
-        private ComboBox cboSubida; 
+        private ComboBox cboSubida;
 
         private StaticText lblAdminOper;
         private ComboBox cboAdminOper;
 
         #endregion
 
-        private void txtItem_ValidateAfter(object sboObject, SBOItemEventArg pVal) {
-            if(string.IsNullOrEmpty(txtItem.Value)) {
+        private void txtItem_ValidateAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            if (string.IsNullOrEmpty(txtItem.Value))
+            {
                 lblItemName.Caption = string.Empty;
             }
         }
 
-        private void Form_RightClickAfter(ref ContextMenuInfo eventInfo) {
+        private void Form_RightClickAfter(ref ContextMenuInfo eventInfo)
+        {
             mtxXML.AutoResizeColumns();
 
         }
 
-        private void Form_CloseAfter(SBOItemEventArg pVal) {
+        private void Form_CloseAfter(SBOItemEventArg pVal)
+        {
             UnLoadEvents();
 
         }
 
-   
+        private void txtAF_KeyDownAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (pVal.CharPressed == 13)
+                {
+                    if (UIUtility.IsFormOpen("UGRS.AddOn.Purchases.Forms.frmModalAF"))
+                    {
+                        UIApplication.GetApplication().Forms.Item("frmMdlAF").Close();
+                    }
+
+                    mObjModalAF = new frmModalAF(txtArea.Value, txtAF.Value);
+                    mObjModalAF.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError(ex.Message);
+                LogService.WriteError(ex);
+                UIApplication.ShowMessageBox(ex.Message);
+            }
+        }
+
+        private void mtxXML_KeyDownAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (pVal.ColUID == "C_AF")
+                {
+                    if (pVal.CharPressed == 13)
+                    {
+                        if (UIUtility.IsFormOpen("UGRS.AddOn.Purchases.Forms.frmModalAF"))
+                        {
+                            UIApplication.GetApplication().Forms.Item("frmMdlAF").Close();
+                        }
+
+                        string lStrArea = (mtxXML.Columns.Item("C_Area").Cells.Item(pVal.Row).Specific as EditText).Value;
+                        string lStrAF = (mtxXML.Columns.Item("C_AF").Cells.Item(pVal.Row).Specific as EditText).Value;
+                        mObjModalAF = new frmModalAF(lStrArea, lStrAF, true);
+                        mObjModalAF.Show();
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError("[mtxXML_KeyDownAfter]: " + ex.Message);
+                LogService.WriteError(ex);
+            }
+
+        }
+
+
 
 
 
