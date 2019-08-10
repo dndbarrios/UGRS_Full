@@ -103,6 +103,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO\AssetDAO.cs" />
+    <Compile Include="Services\AssetService.cs" />
     <Compile Include="DAO\PurchaseCheeckingCostDAO.cs" />
     <Compile Include="DAO\PurchaseMessageDAO.cs" />
     <Compile Include="DAO\PurchaseNotesDAO.cs" />
@@ -285,6 +287,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\SQL\GetConfigurationPac.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\SQL\GetAssetsCFL.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

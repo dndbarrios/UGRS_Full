@@ -69,5 +69,10 @@ namespace UGRS.Core.SDK.DI.Purchases
        {
            return new PurchaseService();
        }
+
+       public AssetService GetAssetService()
+       {
+           return new AssetService();
+       }
     }
 }
