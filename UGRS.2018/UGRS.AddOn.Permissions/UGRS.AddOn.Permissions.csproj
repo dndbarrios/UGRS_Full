@@ -80,7 +80,7 @@
     <Reference Include="SAPBusinessOneSDK" />
     <Reference Include="UGRS.Core.SDK.DI.WebServicePermissions, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.Core.SDK.DI.WebService.Permissions\bin\Debug\UGRS.Core.SDK.DI.WebServicePermissions.dll</HintPath>
+      <HintPath>..\UGRS.Core.SDK.DI.WebService.Permissions\bin\x86\Debug\UGRS.Core.SDK.DI.WebServicePermissions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -74,15 +74,15 @@
     <Reference Include="System" />
     <Reference Include="UGRS.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.Core\bin\Debug\UGRS.Core.dll</HintPath>
+      <HintPath>..\UGRS.Core\bin\x86\Debug\UGRS.Core.dll</HintPath>
     </Reference>
     <Reference Include="UGRS.Core.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.Core.SDK\bin\Debug\UGRS.Core.SDK.dll</HintPath>
+      <HintPath>..\UGRS.Core.SDK\bin\x86\Debug\UGRS.Core.SDK.dll</HintPath>
     </Reference>
     <Reference Include="UGRS.Core.SDK.DI, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.Core.SDK.DI\bin\Debug\UGRS.Core.SDK.DI.dll</HintPath>
+      <HintPath>..\UGRS.Core.SDK.DI\bin\x86\Debug\UGRS.Core.SDK.DI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
