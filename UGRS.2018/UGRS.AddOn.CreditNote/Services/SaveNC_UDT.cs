@@ -132,11 +132,11 @@ namespace UGRS.AddOn.CreditNote.Services
 
         public int SaveCreditNoteDoc(List<CreditNoteDoc> pLstCreditNoteDoc)
         {
-            UIApplication.ShowSuccess("Guardando documentos preliminares en UDT");
-            mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guadado preliminares", pLstCreditNoteDoc.Count);
+           
+            mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guadado notas de credito", pLstCreditNoteDoc.Count);
             List<string> lLstError = new List<string>();
             int i = 1;
-            foreach (CreditNoteDoc lObjCreditNoteDoc in pLstCreditNoteDoc.Where(x => x.IsDraft == "N"))
+            foreach (CreditNoteDoc lObjCreditNoteDoc in pLstCreditNoteDoc.Where(x => x.IsDocument == "N"))
             {
                 UIApplication.ShowSuccess(string.Format("Guardando {0} de {1}", i, pLstCreditNoteDoc.Count));
                 lLstError.AddRange(mObjCreditNoteFactory.GetCreditNoteService().CreateCreditNoteDOC(lObjCreditNoteDoc, lLstError));
@@ -174,6 +174,7 @@ namespace UGRS.AddOn.CreditNote.Services
                 foreach (var lObjCN in pLstCreditNoteDoc.Where(x => x.IsDocRel == "N"))
                 {
                     UIApplication.ShowSuccess(string.Format("Actualizado {0} de {1}", i, pLstCreditNoteDoc.Count));
+                    LogService.WriteSuccess(string.Format("Actualizado {0} de {1}", i, pLstCreditNoteDoc.Count));
                     mObjCreditNoteFactory.GetCreditNoteService().UpdateDocRel(lObjCN);
                     i++;
                 }
@@ -201,8 +202,8 @@ namespace UGRS.AddOn.CreditNote.Services
                 {
                     DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
                     pBolSuccess = true;
-                    LogService.WriteSuccess("Generado correctamente");
-                    UIApplication.ShowSuccess("Generado correctamente");
+                    LogService.WriteSuccess("Proceso terminado correctamente");
+                    UIApplication.ShowSuccess("Proceso terminado correctamente");
                     // MenuNewForm();
                 }
                 else
@@ -263,16 +264,21 @@ namespace UGRS.AddOn.CreditNote.Services
             try
             {
                 int i = 0;
-                foreach (var lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "N"))
+                foreach (CreditNoteDoc lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "Y"))
                 {
                     UIApplication.ShowMessage(string.Format("Generando documento {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
-                    int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().UpdateDocument(Convert.ToInt32(lObjDoc.DocEntryDraft));
+                    int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().UpdateDocument(Convert.ToInt32(lObjDoc.DocEntry));
 
                     if (lIntResult != 0)
                     {
                         string lStrError = string.Format("Fallo a crear nota de crédito {0} Error: {1}", lObjDoc.DocEntryDraft, DIApplication.Company.GetLastErrorDescription());
                         LogService.WriteError(lStrError);
                         lLstErrors.Add(lStrError);
+                    }
+                    else
+                    {
+                        lObjDoc.IsProcessed = "Y";
+                        mObjCreditNoteFactory.GetCreditNoteDocService().Update(lObjDoc);
                     }
                 }
             }
@@ -314,23 +320,51 @@ namespace UGRS.AddOn.CreditNote.Services
         //}
 
 
-        //public int CancelReport(CreditNoteT pObjCreditNoteT)
-        //{
-        //    try
-        //    {
-        //        DIApplication.Company.StartTransaction();
+        public bool CancelReport(CreditNoteT pObjCreditNoteT)
+        {
+            bool lBolResult = true;
+            try
+            {
+                DIApplication.Company.StartTransaction();
 
-        //        //foreach (var lObjDoc in collection)
-        //        //{
+                foreach (CreditNoteDoc lObjDoc in pObjCreditNoteT.LstCreditNoteDoc)
+                {
+                    if (lBolResult && lObjDoc.IsDocument == "N")
+                    {
+                        foreach (CreditNoteDet lObjDet in lObjDoc.LstCreditNoteDet)
+                        {
+                            lObjDet.IsCanceled = "Y";
+                            if (mObjCreditNoteFactory.GetCreditNoteDetService().Update(lObjDet) != 0)
+                            {
+                                lBolResult = false;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lBolResult = false;
+                        break;
+                    }
+                }
 
-        //        //}
-        //    }
-        //    catch (Exception)
-        //    {
-                
-        //        throw;
-        //    }
-        //}
+                if (lBolResult)
+                {
+                    pObjCreditNoteT.IsCanceled = "Y";
+                    if (mObjCreditNoteFactory.GetCreditNoteTService().Update(pObjCreditNoteT) != 0)
+                    {
+                        lBolResult = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lBolResult = false;
+                LogService.WriteError(ex);
+            }
+
+           return CloseTransaction(lBolResult);
+        }
        
     }
 }

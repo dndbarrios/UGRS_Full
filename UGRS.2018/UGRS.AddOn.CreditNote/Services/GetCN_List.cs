@@ -18,12 +18,14 @@ namespace UGRS.AddOn.CreditNote.Services
         CreditNoteFactory mObjCreditNoteFactory = new CreditNoteFactory();
          ProgressBarManager mObjProgressBar = null;
          SAPbouiCOM.DataTable mDtMatrix;
-         string mStrDate = string.Empty;
+         string mStrDateFrom = string.Empty;
+         string mStrDateTo = string.Empty;
        
-        public GetCN_List(DataTable pDtMatrix, string pStrDate)
+        public GetCN_List(DataTable pDtMatrix, string pStrDateFrom, string pStrDateTo)
         {
             mDtMatrix = pDtMatrix;
-            mStrDate = pStrDate;
+            mStrDateFrom = pStrDateFrom;
+            mStrDateTo = pStrDateTo;
         }
 
         /// <summary>
@@ -130,12 +132,12 @@ namespace UGRS.AddOn.CreditNote.Services
                     TaxCode = lStrTaxCode,
                     Line = i,
                     LstCreditNoteDet = lLstCreditNoteByCardcode,
-                    IsCanceled = "N",
-                    IsDraft = "N",
+                    //IsCanceled = "N",
+                    //IsDraft = "N",
                     IsDocRel = "N",
                     IsDocument = "N",
                     IsProcessed = "N",
-                    IsDelDraft = "N",
+                    //IsDelDraft = "N",
                     QtyInv = lLstCreditNoteByCardcode.Count(),
                     User = DIApplication.Company.UserName,
                     FolioDoc =  string.Format("{0}_{1}", pStrId, i)
@@ -155,8 +157,11 @@ namespace UGRS.AddOn.CreditNote.Services
             CreditNoteT lObjCreditNoteT = new CreditNoteT
             {
                 NcId = pStrId,
-                Date = string.IsNullOrEmpty(mStrDate) ? DateTime.Now :
-                                DateTime.ParseExact(mStrDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None),
+                DateFrom = string.IsNullOrEmpty(mStrDateFrom) ? DateTime.Now :
+                                DateTime.ParseExact(mStrDateFrom, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None),
+                DateTo = string.IsNullOrEmpty(mStrDateTo) ? DateTime.Now :
+                                               DateTime.ParseExact(mStrDateTo, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None),
+
                 CreationDate = DateTime.Now,
                 IsAutorized = "N",
                 IsCanceled = "N",

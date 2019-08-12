@@ -23,7 +23,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
             lLstStrParameters.Add("StartDate", pStrDateTimeFrom);
             lLstStrParameters.Add("EndDate", pStrDateTimeTo);
             string lStrQuery = this.GetSQL("Exec_Invoices").Inject(lLstStrParameters);
-            LogService.WriteInfo(lStrQuery);
+           // LogService.WriteInfo(lStrQuery);
             return lStrQuery;
         }
 
@@ -32,7 +32,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
             Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
             lLstStrParameters.Add("NcId", pStrNcId);
             string lStrQuery = this.GetSQL("GetNCReportSaved").Inject(lLstStrParameters);
-            LogService.WriteInfo(lStrQuery);
+            //LogService.WriteInfo(lStrQuery);
             return lStrQuery;
         }
 
@@ -133,7 +133,7 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
 
         public CreditNoteT GetCreditNoteTSaved(string pStrId)
         {
-            return mObjQueryManager.GetObjectsList<CreditNoteT>("U_NcId", pStrId, "[@UG_PE_NC]").First();
+            return mObjQueryManager.GetObjectsList<CreditNoteT>("U_NcId", pStrId, "[@UG_PE_NC]").FirstOrDefault();
         }
 
         public List<CreditNoteDoc> GetCreditNoteDocSaved(string pStrId)

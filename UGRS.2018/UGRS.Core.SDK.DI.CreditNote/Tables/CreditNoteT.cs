@@ -13,7 +13,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         public string NcId { get; set; }
 
         [Field(Description = "Date", Type = BoFieldTypes.db_Date)]
-        public DateTime Date { get; set; }
+        public DateTime DateFrom { get; set; }
+
+        [Field(Description = "Date", Type = BoFieldTypes.db_Date)]
+        public DateTime DateTo { get; set; }
 
         [Field(Description = "Total", Type = BoFieldTypes.db_Float, SubType = BoFldSubTypes.st_Price)]
         public float Total { get; set; }

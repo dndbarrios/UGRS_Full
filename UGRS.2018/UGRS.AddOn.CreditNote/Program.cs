@@ -27,7 +27,7 @@ namespace UGRS.AddOn.CreditNote
                     oApp = new Application(args[0]);
                 }
 
-                LogService.Filename("AddOnCompras");
+                LogService.Filename("AddOnCreditNotes");
 
                 Menu MyMenu = new Menu();
                 MyMenu.AddMenuItems();
