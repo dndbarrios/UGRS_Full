@@ -16,8 +16,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
         /// Crea un pago
         /// </summary>
         /// 
-        public List<string> CreateCreditNote(CreditNoteDoc pObjCreditNoteDoc, List<string> pLstErrors)
+        public List<string> CreateCreditNote(CreditNoteDoc pObjCreditNoteDoc)
         {
+            List<string> lLstErrors = new List<string>();
             try
             {
                 //Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oCreditNotes);
@@ -41,8 +42,8 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 {
                     DIApplication.Company.GetLastError(out intError, out lStrErrMsg);
                     LogService.WriteError(lStrErrMsg);
-                    pLstErrors.Add(lStrErrMsg);
-                    UIApplication.ShowError(lStrErrMsg);
+                    lLstErrors.Add(lStrErrMsg);
+                    //UIApplication.ShowError(lStrErrMsg);
                 }
                 else
                 {
@@ -59,10 +60,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
             {
                 LogService.WriteError(string.Format("Error al crear el borrador {1} Error {0}", ex.Message, pObjCreditNoteDoc.FolioDoc));
                 LogService.WriteError(ex);
-                pLstErrors.Add(ex.Message);
+                lLstErrors.Add(ex.Message);
 
             }
-            return pLstErrors;
+            return lLstErrors;
         }
 
         //private void SBO_Application_ItemEvent(string FormUID, ref ItemEvent pVal, out bool BubbleEvent)

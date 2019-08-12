@@ -16,7 +16,7 @@ namespace UGRS.AddOn.CreditNote.Services
     public class GetCN_List
     {
         CreditNoteFactory mObjCreditNoteFactory = new CreditNoteFactory();
-         ProgressBarManager mObjProgressBar = null;
+         //ProgressBarManager mObjProgressBar = null;
          SAPbouiCOM.DataTable mDtMatrix;
          string mStrDateFrom = string.Empty;
          string mStrDateTo = string.Empty;
@@ -49,11 +49,10 @@ namespace UGRS.AddOn.CreditNote.Services
             {
                 if (mDtMatrix != null)
                 {
-                    mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Obtencion de registros", mDtMatrix.Rows.Count);
+                    UIApplication.ShowMessage("Obtencion de registros " + mDtMatrix.Rows.Count);
                     for (int i = 0; i < mDtMatrix.Rows.Count; i++)
                     {
                         lLstCN.Add(GetDTMatrixRow(i, pStrId));
-                        mObjProgressBar.NextPosition();
                     }
                 }
             }
@@ -63,10 +62,7 @@ namespace UGRS.AddOn.CreditNote.Services
             }
             finally
             {
-                if (mObjProgressBar != null)
-                {
-                    mObjProgressBar.Dispose();
-                }
+               
             }
             return lLstCN;
         }
@@ -76,6 +72,7 @@ namespace UGRS.AddOn.CreditNote.Services
         /// </summary>
         public CreditNoteDet GetDTMatrixRow(int pIntRow, string pStrId)
         {
+            string pstr = mDtMatrix.GetValue("C_DocDate", pIntRow).ToString();
             CreditNoteDet lObjCN_DTO = new CreditNoteDet
             {
                 Amount = float.Parse(mDtMatrix.GetValue("C_Amount", pIntRow).ToString()),
@@ -93,7 +90,9 @@ namespace UGRS.AddOn.CreditNote.Services
                 QtyExp = Convert.ToInt32(mDtMatrix.GetValue("C_HeadExp", pIntRow).ToString()),
                 QtyNoCruz = Convert.ToInt32(mDtMatrix.GetValue("C_HeadNoC", pIntRow).ToString()),
                 QtyInv = Convert.ToInt32(mDtMatrix.GetValue("C_InvHead", pIntRow).ToString()),
-                FolioFiscal = mDtMatrix.GetValue("UUID", pIntRow).ToString()
+                FolioFiscal = mDtMatrix.GetValue("UUID", pIntRow).ToString(),
+                SerieINV = mDtMatrix.GetValue("C_Series", pIntRow).ToString(),
+                DateINV = Convert.ToDateTime(mDtMatrix.GetValue("C_DocDate", pIntRow).ToString())
             };
 
 

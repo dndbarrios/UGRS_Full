@@ -53,7 +53,7 @@ namespace UGRS.AddOn.CreditNote.Services
             }
             finally
             {
-                CloseTransaction(lIntResult == 0 ? true : false); 
+                CloseTransaction(lIntResult == 0 ? true : false);
                 if (mObjProgressBar != null)
                 {
                     mObjProgressBar.Dispose();
@@ -74,28 +74,52 @@ namespace UGRS.AddOn.CreditNote.Services
         }
 
         /// <summary>
+        /// Actualiza encabezado en UDT
+        /// </summary>
+        public int UpdateTinUDT(CreditNoteT pObjCreditNoteT)
+        {
+            int lIntResult = mObjCreditNoteFactory.GetCreditNoteTService().Update(pObjCreditNoteT);
+
+            return lIntResult;
+        }
+
+        /// <summary>
         /// Guarda documento en UDT
         /// </summary>
         public int SaveDocInUDT(List<CreditNoteDoc> pLstCreditNoteDoc)
         {
             //Test
             //int lIntResult = mObjCreditNoteFactory.GetCreditNoteDocService().Add(pLstCreditNoteDoc.First());
+           
             int lIntResult = -1;
-            UIApplication.ShowMessage("Guardando Documentos en UDT");
-            mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guardando Documentos en UDT", pLstCreditNoteDoc.Count);
-            foreach (var lObjCreditNoteDoc in pLstCreditNoteDoc)
+
+            try
             {
-                lIntResult = mObjCreditNoteFactory.GetCreditNoteDocService().Add(lObjCreditNoteDoc);
-                if (lIntResult != 0)
+                UIApplication.ShowMessage("Guardando Documentos en UDT");
+                mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guardando Documentos en UDT", pLstCreditNoteDoc.Count);
+                foreach (var lObjCreditNoteDoc in pLstCreditNoteDoc)
                 {
-                    break;
+                    lIntResult = mObjCreditNoteFactory.GetCreditNoteDocService().Add(lObjCreditNoteDoc);
+                    if (lIntResult != 0)
+                    {
+                        break;
+                    }
+                    mObjProgressBar.NextPosition();
                 }
-                mObjProgressBar.NextPosition();
+              
             }
-            if (mObjProgressBar != null)
+            catch (Exception ex)
             {
-                mObjProgressBar.Dispose();
+                LogService.WriteError(ex);
             }
+            finally
+            {
+                if (mObjProgressBar != null)
+                {
+                    mObjProgressBar.Dispose();
+                }
+            }
+           
             return lIntResult;
 
         }
@@ -106,68 +130,69 @@ namespace UGRS.AddOn.CreditNote.Services
         public int SaveDetInUDT(List<CreditNoteDoc> pLstCreditNoteDoc)
         {
             int lIntResult = -1;
-            UIApplication.ShowMessage("Guardando Detalles en UDT");
-            mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guadado detalle", pLstCreditNoteDoc.Count);
-
-            foreach (var lObjDoc in pLstCreditNoteDoc)
+            try
             {
-                foreach (var lObjCreditNoteDet in lObjDoc.LstCreditNoteDet)
+                mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guadado detalle", pLstCreditNoteDoc.Count);
+                UIApplication.ShowMessage("Guardando Detalles en UDT");
+                foreach (var lObjDoc in pLstCreditNoteDoc)
                 {
-                    lIntResult = mObjCreditNoteFactory.GetCreditNoteDetService().Add(lObjCreditNoteDet);
-                    if (lIntResult != 0)
+                    foreach (var lObjCreditNoteDet in lObjDoc.LstCreditNoteDet)
                     {
-                        break;
+                        lIntResult = mObjCreditNoteFactory.GetCreditNoteDetService().Add(lObjCreditNoteDet);
+                        if (lIntResult != 0)
+                        {
+                            break;
+                        }
                     }
-                } 
-                mObjProgressBar.NextPosition();
-               
-            } 
-            if (mObjProgressBar != null)
+                    mObjProgressBar.NextPosition();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                LogService.WriteError(ex);
+            }
+            finally
+            {
+                if (mObjProgressBar != null)
                 {
                     mObjProgressBar.Dispose();
                 }
-            
+            }
             return lIntResult;
         }
 
-        public int SaveCreditNoteDoc(List<CreditNoteDoc> pLstCreditNoteDoc)
+        public List<string> SaveCreditNoteDoc(List<CreditNoteDoc> pLstCreditNoteDoc)
         {
-           
-            mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guadado notas de credito", pLstCreditNoteDoc.Count);
             List<string> lLstError = new List<string>();
-            int i = 1;
-            foreach (CreditNoteDoc lObjCreditNoteDoc in pLstCreditNoteDoc.Where(x => x.IsDocument == "N"))
+            try
             {
-                UIApplication.ShowSuccess(string.Format("Guardando {0} de {1}", i, pLstCreditNoteDoc.Count));
-                lLstError.AddRange(mObjCreditNoteFactory.GetCreditNoteService().CreateCreditNoteDOC(lObjCreditNoteDoc, lLstError));
-                mObjProgressBar.NextPosition();
-                i++;
+                mObjProgressBar = new ProgressBarManager(UIApplication.GetApplication(), "Guardando Notas de credito", pLstCreditNoteDoc.Where(x => x.IsDocument == "N").Count());
+                foreach (CreditNoteDoc lObjCreditNoteDoc in pLstCreditNoteDoc.Where(x => x.IsDocument == "N"))
+                {
+                    //UIApplication.ShowSuccess(string.Format("Guardando {0} de {1}", i, pLstCreditNoteDoc.Count));
+                    lLstError.AddRange(mObjCreditNoteFactory.GetCreditNoteService().CreateCreditNoteDOC(lObjCreditNoteDoc));
+                   
+                    mObjProgressBar.NextPosition();
+                }
             }
-
-            if (lLstError.Count() > 0)
+            catch (Exception ex)
             {
-                string lStrMessageError = string.Format("Algunos preliminares no fueron generadas correctamente: \n{0}",
-                    string.Join("\n", lLstError.Select(x => string.Format("{0}", x)).ToArray()));
-                LogService.WriteError(lStrMessageError);
+                lLstError.Add(ex.Message);
             }
-            else
+            finally
             {
-                UIApplication.ShowSuccess("Documentos preliminares Guardados correctamente");
+                if (mObjProgressBar != null)
+                {
+                    mObjProgressBar.Dispose();
+                }
             }
-            if (mObjProgressBar != null)
-            {
-                mObjProgressBar.Dispose();
-            }
-            return lLstError.Count;
+            return lLstError;
         }
 
 
         public void UpdateDocRel(List<CreditNoteDoc> pLstCreditNoteDoc)
         {
-            if (mObjProgressBar != null)
-            {
-                mObjProgressBar.Dispose();
-            }
             int i = 1;
             try
             {
@@ -263,15 +288,15 @@ namespace UGRS.AddOn.CreditNote.Services
             List<string> lLstErrors = new List<string>();
             try
             {
-                int i = 0;
+                int i = 1;
                 foreach (CreditNoteDoc lObjDoc in pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDocument == "Y"))
                 {
-                    UIApplication.ShowMessage(string.Format("Generando documento {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
+                    UIApplication.ShowWarning(string.Format("Actualizando nota de crédito {0} de {1}", i, pObjCreditNoteT.LstCreditNoteDoc.Count()));
                     int lIntResult = mObjCreditNoteFactory.GetCreditNoteService().UpdateDocument(Convert.ToInt32(lObjDoc.DocEntry));
 
                     if (lIntResult != 0)
                     {
-                        string lStrError = string.Format("Fallo a crear nota de crédito {0} Error: {1}", lObjDoc.DocEntryDraft, DIApplication.Company.GetLastErrorDescription());
+                        string lStrError = string.Format("Fallo al actualizar nota de crédito {0} Error: {1}", lObjDoc.DocEntryDraft, DIApplication.Company.GetLastErrorDescription());
                         LogService.WriteError(lStrError);
                         lLstErrors.Add(lStrError);
                     }
@@ -280,6 +305,7 @@ namespace UGRS.AddOn.CreditNote.Services
                         lObjDoc.IsProcessed = "Y";
                         mObjCreditNoteFactory.GetCreditNoteDocService().Update(lObjDoc);
                     }
+                    i++;
                 }
             }
             catch (Exception ex)
