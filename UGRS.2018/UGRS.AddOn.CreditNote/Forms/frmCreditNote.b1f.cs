@@ -13,6 +13,7 @@ using System.IO;
 using UGRS.Core.SDK.DI.CreditNote.DOC;
 using UGRS.Core.SDK.DI.CreditNote.Enum;
 using UGRS.Core.Extension.Enum;
+using SAPbouiCOM;
 
 namespace UGRS.AddOn.CreditNote.Forms
 {
@@ -45,6 +46,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.btnNC = ((SAPbouiCOM.Button)(this.GetItem("btnNC").Specific));
             this.btnNC.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnNC_ClickAfter);
             this.btnReport = ((SAPbouiCOM.Button)(this.GetItem("btnReport").Specific));
+            this.btnReport.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnReport_ClickAfter);
             this.mtxInv = ((SAPbouiCOM.Matrix)(this.GetItem("mtxInv").Specific));
             this.lblDateTo = ((SAPbouiCOM.StaticText)(this.GetItem("lblDate").Specific));
             this.btnSearch = ((SAPbouiCOM.Button)(this.GetItem("btnSearch").Specific));
@@ -140,6 +142,10 @@ namespace UGRS.AddOn.CreditNote.Forms
 
                         case StatusEnum.PendingReport:
                             SaveReport(lObjSaveNC, lObjGetList);
+                            break;
+
+                        case StatusEnum.PendingAutorized:
+                            Autorize(lObjSaveNC, lObjCreditNoteTSaved, lStrNcId);
                             break;
 
                        
@@ -248,6 +254,14 @@ namespace UGRS.AddOn.CreditNote.Forms
                 }
             }
         }
+
+         private void btnReport_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            printUDO(txtFolio.Value);
+
+        }
+      
+
         #endregion
 
         #region Methods
@@ -279,7 +293,7 @@ namespace UGRS.AddOn.CreditNote.Forms
                     break;
 
                 case "1282": // Add New Record
-                    MenuNewForm();
+                    MenuNewReport();
                     break;
 
                 case "1288": // Next Record
@@ -299,7 +313,8 @@ namespace UGRS.AddOn.CreditNote.Forms
                     break;
             }
         }
-        private void MenuNewForm()
+       
+        private void MenuNewReport()
         {
             mIntNcCode = 0;
 
@@ -392,7 +407,7 @@ namespace UGRS.AddOn.CreditNote.Forms
                 //Obtener datos para guardar reporte
                 string pStrId = pObjGetList.GetId();
 
-                UIApplication.ShowMessage("Guardando reporte" + pStrId);
+                UIApplication.ShowWarning("Guardando reporte" + pStrId);
                 LogService.WriteInfo("Guardando reporte" + pStrId);
                 List<CreditNoteDet> lLstCreditNoteDet = pObjGetList.GetMatrixData(pStrId);
                 List<CreditNoteDoc> lLstCreditNoteDoc = pObjGetList.GetNC_Doc(pStrId, lLstCreditNoteDet);
@@ -412,28 +427,28 @@ namespace UGRS.AddOn.CreditNote.Forms
             }
         }
 
-        //Guarda preliminares
-        private void SaveCreditNote(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList, CreditNoteT pObjCreditNoteTSaved, string pStrNcId)
+        private void Autorize(SaveNC_UDT pObjSaveNC, CreditNoteT pObjCreditNoteTSaved, string pStrNcId)
         {
             //Guardado de Notas de credito
             pObjCreditNoteTSaved = VerifyStatus(pStrNcId);
-
             if (!string.IsNullOrEmpty(pObjCreditNoteTSaved.Attach))
             {
-                if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea iniciar la generacion de Notas de crédito?", 2, "Si", "No", "") == 1)
+                if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea autorizar el reporte?", 2, "Si", "No", "") == 1)
                 {
-                    pObjCreditNoteTSaved = VerifyStatus(pStrNcId);
-                    UIApplication.ShowMessage("Guardando Notas de credito " + pStrNcId);
-                    LogService.WriteInfo("Guardando Nota de credito " + pStrNcId);
-                    int lIntResult = pObjSaveNC.SaveCreditNoteDoc(pObjCreditNoteTSaved.LstCreditNoteDoc);
+                    pObjCreditNoteTSaved.IsAutorized = "Y";
+                    pObjCreditNoteTSaved.UserMod = DIApplication.Company.UserName;
+                    pObjCreditNoteTSaved.ModificationDate = DateTime.Now;
+                    pObjCreditNoteTSaved.ModificationTime = DateTime.Now.ToString("hhmm");
 
-                    if (lIntResult == 0)
+                    if (pObjSaveNC.UpdateTinUDT(pObjCreditNoteTSaved) == 0)
                     {
-                        //llamado Actualiza documentos preliminares
-                        pObjCreditNoteTSaved = VerifyStatus(pStrNcId);
-                        UIApplication.ShowMessage("Guardado Notas de credito realizado correctamente " + pStrNcId);
-                        LogService.WriteInfo("Guardado Notas de credito realizado correctamente " + pStrNcId);
-                        UpdateDocRel(pObjSaveNC, pStrNcId);
+                        UIApplication.ShowSuccess("Autorizado correctamente");
+                    }
+                    else
+                    {
+                        string lStrError = string.Format("Fallo al autorizar {0}", DIApplication.Company.GetLastErrorDescription());
+                        UIApplication.ShowMessageBox(lStrError);
+                        LogService.WriteError(lStrError);
                     }
                 }
             }
@@ -443,6 +458,32 @@ namespace UGRS.AddOn.CreditNote.Forms
             }
         }
 
+        //Guarda preliminares
+        private void SaveCreditNote(SaveNC_UDT pObjSaveNC, GetCN_List pObjGetList, CreditNoteT pObjCreditNoteTSaved, string pStrNcId)
+        {
+            if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea iniciar la generacion de Notas de crédito?", 2, "Si", "No", "") == 1)
+            {
+                pObjCreditNoteTSaved = VerifyStatus(pStrNcId);
+                UIApplication.ShowWarning("Guardando Notas de credito " + pStrNcId);
+                LogService.WriteInfo("Guardando Nota de credito " + pStrNcId);
+                List<string> LstResult = pObjSaveNC.SaveCreditNoteDoc(pObjCreditNoteTSaved.LstCreditNoteDoc);
+
+                if (LstResult.Count == 0)
+                {
+                    //llamado Actualiza documentos preliminares
+                    pObjCreditNoteTSaved = VerifyStatus(pStrNcId);
+                    UIApplication.ShowSuccess("Guardado Notas de credito realizado correctamente " + pStrNcId);
+                    LogService.WriteInfo("Guardado Notas de credito realizado correctamente " + pStrNcId);
+                    UpdateDocRel(pObjSaveNC, pStrNcId);
+                }
+                else
+                {
+                    ShowMessageboxList("Algunos preliminares no fueron generadas correctamente: ", LstResult);
+                }
+            }
+
+        }
+
         //Actualiza documentos relacionados
         private List<string> UpdateDocRel(SaveNC_UDT pObjSaveNC, string pStrNcId)
         {
@@ -450,14 +491,15 @@ namespace UGRS.AddOn.CreditNote.Forms
             GetCN_List lObjGetList = new GetCN_List(DtMatrix, txtDateTo.Value, txtDateTo.Value);
             lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
 
-            UIApplication.ShowMessage("Actualizando documentos relacionados " + pStrNcId);
+            UIApplication.ShowWarning("Actualizando documentos relacionados " + pStrNcId);
+            
             LogService.WriteInfo("Actualizando documentos relacionados " + pStrNcId);
             pObjSaveNC.UpdateDocRel(lObjCreditNoteTSaved.LstCreditNoteDoc);
            
             //Verifica DocRel
             lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
 
-            UIApplication.ShowMessage("Verificando documentos relacionados " + pStrNcId);
+            UIApplication.ShowWarning("Verificando documentos relacionados " + pStrNcId);
             LogService.WriteInfo("Verificando documentos relacionados " + pStrNcId);
             //lObjCreditNoteTSaved = lObjGetList.GetCreditNoteTSaved(pStrId);
             List<string> lLstError = pObjSaveNC.ValidateCreditNoteRelation(lObjGetList.GetDraftReference(pStrNcId), lObjCreditNoteTSaved);
@@ -480,7 +522,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             lObjCreditNoteTSaved = VerifyStatus(pStrNcId);
             //Guarda Nota de credito desde borrador
 
-            UIApplication.ShowMessage("Actualizando notas de credito a relevante " + pStrNcId);
+            UIApplication.ShowWarning("Actualizando notas de credito a relevante " + pStrNcId);
             LogService.WriteInfo("Actualizando notas de credito a relevante " + pStrNcId);
             List<string> lLstErrorDoc = pObjSaveNC.UpdateDocument(lObjCreditNoteTSaved);
             if (lLstErrorDoc.Count() > 0)
@@ -526,7 +568,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             string lStrMessageError = string.Format(pStrMessage + "\n{0}",
                        string.Join("\n", pLstError.Select(x => string.Format("{0}", x)).ToArray()));
             LogService.WriteError(lStrMessageError);
-            Application.SBO_Application.MessageBox(lStrMessageError);
+            SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(lStrMessageError);
         }
 
         private string AttatchFile(string pStrFile)
@@ -634,7 +676,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             }
             else
             {
-                UIApplication.ShowMessage("No se econtraron registros");
+                UIApplication.ShowError("No se econtraron registros");
             }
 
         }
@@ -644,44 +686,63 @@ namespace UGRS.AddOn.CreditNote.Forms
         {
             try
             {
-                this.UIAPIRawForm.Freeze(true);
-
-                UIApplication.ShowMessage("Cargando reporte " + pStrNcId);
-                LogService.WriteInfo("Cargando reporte " + pStrNcId);
-
-                mIntNcCode = string.IsNullOrEmpty(pStrNcId) ? 0 : Convert.ToInt32(pStrNcId.Substring(3));
-                GetCN_List lObjNC_List = new GetCN_List(DtMatrix, txtDateFrom.Value, txtDateTo.Value);
-                mObjCreditNoteT = lObjNC_List.GetCreditNoteTSaved(pStrNcId);
-                if (mObjCreditNoteT != null)
+                if (!string.IsNullOrEmpty(pStrNcId))
                 {
-                    DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
-                    DtMatrix.Rows.Clear();
-                    DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetReportSavedQuery(pStrNcId));
-                    BindMatrix();
-                    txtFolio.Value = pStrNcId;
-                    txtAttach.Value = mObjCreditNoteT.Attach;
-                    txtDateFrom.Value = mObjCreditNoteT.DateFrom.ToString("yyyyMMdd");
-                    txtDateTo.Value = mObjCreditNoteT.DateTo.ToString("yyyyMMdd");
-                    // txtFolio.Item.Click();
-                    txtDateTo.Item.Enabled = true;
-                    txtDateFrom.Item.Enabled = true;
-                    btnSearch.Item.Enabled = false;
-                    btnAttach.Item.Enabled = true;
-                    btnNC.Item.Enabled = true;
-                    btnNC.Caption = "Generar NC";
-                    btnReport.Item.Enabled = true;
-                    btnCancel.Item.Enabled = true;
+                    this.UIAPIRawForm.Freeze(true);
 
-                    mEnumStatus = SetStatus(mObjCreditNoteT);
-                    string pStrStatus = mEnumStatus.GetDescription();
-                    lblStatus.Caption = string.Format("Estatus: {0}", pStrStatus);
+                    UIApplication.ShowWarning("Cargando reporte " + pStrNcId);
+                    LogService.WriteInfo("Cargando reporte " + pStrNcId);
+
+                    mIntNcCode = string.IsNullOrEmpty(pStrNcId) ? 0 : Convert.ToInt32(pStrNcId.Substring(3));
+                    GetCN_List lObjNC_List = new GetCN_List(DtMatrix, txtDateFrom.Value, txtDateTo.Value);
+                    mObjCreditNoteT = lObjNC_List.GetCreditNoteTSaved(pStrNcId);
+                    if (mObjCreditNoteT != null)
+                    {
+                        DtMatrix = this.UIAPIRawForm.DataSources.DataTables.Item("Dt_INV");
+                        DtMatrix.Rows.Clear();
+                        DtMatrix.ExecuteQuery(mObjCreditNoteFactory.GetCreditNoteService().GetReportSavedQuery(pStrNcId));
+                        BindMatrix();
+                        txtFolio.Value = pStrNcId;
+                        txtAttach.Value = mObjCreditNoteT.Attach;
+                        txtDateFrom.Value = mObjCreditNoteT.DateFrom.ToString("yyyyMMdd");
+                        txtDateTo.Value = mObjCreditNoteT.DateTo.ToString("yyyyMMdd");
+                        // txtFolio.Item.Click();
+                        txtDateTo.Item.Enabled = true;
+                        txtDateFrom.Item.Enabled = true;
+                        btnSearch.Item.Enabled = false;
+                        btnAttach.Item.Enabled = true;
+                        btnNC.Item.Enabled = true;
+                        btnReport.Item.Enabled = true;
+                        btnCancel.Item.Enabled = true;
+
+                        mEnumStatus = SetStatus(mObjCreditNoteT);
+
+                        switch (mEnumStatus)
+                        {
+                            case StatusEnum.PendingAutorized:
+                                btnNC.Caption = "Autorizar";
+                                break;
+                            case StatusEnum.PendingReport:
+                                btnNC.Caption = "Guardar reporte";
+                                break;
+                            default:
+                                btnNC.Caption = "Generar NC";
+                                break;
+                        }
+                        string pStrStatus = mEnumStatus.GetDescription();
+                        lblStatus.Caption = string.Format("Estatus: {0}", pStrStatus);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 LogService.WriteError(ex);
-                this.UIAPIRawForm.Freeze(true);
-                UIApplication.ShowMessage(ex.Message);
+                this.UIAPIRawForm.Freeze(false);
+                UIApplication.ShowError(ex.Message);
+            }
+            finally
+            {
+                this.UIAPIRawForm.Freeze(false);
             }
         }
 
@@ -705,11 +766,17 @@ namespace UGRS.AddOn.CreditNote.Forms
                     btnSearch.Item.Enabled = false;
                 }
 
-                ////Autorizado
-                //if (pObjCreditNoteT.IsAutorized == "Y")
-                //{
-                //    lEnum = StatusEnum.Authorized;
-                //}
+                //Autorizado
+                if (pObjCreditNoteT.IsAutorized == "N")
+                {
+                    lEnum = StatusEnum.PendingAutorized;
+                }
+
+                //Autorizado
+                if (pObjCreditNoteT.IsAutorized == "Y")
+                {
+                    lEnum = StatusEnum.Authorized;
+                }
 
                 ////Borrador
                 //if (pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDraft == "Y").Count() > 0 && pObjCreditNoteT.LstCreditNoteDoc.Where(x => x.IsDraft == "N").Count() > 0)
@@ -762,7 +829,24 @@ namespace UGRS.AddOn.CreditNote.Forms
         }
         #endregion
 
-      
+
+        public void printUDO(string pStrNcId)
+        {
+            try
+            {
+                // execute menu and enter document number
+                string lStrMenu = mObjCreditNoteFactory.GetCreditNoteService().GetMenuId();
+                UIApplication.GetApplication().ActivateMenuItem(lStrMenu);
+                Form lObjForm = UIApplication.GetApplication().Forms.ActiveForm;
+                ((EditText)lObjForm.Items.Item("1000003").Specific).String = pStrNcId;
+                lObjForm.Items.Item("1").Click(BoCellClickType.ct_Regular); // abrir reporte
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError("printUDO " + ex.Message);
+                LogService.WriteError(ex);
+            }
+        }
 
     
         #endregion
@@ -788,8 +872,8 @@ namespace UGRS.AddOn.CreditNote.Forms
         private SAPbouiCOM.StaticText lblProgress;
         private SAPbouiCOM.Button btnCancel;
         #endregion
-      
 
+       
 
 
 

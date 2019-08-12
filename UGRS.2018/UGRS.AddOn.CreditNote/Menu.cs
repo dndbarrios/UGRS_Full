@@ -49,7 +49,7 @@ namespace UGRS.AddOn.CreditNote
                 oCreationPackage.String = "Nota de crédito";
                 oMenus.AddEx(oCreationPackage);
             }
-            catch (Exception ex )
+            catch (Exception )
             { //  Menu already exists
                 
                 Application.SBO_Application.SetStatusBarMessage("Menu Already Exists", SAPbouiCOM.BoMessageTime.bmt_Short, true);

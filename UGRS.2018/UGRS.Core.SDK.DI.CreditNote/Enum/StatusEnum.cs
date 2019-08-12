@@ -10,8 +10,8 @@ namespace UGRS.Core.SDK.DI.CreditNote.Enum
         [Description("Por generar reporte")] //Sin guardar
         PendingReport = 1,
 
-        //[Description("Pendiente de autorizar")] //Generado en UDT 
-        //PendingAutorized = 2,
+        [Description("Pendiente de autorizar")] //Generado en UDT 
+        PendingAutorized = 2,
 
         [Description("Autorizado")] //U_IsAutorized Y
         Authorized = 3,
