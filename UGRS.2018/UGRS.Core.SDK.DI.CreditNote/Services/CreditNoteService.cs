@@ -30,9 +30,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
             return mObjCreditNoteDAO.GetReportSavedQuery(pNcId);
         }
 
-        public List<string> CreateCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO, List<string> pLstErrors)
+        public List<string> CreateCreditNoteDOC(CreditNoteDoc pLstCreditNoteDTO)
         {
-            return mObjCreditNoteDOC.CreateCreditNote(pLstCreditNoteDTO, pLstErrors);
+            return mObjCreditNoteDOC.CreateCreditNote(pLstCreditNoteDTO);
         }
 
         public void UpdateDocRel(CreditNoteDoc pObjCreditNote)
@@ -94,6 +94,11 @@ namespace UGRS.Core.SDK.DI.CreditNote.Services
         public string GetAttachPath()
         {
             return mObjCreditNoteDAO.GetAttachPath();
+        }
+
+        public string GetMenuId()
+        {
+            return mObjCreditNoteDAO.GetMenuId();
         }
 
     }

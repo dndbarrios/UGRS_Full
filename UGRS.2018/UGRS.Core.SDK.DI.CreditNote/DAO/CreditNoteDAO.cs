@@ -193,5 +193,57 @@ namespace UGRS.Core.SDK.DI.CreditNote.DAO
             }
             return lLstDraftReference;
         }
+
+
+        public string GetMenuId()
+        {
+            string lStrMenuID = string.Empty;
+            SAPbobsCOM.Recordset lObjRecordset = (SAPbobsCOM.Recordset)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+            try
+            {
+                string pStrObjectKey = GetConfigValue("PE_REPORT_NC");
+                // get menu UID of report
+                Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
+                lLstStrParameters.Add("ObjectKey", pStrObjectKey);
+                string lStrQuery = this.GetSQL("GetReportId").Inject(lLstStrParameters);
+                lObjRecordset.DoQuery(lStrQuery);
+                if (lObjRecordset.RecordCount > 0)
+                {
+                    lStrMenuID = lObjRecordset.Fields.Item("MenuUID").Value.ToString();
+                }
+
+            }
+            catch (Exception lObjException)
+            {
+                LogService.WriteError("PurchasesDAO (GetMenuId): " + lObjException.Message);
+                LogService.WriteError(lObjException);
+            }
+            finally
+            {
+                MemoryUtility.ReleaseComObject(lObjRecordset);
+            }
+            return lStrMenuID;
+        }
+
+
+        /// <summary>
+        /// Obtener valor de la configuracion.
+        /// </summary>
+        public string GetConfigValue(string pStrField)
+        {
+            string lStrCostAccount = "";
+            try
+            {
+                lStrCostAccount = mObjQueryManager.GetValue("U_Value", "Name", pStrField, "[@UG_Config]");
+            }
+            catch (Exception lObjException)
+            {
+                UIApplication.ShowError(string.Format("CostAccount: {0}", lObjException.Message));
+                LogService.WriteError("GetConfigValue (GetDUAccount): " + lObjException.Message);
+                LogService.WriteError(lObjException);
+            }
+            return lStrCostAccount;
+        }
+
     }
 }

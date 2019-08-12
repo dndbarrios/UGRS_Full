@@ -270,7 +270,7 @@ namespace UGRS.Core.SDK.DI.DAO
 
                     pObjUserTable.UserFields.Fields.Item(lStrFieldName).Value = (lObjFieldType != typeof(DateTime) ? lUnkFieldValue.ToString() : lUnkFieldValue);
                 }
-                catch (Exception lObjException)
+                catch (Exception )
                 {
                     //Ignore ;)
                     //LogUtility.Write(string.Format("[ERROR] {0}", lObjException.ToString()));
