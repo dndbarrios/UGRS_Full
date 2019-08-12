@@ -57,13 +57,13 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Creation date", Type = BoFieldTypes.db_Date)]
         public DateTime CreationDate { get; set; }
 
-        [Field(Description = "Creation time", Type = BoFieldTypes.db_Date)]
+        [Field(Description = "Creation time", Type = BoFieldTypes.db_Alpha, Size = 4)]
         public string CreationTime { get; set; }
 
         [Field(Description = "Modification date", Type = BoFieldTypes.db_Date)]
         public DateTime ModificationDate { get; set; }
 
-        [Field(Description = "Modification time", Type = BoFieldTypes.db_Date)]
+        [Field(Description = "Modification time", Type = BoFieldTypes.db_Alpha, Size = 4)]
         public string ModificationTime { get; set; }
 
         [Field(Description = "UserMod", Size = 32)]

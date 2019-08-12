@@ -8,6 +8,8 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
     [Table(Name = "UG_PE_NCDET", Description = "Nota de credito Detalle", Type = BoUTBTableType.bott_NoObjectAutoIncrement)]
     public class CreditNoteDet : Table
     {
+
+
         [Field(Description = "NcId", Type = BoFieldTypes.db_Alpha, Size = 16)]
         public string NcId { get; set; }
 
@@ -28,6 +30,12 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
 
         [Field(Description = "Cert", Type = BoFieldTypes.db_Alpha, Size = 16)]
         public string Cert { get; set; }
+
+        [Field(Description = "SerieINV", Type = BoFieldTypes.db_Alpha, Size = 16)]
+        public string SerieINV { get; set; }
+
+        [Field(Description = "DateInv", Type = BoFieldTypes.db_Date)]
+        public DateTime DateINV { get; set; }
 
         [Field(Description = "DocEntryINV", Type = BoFieldTypes.db_Numeric)]
         public int DocEntryINV { get; set; }
@@ -56,13 +64,13 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "Creation date", Type = BoFieldTypes.db_Date)]
         public DateTime CreationDate { get; set; }
 
-        [Field(Description = "Creation time", Type = BoFieldTypes.db_Date)]
+        [Field(Description = "Creation time", Type = BoFieldTypes.db_Alpha, Size = 4)]
         public string CreationTime { get; set; }
 
         [Field(Description = "Modification date", Type = BoFieldTypes.db_Date)]
         public DateTime ModificationDate { get; set; }
 
-        [Field(Description = "Modification time", Type = BoFieldTypes.db_Date)]
+        [Field(Description = "Modification time", Type = BoFieldTypes.db_Alpha, Size = 4)]
         public string ModificationTime { get; set; }
 
         [Field(Description = "UserMod", Size = 32)]
