@@ -1461,6 +1461,8 @@ namespace UGRS.AddOn.FoodProduction
                         SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Ya existen Preliminares en folio(s): " + lStrDraftFolio
       , SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
                     }
+
+                    mStrODraftDocument = DIApplication.Company.GetNewObjectKey();
                 }
 
             }
