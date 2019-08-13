@@ -16,6 +16,8 @@ namespace UGRS.AddOn.Purchases.Forms
         #region Properties
         PurchasesServiceFactory mObjPurchaseServiceFactory = new PurchasesServiceFactory();
         public string mStrAFCode = string.Empty;
+        public string mStrAreaParam = string.Empty;
+        public string mStrAFParam = string.Empty;
         public bool mBolForMatrix = false;
         #endregion
 
@@ -23,6 +25,9 @@ namespace UGRS.AddOn.Purchases.Forms
         public frmModalAF(string pStrArea = null, string pStrAFCode = null, bool pBolForMatrix = false)
         {
             mBolForMatrix = pBolForMatrix;
+            mStrAreaParam = pStrArea;
+            mStrAFParam = pStrAFCode;
+
             CreateDatatableAF();
             LoadAF(pStrArea, pStrAFCode);
         }
@@ -43,6 +48,7 @@ namespace UGRS.AddOn.Purchases.Forms
             this.mtxAF.ClickBefore += new SAPbouiCOM._IMatrixEvents_ClickBeforeEventHandler(this.mtxAF_ClickBefore);
             this.lblSearch = ((SAPbouiCOM.StaticText)(this.GetItem("lblSearch").Specific));
             this.txtSearch = ((SAPbouiCOM.EditText)(this.GetItem("txtSearch").Specific));
+            this.txtSearch.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.txtSearch_KeyDownAfter);
             this.btnSearch = ((SAPbouiCOM.Button)(this.GetItem("btnSearch").Specific));
             this.btnSearch.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSearch_ClickBefore);
             this.OnCustomInitialize();
@@ -69,6 +75,7 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             BubbleEvent = true;
 
+            LoadAF(mStrAreaParam, txtSearch.Value);
         }
 
         private void btnSelect_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -103,6 +110,14 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             mtxAF.AutoResizeColumns();
         }
+
+        private void txtSearch_KeyDownAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            if (pVal.CharPressed == 13)
+            {
+                LoadAF(mStrAreaParam, txtSearch.Value);
+            }
+        }
         #endregion
 
         #region Functions
@@ -124,6 +139,10 @@ namespace UGRS.AddOn.Purchases.Forms
             {
                 LogUtility.WriteError(String.Format("[frmModalAF - LoadAF] Error: {0}", lObjException.Message));
                 UIApplication.GetApplication().MessageBox(string.Format("Error al obtener los activos fijos: {0}", lObjException.Message));
+            }
+            finally
+            {
+                this.UIAPIRawForm.Freeze(false);
             }
         }
 
