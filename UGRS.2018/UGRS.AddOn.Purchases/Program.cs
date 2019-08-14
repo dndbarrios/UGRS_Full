@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using servTim = UGRS.AddOn.Purchases.TimbradoSoap33Prodigia;
+using UGRS.Core.SDK.DI.Purchases.Services;
 
 namespace UGRS.AddOn.Purchases
 {
@@ -38,7 +39,7 @@ namespace UGRS.AddOn.Purchases
                 DIApplication.DIConnect((SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany());
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
                 //TestXML();
-
+                //TestValidateXML();
                 //Initialize Tables 
                 UIApplication.ShowSuccess(string.Format("Inicializar las tablas"));
                 PurchasesServiceFactory lObjFoodProductionFactory = new PurchasesServiceFactory();
@@ -85,6 +86,51 @@ namespace UGRS.AddOn.Purchases
                     servTim.PadeTimbradoServiceClient mObjTimbradorp = new  servTim.PadeTimbradoServiceClient();
                     string lStrCFDI = mObjTimbradorp.cfdiPorUUID("1d3027c6-5c49-11e3-a2a4-109add4fad20", "factugrs", "A123456789$", "9E5B72AA-11F4-4E2E-BAF2-E4D83465784B");
 
+                }
+
+                LogService.WriteInfo("Correcto: " + Correcto + " Incorrecto: " + incorrecto);
+                TimeSpan lTmsTime = DateTime.Now - mDblTime;
+                LogService.WriteInfo(lTmsTime.Seconds + "." + lTmsTime.Milliseconds);
+                i++;
+            }
+
+            TimeSpan lTmsTimeGral = DateTime.Now - mDblTimeGEneral;
+            LogService.WriteInfo(lTmsTimeGral.Seconds + "." + lTmsTimeGral.Milliseconds);
+        }
+
+
+
+        static void TestValidateXML()
+        {
+
+            string lStrUri = @"C:\Users\amartinez\Documents\Proyectos\UGRS\Compras\XML\XML TODOS";
+            DirectoryInfo d = new DirectoryInfo(lStrUri);//Assuming Test is your Folder
+            FileInfo[] Files = d.GetFiles("*.xml"); //Getting Text files
+            DateTime mDblTimeGEneral = DateTime.Now;
+            int i = 0;
+            int Correcto = 0;
+            int incorrecto = 0;
+            foreach (FileInfo file in Files.Take(5))
+            {
+                DateTime mDblTime = DateTime.Now;
+                LogService.WriteInfo(i + " de " + Files.Length + "Leyendo archivo" + file.Name);
+                UGRS.AddOn.Purchases.Services.ReadXMLService lObjReadXML = new Services.ReadXMLService();
+                UGRS.Core.SDK.DI.Purchases.DTO.PurchaseXMLDTO lOBj = lObjReadXML.ReadXML(file.FullName);
+
+                if (lOBj == null || string.IsNullOrEmpty(lOBj.Total))
+                {
+                    LogService.WriteError("Carga fallida" + file.Name);
+                    incorrecto++;
+                }
+                else
+                {
+                    LogService.WriteSuccess("Lectura correcta");
+                    LogService.WriteInfo(string.Format("UUID: {0} Total: {1} XMLTotal: {2} Subtotal: {3} Retenciones: {4} Ieps: {5} Iva: {6} RetIva: {7} RetIva4: {8}",
+                        lOBj.FolioFiscal, lOBj.Total, lOBj.XMLTotal, lOBj.SubTotal , lOBj.WithholdingTax.Sum(x => Convert.ToDouble(x.Amount)) , lOBj.Ieps, lOBj.Iva, lOBj.RetIva , lOBj.RetIva4));
+         
+                    Correcto++;
+                    InvoiceDI lObjInvoiceDI = new InvoiceDI();
+                    lObjInvoiceDI.CreateDocument(lOBj, false);
                 }
 
                 LogService.WriteInfo("Correcto: " + Correcto + " Incorrecto: " + incorrecto);
