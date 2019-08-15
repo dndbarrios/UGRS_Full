@@ -77,6 +77,11 @@
     <Compile Include="DTO\TransferHeader_DTO.cs" />
     <Compile Include="FoodProductionSeviceFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\DataSet\dsTicket.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsTicket.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Services\CreateAlertService.cs" />
     <Compile Include="Services\ReceptionTransferService.cs" />
     <Compile Include="Services\SetupService.cs" />
@@ -88,6 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\SQL\GetPrice.sql" />
+    <Content Include="Reports\Tickets\rptTicket.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UGRS.Core.SDK.DI\UGRS.Core.SDK.DI.csproj">
@@ -130,6 +138,19 @@
     <EmbeddedResource Include="DAO\SQL\FindDraft.sql" />
     <Content Include="DAO\SQL\GetSeries.sql" />
     <Content Include="DAO\SQL\SearchOC.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Reports\DataSet\dsTicket.xsc">
+      <DependentUpon>dsTicket.xsd</DependentUpon>
+    </None>
+    <None Include="Reports\DataSet\dsTicket.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsTicket.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Reports\DataSet\dsTicket.xss">
+      <DependentUpon>dsTicket.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
