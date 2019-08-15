@@ -24,24 +24,13 @@ namespace UGRS.Object.WeighingMachine.Services
             }
         }
 
-        public void Write(string pStrValue)
-        {
-            try
-            {
-
-
-                if (mObjSerialPort != null && mObjSerialPort.IsOpen)
-                {
-                    mObjSerialPort.WriteLine(pStrValue);
-                }
-            }
-            catch (Exception ex)
-            {
-                LogUtility.Write(ex.Message);
-                //LogUtility.Write(ex);
-                
-            }
-        }
+        //public void Write(string pStrValue)
+        //{
+        //    if (mObjSerialPort != null && mObjSerialPort.IsOpen)
+        //    {
+        //        mObjSerialPort.WriteLine(pStrValue);
+        //    }
+        //}
 
         public string GetName()
         {

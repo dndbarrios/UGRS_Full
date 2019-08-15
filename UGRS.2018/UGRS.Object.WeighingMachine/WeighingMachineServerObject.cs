@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
+using System.Text.RegularExpressions;
 using UGRS.Core.Services;
 using UGRS.Core.Utility;
 using UGRS.Object.WeighingMachine.Events;
@@ -41,13 +42,13 @@ namespace UGRS.Object.WeighingMachine
             }
         }
 
-        private ISerialPortService WritePort
-        {
-            get
-            {
-                return mObjSerialPortService;
-            }
-        }
+        //private ISerialPortService WritePort
+        //{
+        //    get
+        //    {
+        //        return mObjSerialPortService;
+        //    }
+        //}
 
         #endregion
 
@@ -55,7 +56,7 @@ namespace UGRS.Object.WeighingMachine
 
         public WeighingMachineEventHandler mObjDataReceivedDelegate;
 
-        
+
 
         #region Constructor
 
@@ -76,10 +77,10 @@ namespace UGRS.Object.WeighingMachine
             }
         }
 
-        public void WriteSerialPort(string pStrText)
-        {
-            WriteDisplayOne(SerialPort, pStrText);
-        }
+        //public void WriteSerialPort(string pStrText)
+        //{
+        //    WriteDisplayOne(SerialPort, pStrText);
+        //}
 
         #endregion
 
@@ -145,7 +146,7 @@ namespace UGRS.Object.WeighingMachine
 
         protected void OnInternalDataReceived(SerialPortEventArgs pObjEventArgs)
         {
-            LogService.WriteSuccess(string.Format("Dato recibido: {0}", pObjEventArgs.Value));
+            //LogService.WriteSuccess(string.Format("Dato recibido: {0}", pObjEventArgs.Value));
             mStrDataReceived += pObjEventArgs.Value;
             ProcessDataReceived();
         }
@@ -153,6 +154,7 @@ namespace UGRS.Object.WeighingMachine
         private void ProcessDataReceived()
         {
             string lStrData = string.Empty;
+            string lStrDataAux = string.Empty;
 
             switch (GetLocation())
             {
@@ -160,7 +162,16 @@ namespace UGRS.Object.WeighingMachine
 
                     if (mStrDataReceived.Contains("\r"))
                     {
-                        lStrData = mStrDataReceived.Replace("G", "").Replace("N", "").Replace("kg", "").Replace("\r", "").Trim();
+                        //lStrData = mStrDataReceived.Replace("G", "").Replace("N", "").Replace("kg", "").Replace("\r", "").Trim();
+                        lStrData = Regex.Replace(mStrDataReceived, "[^0-9]", "");
+                        //LogService.WriteInfo("Cadena modificada : " + lStrData);
+                        lStrData = lStrData.TrimStart('0');
+                        //LogService.WriteInfo("Cadena modificada trimstart 0 : " + lStrData);
+                        if (string.IsNullOrEmpty(lStrData) || Convert.ToDecimal(lStrData) == 0)
+                        {
+                            lStrData = "0";
+                        }
+
                     }
                     break;
 
@@ -168,7 +179,22 @@ namespace UGRS.Object.WeighingMachine
 
                     if (mStrDataReceived.Contains(","))
                     {
-                        lStrData = mStrDataReceived.Replace("US", "").Replace("GS", "").Replace("kg", "").Replace("+", "").Replace(",", "").Trim();
+
+
+                        lStrDataAux = Regex.Replace(mStrDataReceived, "[^0-9]", "");
+                        //LogService.WriteInfo("Cadena modificada : " + lStrDataAux);
+
+
+                        lStrDataAux = lStrDataAux.TrimStart('0');
+
+                        //LogService.WriteInfo("Cadena modificada trimstart 0 : " + lStrDataAux);
+
+                        lStrData = lStrDataAux.Length > 7 ? lStrDataAux.Substring(0,7).Trim('0').ToString() : lStrDataAux;
+
+                        if (string.IsNullOrEmpty(lStrData) || Convert.ToDecimal(lStrData) == 0)
+                        {
+                            lStrData = "0";
+                        }
                     }
 
                     break;
@@ -181,19 +207,10 @@ namespace UGRS.Object.WeighingMachine
             }
         }
 
-        private void WriteDisplayOne(ISerialPortService pObjDisplay, string pStrPrint)
-        {
-            if (pObjDisplay.IsOpen())
-            {
-
-                pObjDisplay.Write(pStrPrint);
-            }
-            else
-            {
-                pObjDisplay.Open();
-            }
-
-        }
+        //private void WriteDisplayOne(ISerialPortService pObjDisplay, string pStrPrint)
+        //{
+        //    pObjDisplay.Write(pStrPrint);
+        //}
 
         #endregion
 
