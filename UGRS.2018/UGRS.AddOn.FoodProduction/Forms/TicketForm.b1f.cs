@@ -1551,24 +1551,6 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             }
 
-            int j = 0;
-            foreach (TicketDetail lObjTicketDetail in pLstTicketDetail)
-            {
-                j++;
-                if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0)
-                {
-                    lLstLine.Add(j.ToString("00") + " Peso Ent: " + lObjTicketDetail.FirstWT);
-                }
-                if (!string.IsNullOrEmpty(lObjTicketDetail.SecondWT.ToString()) && lObjTicketDetail.SecondWT > 0)
-                {
-                    lLstLine.Add(j.ToString("00") + " Peso Sal: " + lObjTicketDetail.SecondWT);
-                }
-                if (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0)
-                {
-                    lLstLine.Add(j.ToString("00") + " Peso Neto: " + lObjTicketDetail.netWeight);
-                }
-            }
-
             //if (!string.IsNullOrEmpty(pObjTicket.OutputWT.ToString()) && pObjTicket.OutputWT > 0)
             //{
             //    lLstLine.Add("Peso salida: " + pObjTicket.OutputWT.ToString());
@@ -1576,6 +1558,24 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close))
             {
+                int j = 0;
+                foreach (TicketDetail lObjTicketDetail in pLstTicketDetail)
+                {
+                    j++;
+                    if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0)
+                    {
+                        lLstLine.Add(j.ToString("00") + " Peso Ent: " + lObjTicketDetail.FirstWT);
+                    }
+                    if (!string.IsNullOrEmpty(lObjTicketDetail.SecondWT.ToString()) && lObjTicketDetail.SecondWT > 0)
+                    {
+                        lLstLine.Add(j.ToString("00") + " Peso Sal: " + lObjTicketDetail.SecondWT);
+                    }
+                    if (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0)
+                    {
+                        lLstLine.Add(j.ToString("00") + " Peso Neto: " + lObjTicketDetail.netWeight);
+                    }
+                }
+
                 DateTime lDtmDateOutput = mObjTicketServices.GetDateTime(pLstTicketDetail[pLstTicketDetail.Count - 1].OutputDate, pLstTicketDetail[pLstTicketDetail.Count - 1].OutputTime.ToString());
                 lLstLine.Add("Fecha cierre: " + lDtmDateOutput.ToString("dd/MM/yyyy HH:mm"));
             }
