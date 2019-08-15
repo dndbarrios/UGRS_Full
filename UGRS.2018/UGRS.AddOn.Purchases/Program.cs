@@ -39,7 +39,7 @@ namespace UGRS.AddOn.Purchases
                 DIApplication.DIConnect((SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany());
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
                 //TestXML();
-                //TestValidateXML();
+               // TestValidateXML();
                 //Initialize Tables 
                 UIApplication.ShowSuccess(string.Format("Inicializar las tablas"));
                 PurchasesServiceFactory lObjFoodProductionFactory = new PurchasesServiceFactory();
@@ -98,7 +98,7 @@ namespace UGRS.AddOn.Purchases
             LogService.WriteInfo(lTmsTimeGral.Seconds + "." + lTmsTimeGral.Milliseconds);
         }
 
-
+      
 
         static void TestValidateXML()
         {
@@ -116,6 +116,7 @@ namespace UGRS.AddOn.Purchases
                 LogService.WriteInfo(i + " de " + Files.Length + "Leyendo archivo" + file.Name);
                 UGRS.AddOn.Purchases.Services.ReadXMLService lObjReadXML = new Services.ReadXMLService();
                 UGRS.Core.SDK.DI.Purchases.DTO.PurchaseXMLDTO lOBj = lObjReadXML.ReadXML(file.FullName);
+                lOBj = AddValuesTest(lOBj);
 
                 if (lOBj == null || string.IsNullOrEmpty(lOBj.Total))
                 {
@@ -130,7 +131,10 @@ namespace UGRS.AddOn.Purchases
          
                     Correcto++;
                     InvoiceDI lObjInvoiceDI = new InvoiceDI();
-                    lObjInvoiceDI.CreateDocument(lOBj, false);
+                    if (lObjInvoiceDI.CreateDocument(lOBj, false))
+                    {
+                        LogService.WriteSuccess("Factura generada correctamente");
+                    }
                 }
 
                 LogService.WriteInfo("Correcto: " + Correcto + " Incorrecto: " + incorrecto);
@@ -141,6 +145,71 @@ namespace UGRS.AddOn.Purchases
 
             TimeSpan lTmsTimeGral = DateTime.Now - mDblTimeGEneral;
             LogService.WriteInfo(lTmsTimeGral.Seconds + "." + lTmsTimeGral.Milliseconds);
+        }
+
+        static UGRS.Core.SDK.DI.Purchases.DTO.PurchaseXMLDTO AddValuesTest(UGRS.Core.SDK.DI.Purchases.DTO.PurchaseXMLDTO pObjPurchaseDTO)
+        {
+            pObjPurchaseDTO.CardCode = "PR00000001";
+            pObjPurchaseDTO.TaxDate = DateTime.Now;
+            pObjPurchaseDTO.DocDate = DateTime.Now;
+            pObjPurchaseDTO.Obs = "Obs";
+            pObjPurchaseDTO.MQRise = "";
+            pObjPurchaseDTO.Folio = "Test";
+            pObjPurchaseDTO.RowLine = "";
+
+           
+
+            //foreach (System.Reflection.PropertyInfo pinfo in pObjPurchaseDTO.GetType().GetProperties())
+            //{
+            //    string pStr = pinfo.Name;
+            //    object value = pinfo.GetValue(pObjPurchaseDTO, null);
+
+            //    if (value == null)
+            //    {
+            //        value = "null";
+                 
+            //    }  
+            //    LogService.WriteInfo(pStr + " " +  value.ToString());
+            //}
+
+
+            foreach (var lObjItems in pObjPurchaseDTO.ConceptLines)
+            {
+                lObjItems.CodeItmProd = "A00000209";
+                lObjItems.CostingCode = "OG_GRAL";
+                lObjItems.AdmOper = "A";
+                lObjItems.AF = "";
+                lObjItems.Project = "";
+                lObjItems.AGL = "";
+                lObjItems.WareHouse = "OFGE";
+               // lObjItems.
+                double lDblRate = 0;
+                if (lObjItems.LstTaxes != null && lObjItems.LstTaxes.Count > 0)
+                {
+                    if (lObjItems.LstTaxes.Where(x => x.Tax == "002").Count() > 0)
+                    {
+                        string lStrRate = lObjItems.LstTaxes.Where(x => x.Tax == "002").FirstOrDefault().Rate;
+                        lDblRate = string.IsNullOrEmpty(lStrRate) ? 0 : Convert.ToDouble(lStrRate);
+                    }
+                }
+                PurchasesServiceFactory mObjPurchaseServiceFactory = new PurchasesServiceFactory();
+                string lStrTaxCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetTaxCode((lDblRate * 100).ToString()); //
+                lObjItems.TaxCode = lStrTaxCode;
+                //foreach (System.Reflection.PropertyInfo pinfo in lObjItems.GetType().GetProperties())
+                //{
+                //    string pStr = pinfo.Name;
+                //    object value = pinfo.GetValue(lObjItems, null);
+
+                //    if (value == null)
+                //    {
+                //        value = "null";
+
+                //    }
+                //    LogService.WriteInfo(pStr + " " + value.ToString());
+                //}
+            }
+
+            return pObjPurchaseDTO;
         }
 
         static void SBO_Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)

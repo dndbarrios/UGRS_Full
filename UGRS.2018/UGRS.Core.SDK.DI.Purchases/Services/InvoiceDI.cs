@@ -47,16 +47,16 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 				lObjDocument.UserFields.Fields.Item("U_GLO_ObjTUG").Value = "frmReceipts";
 				lObjDocument.UserFields.Fields.Item("U_FolioFiscal").Value = pObjPurchase.FolioFiscal;
                 lObjDocument.UserFields.Fields.Item("U_GLO_Memo").Value = pObjPurchase.Obs;
-				string lStrFile = AttatchFile(pObjPurchase.XMLFile);
-				if (!string.IsNullOrEmpty(lStrFile))
-				{
-					lObjDocument.UserFields.Fields.Item("U_ArchivoXML").Value = AttatchFile(pObjPurchase.XMLFile);
-					lObjDocument.UserFields.Fields.Item("U_ArchivoPDF").Value = AttatchFile(pObjPurchase.PDFFile);
-				}
-				else
-				{
-					return false;
-				}
+                string lStrFile = AttatchFile(pObjPurchase.XMLFile);
+                if (!string.IsNullOrEmpty(lStrFile))
+                {
+                    lObjDocument.UserFields.Fields.Item("U_ArchivoXML").Value = AttatchFile(pObjPurchase.XMLFile);
+                    lObjDocument.UserFields.Fields.Item("U_ArchivoPDF").Value = AttatchFile(pObjPurchase.PDFFile);
+                }
+                else
+                {
+                    return false;
+                }
 			   
 				lObjDocument.UserFields.Fields.Item("U_MQ_Rise").Value = pObjPurchase.MQRise;
 				// lObjDocument.WithholdingTaxData
@@ -191,14 +191,31 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 
 					  
 						pObjPurchase.DocEntry = Convert.ToInt32(lStrDocEntry);
-						PaymentDI lObjPaymentDI = new PaymentDI();
+
+						
 
 						//SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
 						SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
 						lObjDocInvoice.GetByKey(Convert.ToInt32(lStrDocEntry));
 
-						pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
+                        double sss = 0.0;
+                        for (int i = 0; i < lObjDocInvoice.Lines.Count; i++)
+                        {
+                            sss += lObjDocInvoice.Lines.TaxTotal;
 
+                        }
+                          
+
+						pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
+                        LogService.WriteInfo(string.Format("UUID: {0} Total: {1}  Retenciones: {2} Impuesto: {3} ",
+                            lObjDocInvoice.UserFields.Fields.Item("U_UDF_UUID").Value //UUID
+                            , lObjDocInvoice.DocTotal //TOTAL
+                            , lObjDocInvoice.WithholdingTaxData.WTAmount //Retenciones
+                            , sss //IVA
+                            ));
+                          //  , lObjDocInvoice.Lines.TaxTotal.total lOBj.Ieps, lOBj.Iva, lOBj.RetIva, lOBj.RetIva4));
+
+                        //PaymentDI lObjPaymentDI = new PaymentDI();
 						if (lBolCreatePayment)
 						{
 						   
