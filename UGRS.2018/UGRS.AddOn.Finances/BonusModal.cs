@@ -121,7 +121,7 @@ namespace UGRS.AddOn.Finances
         {
             mCmbType.Item.DisplayDesc = true;
             mCmbType.ValidValues.Add("NCB", "NC Bonificación");
-            //mCmbType.ValidValues.Add("NCD", "NC Devolución");
+            mCmbType.ValidValues.Add("NCD", "NC Devolución");
             mCmbType.ValidValues.Add("NC", "Nota de crédito");
             mCmbType.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.mCmbType_ComboSelectAfter);
             mEdtAmount.ValidateBefore += mEdtAmount_ValidateBefore;
@@ -193,6 +193,19 @@ namespace UGRS.AddOn.Finances
                 }
                 if (mCmbType.Value == "NCD")
                 {
+                    string lStrStatus = mObjQueryManager.GetValue("DocStatus", "DocEntry", lStrDocEntry, "OINV");
+                    if (lOriginal.Cancelled == SAPbobsCOM.BoYesNoEnum.tYES)
+                    {
+                        UIApplication.ShowError("El documento no debe estar cancelado para crear una NC Devolución");
+                        return;
+                    }
+
+                    if (lStrStatus != "C")
+                    {
+                        UIApplication.ShowError("El documento debe estar cerrado para crear una NC Devolución");
+                        return;
+                    }
+
                     CreateReturnDraft(lOriginal);
                 }
                 if (mCmbType.Value == "NC")
