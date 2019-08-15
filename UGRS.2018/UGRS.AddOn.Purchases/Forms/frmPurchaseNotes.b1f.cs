@@ -1259,7 +1259,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 lObjVouchersDetail.NA = "N";
                 lObjVouchersDetail.Coments = ""; //Puede haber varios comentarios 
                 lObjVouchersDetail.Coment = "";
-                lObjVouchersDetail.Date = DateTime.Now;
+                lObjVouchersDetail.Date = mObjVouchers.Date;
                 lObjVouchersDetail.DocNum = pStrDocentry;
                 lObjVouchersDetail.DocEntry = pStrDocentry;
                 lObjVouchersDetail.CodeVoucher = pLstObjDocument[0].CodeVoucher;

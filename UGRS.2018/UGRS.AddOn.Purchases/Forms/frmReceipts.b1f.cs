@@ -135,8 +135,8 @@ namespace UGRS.AddOn.Purchases.Forms
         /// </summary>
         public override void OnInitializeComponent()
         {
-            //       try
-            //       {
+            //          try
+            //          {
             this.lblFolio = ((SAPbouiCOM.StaticText)(this.GetItem("lblFolio").Specific));
             this.lblArea = ((SAPbouiCOM.StaticText)(this.GetItem("lblArea").Specific));
             this.lblEmploye = ((SAPbouiCOM.StaticText)(this.GetItem("lblEmploye").Specific));
@@ -151,9 +151,9 @@ namespace UGRS.AddOn.Purchases.Forms
             this.txtDate = ((SAPbouiCOM.EditText)(this.GetItem("txtDate").Specific));
             this.txtTotal = ((SAPbouiCOM.EditText)(this.GetItem("txtTotal").Specific));
             this.btnCFDI = ((SAPbouiCOM.Button)(this.GetItem("btnCFDI").Specific));
-            this.btnCFDI.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCFDI_ClickBefore);
+            this.btnCFDI.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnCFDI_ClickAfter);
             this.btnNotes = ((SAPbouiCOM.Button)(this.GetItem("btnNotes").Specific));
-            this.btnNotes.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnNotes_ClickBefore);
+            this.btnNotes.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnNotes_ClickAfter);
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
             this.btnCancel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCancel_ClickBefore);
             this.mtxReceipt = ((SAPbouiCOM.Matrix)(this.GetItem("mtxReceipt").Specific));
@@ -170,18 +170,18 @@ namespace UGRS.AddOn.Purchases.Forms
             this.btnAuthor.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAuthor_ClickBefore);
             UGRS.Core.SDK.UI.UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
             UGRS.Core.SDK.UI.UIApplication.GetApplication().MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(this.SBO_Application_MenuEvent);
-            //   UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
+            //      UIApplication.GetApplication().ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(this.SBO_Application_ItemEvent);
             this.cboStatus = ((SAPbouiCOM.ComboBox)(this.GetItem("cboStatus").Specific));
             this.lblCodeMov = ((SAPbouiCOM.StaticText)(this.GetItem("lblCodeMov").Specific));
             this.txtCodeMov = ((SAPbouiCOM.EditText)(this.GetItem("txtCodeMov").Specific));
             this.txtAreaF = ((SAPbouiCOM.EditText)(this.GetItem("txtAreaF").Specific));
             this.txtEmpF = ((SAPbouiCOM.EditText)(this.GetItem("txtEmpF").Specific));
-            //       }
-            //       catch (Exception ex)
-            //       {
-            //           LogService.WriteError("frmReceipts: " + ex.Message);
-            //           LogService.WriteError(ex);
-            //       }
+            //          }
+            //          catch (Exception ex)
+            //          {
+            //              LogService.WriteError("frmReceipts: " + ex.Message);
+            //              LogService.WriteError(ex);
+            //          }
             this.chkCopy = ((SAPbouiCOM.CheckBox)(this.GetItem("chk_Copy").Specific));
             this.btnInv = ((SAPbouiCOM.Button)(this.GetItem("btnInv").Specific));
             this.btnInv.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnInv_ClickBefore);
@@ -506,7 +506,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 lObjVoucher.TypeVoucher = (int)mEnumType;
                 lObjVoucher.Area = lStrArea;
                 lObjVoucher.Coments = txtComents.Value;
-                lObjVoucher.Date = DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
+                lObjVoucher.Date = Convert.ToDateTime(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Date").Value);// DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
                 lObjVoucher.Employee = mStrEmployeId;
                 lObjVoucher.UserCode = mStrUserCode;
                 lObjVoucher.Total = string.IsNullOrEmpty(txtTotal.Value) ? 0 : Convert.ToDouble(txtTotal.Value);
@@ -1273,18 +1273,15 @@ namespace UGRS.AddOn.Purchases.Forms
 
         }
 
-        /// <summary>
-        /// Evento de abrir la ventana de CFDI
-        /// <summary>
-        private void btnCFDI_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) 
+        private void btnCFDI_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            BubbleEvent = true;
-
-            try {
+            try
+            {
                 string lStrArea = !string.IsNullOrEmpty(txtArea.Value) ? txtArea.Value : txtAreaF.Value;
                 Vouchers lObjVouchers = GetVoucherForm();
 
-                if(ValidateSaveVoucher(lStrArea, lObjVouchers)) {
+                if (ValidateSaveVoucher(lStrArea, lObjVouchers))
+                {
                     DateTime lDtmDate = Convert.ToDateTime(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Date").Value);
                     frmPurchaseXML lObjfrmPurchaseXML = new frmPurchaseXML(mStrRowCode, lStrArea, mStrEmployeId, txtFolio.Value, GetAccountRefound(lStrArea),
                                                                         lObjVouchers, chkCopy.Checked, lDtmDate);
@@ -1295,10 +1292,12 @@ namespace UGRS.AddOn.Purchases.Forms
                 }
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 LogService.WriteError("btnCFDI_ClickBefore: " + ex.Message);
                 LogService.WriteError(ex);
             }
+
         }
 
         private bool ValidateSaveVoucher(string pStrArea, Vouchers pObjVouchers)
@@ -1377,9 +1376,8 @@ namespace UGRS.AddOn.Purchases.Forms
         /// <summary>
         /// Evento de abrir la ventana de notas
         /// <summary>
-        private void btnNotes_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        private void btnNotes_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            BubbleEvent = true;
             try
             {
                 string lStrArea = !string.IsNullOrEmpty(txtArea.Value) ? txtArea.Value : txtAreaF.Value;
@@ -1413,8 +1411,8 @@ namespace UGRS.AddOn.Purchases.Forms
                 LogService.WriteError("btnNotes_ClickBefore: " + ex.Message);
                 LogService.WriteError(ex);
             }
-
         }
+
 
         /// <summary>
         /// Cancelar un documento seleccionado
@@ -1846,7 +1844,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 DtMatrix.Rows.Clear();
                 if (!string.IsNullOrEmpty(txtArea.Value))
                 {
-
+                    txtComents.Item.Click();
 
 
                     bool lBolUpdateStatus = false;
@@ -2238,5 +2236,8 @@ namespace UGRS.AddOn.Purchases.Forms
                 LogService.WriteError(ex);
             }
         }
+
+       
+        
     }
 }

@@ -1915,7 +1915,7 @@ namespace UGRS.AddOn.Purchases.Forms
         private string GetWhs(string pStrItemCode, string pStrArea)
         {
             string lStrWhsMQ = "";
-            if (!string.IsNullOrEmpty(cboSubida.Value))
+            if (!string.IsNullOrEmpty(cboSubida.Value) && !string.IsNullOrEmpty(pStrItemCode))
             {
                 lStrWhsMQ = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetMQWhs(pStrItemCode);
             }
