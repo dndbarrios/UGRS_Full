@@ -16,20 +16,22 @@ namespace UGRS.AddOn.Purchases.Forms
         #region Properties
         PurchasesServiceFactory mObjPurchaseServiceFactory = new PurchasesServiceFactory();
         public string mStrAFCode = string.Empty;
-        public string mStrAreaParam = string.Empty;
-        public string mStrAFParam = string.Empty;
         public bool mBolForMatrix = false;
+        private string mStrAreaParam = string.Empty;
+        private string mStrAFParam = string.Empty;
+        private string mStrSubida = string.Empty;
         #endregion
 
         #region Constructor
-        public frmModalAF(string pStrArea = null, string pStrAFCode = null, bool pBolForMatrix = false)
+        public frmModalAF(string pStrArea = null, string pStrAFCode = null, string pStrSubida = null, bool pBolForMatrix = false)
         {
             mBolForMatrix = pBolForMatrix;
             mStrAreaParam = pStrArea;
             mStrAFParam = pStrAFCode;
+            mStrSubida = pStrSubida;
 
             CreateDatatableAF();
-            LoadAF(pStrArea, pStrAFCode);
+            LoadAF(pStrArea, pStrAFCode, pStrSubida);
         }
         #endregion
 
@@ -75,7 +77,7 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             BubbleEvent = true;
 
-            LoadAF(mStrAreaParam, txtSearch.Value);
+            LoadAF(mStrAreaParam, txtSearch.Value, mStrSubida);
         }
 
         private void btnSelect_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -115,13 +117,13 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             if (pVal.CharPressed == 13)
             {
-                LoadAF(mStrAreaParam, txtSearch.Value);
+                LoadAF(mStrAreaParam, txtSearch.Value, mStrSubida);
             }
         }
         #endregion
 
         #region Functions
-        private void LoadAF(string pStrArea, string pStrAFCode)
+        private void LoadAF(string pStrArea, string pStrAFCode, string pStrSubida)
         {
             try
             {
@@ -130,7 +132,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                 ClearMatrix();
 
-                this.UIAPIRawForm.DataSources.DataTables.Item("DTAF").ExecuteQuery(mObjPurchaseServiceFactory.GetAssetService().GetAssetCFLQuery(pStrArea, pStrAFCode));
+                this.UIAPIRawForm.DataSources.DataTables.Item("DTAF").ExecuteQuery(mObjPurchaseServiceFactory.GetAssetService().GetAssetCFLQuery(pStrArea, pStrAFCode, pStrSubida));
 
                 mtxAF.AutoResizeColumns();
                 mtxAF.LoadFromDataSource();

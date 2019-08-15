@@ -397,7 +397,7 @@ namespace UGRS.AddOn.Purchases.Forms
                         UIApplication.GetApplication().Forms.Item("frmMdlAF").Close();
                     }
 
-                    mObjModalAF = new frmModalAF(txtArea.Value, txtAF.Value);
+                    mObjModalAF = new frmModalAF(txtArea.Value, txtAF.Value, cboSubidaMq.Value);
                     mObjModalAF.Show();
                 }
             }
@@ -668,46 +668,46 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             try
             {
-                SAPbouiCOM.Condition lObjCon = null;
-                SAPbouiCOM.Conditions lObjCons = new Conditions();
+                //SAPbouiCOM.Condition lObjCon = null;
+                //SAPbouiCOM.Conditions lObjCons = new Conditions();
 
-                List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                if (string.IsNullOrEmpty(cboSubidaMq.Value))
-                {
-                    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
-                }
-                else
-                {
-                    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubidaMq.Value).ToList();
-                }
+                ////List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
+                ////if (string.IsNullOrEmpty(cboSubidaMq.Value))
+                ////{
+                ////    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                ////}
+                ////else
+                ////{
+                ////    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubidaMq.Value).ToList();
+                ////}
 
                 //List<AssetsDTO> lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
-                int i = 1;
-                if (lLstAssetsDTO.Count > 0)
-                {
-                    foreach (AssetsDTO lObjAssetDTO in lLstAssetsDTO)
-                    {
-                        lObjCon = lObjCons.Add();
-                        lObjCon.Alias = "PrcCode";
-                        lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
-                        lObjCon.CondVal = lObjAssetDTO.PrcCode;
+                //int i = 1;
+                //if (lLstAssetsDTO.Count > 0)
+                //{
+                //    foreach (AssetsDTO lObjAssetDTO in lLstAssetsDTO)
+                //    {
+                //        lObjCon = lObjCons.Add();
+                //        lObjCon.Alias = "PrcCode";
+                //        lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
+                //        lObjCon.CondVal = lObjAssetDTO.PrcCode;
 
-                        if (lLstAssetsDTO.Count() > i)
-                        {
-                            lObjCon.Relationship = BoConditionRelationship.cr_OR;
-                        }
-                        i++;
-                    }
-                    pCFL.SetConditions(lObjCons);
-                }
-                else
-                {
-                    lObjCon = lObjCons.Add();
-                    lObjCon.Alias = "PrcCode";
-                    lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
-                    lObjCon.CondVal = "";
-                    pCFL.SetConditions(lObjCons);
-                }
+                //        if (lLstAssetsDTO.Count() > i)
+                //        {
+                //            lObjCon.Relationship = BoConditionRelationship.cr_OR;
+                //        }
+                //        i++;
+                //    }
+                //    pCFL.SetConditions(lObjCons);
+                //}
+                //else
+                //{
+                //    lObjCon = lObjCons.Add();
+                //    lObjCon.Alias = "PrcCode";
+                //    lObjCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
+                //    lObjCon.CondVal = "";
+                //    pCFL.SetConditions(lObjCons);
+                //}
             }
             catch (Exception ex)
             {

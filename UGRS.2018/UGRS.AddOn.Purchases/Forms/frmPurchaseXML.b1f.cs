@@ -240,17 +240,17 @@ namespace UGRS.AddOn.Purchases.Forms
                             case BoEventTypes.et_COMBO_SELECT:
                                 if (pVal.ItemUID == "cboSubida")
                                 {
-                                    this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
-                                    List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                                    if (string.IsNullOrEmpty(cboSubida.Value))
-                                    {
-                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
-                                    }
-                                    else
-                                    {
-                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
-                                    }
-                                    AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
+                                    //this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
+                                    //List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
+                                    //if (string.IsNullOrEmpty(cboSubida.Value))
+                                    //{
+                                    //    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                                    //}
+                                    //else
+                                    //{
+                                    //    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
+                                    //}
+                                    //AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
                                 }
                                 else
                                 {
@@ -823,19 +823,19 @@ namespace UGRS.AddOn.Purchases.Forms
                                     break;
 
                                 case "CFL_Area":
-                                    //txtArea.Value = lObjDataTable.GetValue(0, 0).ToString();
-                                    this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
-                                    List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                                    if (string.IsNullOrEmpty(cboSubida.Value))
-                                    {
-                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
-                                    }
-                                    else
-                                    {
-                                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
-                                    }
-                                    AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
-                                    AddConditionChoseFromListProject(mObjCFLProject);
+                                    ////txtArea.Value = lObjDataTable.GetValue(0, 0).ToString();
+                                    //this.UIAPIRawForm.DataSources.UserDataSources.Item("CFL_Asset").ValueEx = "";
+                                    //List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
+                                    //if (string.IsNullOrEmpty(cboSubida.Value))
+                                    //{
+                                    //    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(txtArea.Value).ToList();
+                                    //}
+                                    //else
+                                    //{
+                                    //    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
+                                    //}
+                                    //AddConditionAssets(mObjCFLAsset, lLstAssetsDTO);
+                                    //AddConditionChoseFromListProject(mObjCFLProject);
                                     break;
 
                                 case "CFL_AreaMx":
@@ -905,16 +905,16 @@ namespace UGRS.AddOn.Purchases.Forms
                 //AddConditionItems(lObjChooseFromList);
                 if (lStrCflUID == "CFL_AssetM")
                 {
-                    List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
-                    if (string.IsNullOrEmpty(cboSubida.Value))
-                    {
-                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(DtMatrix.GetValue("C_Area", pObjValEvent.Row - 1).ToString()).ToList();
-                    }
-                    else
-                    {
-                        lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
-                    }
-                    AddConditionAssets(lObjChooseFromList, lLstAssetsDTO);
+                    //List<AssetsDTO> lLstAssetsDTO = new List<AssetsDTO>();
+                    //if (string.IsNullOrEmpty(cboSubida.Value))
+                    //{
+                    //    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseService().GetAssets(DtMatrix.GetValue("C_Area", pObjValEvent.Row - 1).ToString()).ToList();
+                    //}
+                    //else
+                    //{
+                    //    lLstAssetsDTO = mObjPurchaseServiceFactory.GetPurchaseXmlService().GetRiseAF(cboSubida.Value).ToList();
+                    //}
+                    //AddConditionAssets(lObjChooseFromList, lLstAssetsDTO);
                 }
 
                 if (lStrCflUID == "CFL_C_Item")
@@ -2605,7 +2605,7 @@ namespace UGRS.AddOn.Purchases.Forms
                         UIApplication.GetApplication().Forms.Item("frmMdlAF").Close();
                     }
 
-                    mObjModalAF = new frmModalAF(txtArea.Value, txtAF.Value);
+                    mObjModalAF = new frmModalAF(txtArea.Value, txtAF.Value, cboSubida.Value);
                     mObjModalAF.Show();
                 }
             }
@@ -2632,7 +2632,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                         string lStrArea = (mtxXML.Columns.Item("C_Area").Cells.Item(pVal.Row).Specific as EditText).Value;
                         string lStrAF = (mtxXML.Columns.Item("C_AF").Cells.Item(pVal.Row).Specific as EditText).Value;
-                        mObjModalAF = new frmModalAF(lStrArea, lStrAF, true);
+                        mObjModalAF = new frmModalAF(lStrArea, lStrAF, string.Empty, true);
                         mObjModalAF.Show();
 
                     }
