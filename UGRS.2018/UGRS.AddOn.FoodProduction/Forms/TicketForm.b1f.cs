@@ -472,7 +472,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			InitDataSources();
 			StartService();
 			GetRemoteObject();
-			GetRemoteObjectPrint();
+			//GetRemoteObjectPrint();
 
 		}
 	  
@@ -1610,7 +1610,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             using (var doc = new ReportPrintDocument(lObjLocalReport))
             {
-                int lIntCopies = string.IsNullOrEmpty(pStrCopies) ? 0 : int.Parse(pStrCopies);
+                int lIntCopies = string.IsNullOrEmpty(pStrCopies) ? 1 : int.Parse(pStrCopies);
                 for (int i = 0; i < lIntCopies; i++)
                 {
                     doc.Print();
@@ -1888,7 +1888,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			   
 				StartService();
 				GetRemoteObject();//Servicio de bascula
-				GetRemoteObjectPrint();
+				//GetRemoteObjectPrint();
 				//mObjInternalWorker = new Thread(GetRemoteObject);
 				//mObjInternalWorker.Start();
 				// mBolConnected = GetRemoteObject(); //Servicio de bascula
@@ -1921,7 +1921,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
 				mObjWeighingMachine.Disconnect(mObjConnection);
 				LogService.WriteInfo("Disconnect(mObjConnection)");
-				mObjWritePort.Disconnect(mObjConnectionPrinter);
+				//mObjWritePort.Disconnect(mObjConnectionPrinter);
 				LogService.WriteInfo("Disconnect(mObjConnectionPrinter)");
 
 				UIApplication.GetApplication().ItemEvent -= new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
