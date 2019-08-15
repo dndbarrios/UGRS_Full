@@ -16,18 +16,27 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
             mObjRouteListDAO = new AssetDAO();
         }
 
-        public string GetAssetCFLQuery(string pStrArea, string pStrAFCode)
+        public string GetAssetCFLQuery(string pStrArea, string pStrAFCode, string pStrSubida)
         {
-            string lStrQuery = mObjRouteListDAO.GetAssetCFLQuery();
+            string lStrQuery = string.Empty;
 
-            if (!string.IsNullOrEmpty(pStrArea))
+            if (!string.IsNullOrEmpty(pStrSubida))
             {
-                lStrQuery += string.Format(" WHERE T2.OcrCode = '{0}'", pStrArea);
+                lStrQuery = mObjRouteListDAO.GetAssetRiseCFLQuery(pStrSubida);
             }
-
-            if (!string.IsNullOrEmpty(pStrAFCode))
+            else
             {
-                lStrQuery += string.Format(" AND T0.OcrCode LIKE '%{0}%'", pStrAFCode);
+                lStrQuery = mObjRouteListDAO.GetAssetCFLQuery();
+
+                if (!string.IsNullOrEmpty(pStrArea))
+                {
+                    lStrQuery += string.Format(" WHERE T2.OcrCode = '{0}'", pStrArea);
+                }
+
+                if (!string.IsNullOrEmpty(pStrAFCode))
+                {
+                    lStrQuery += string.Format(" AND T0.OcrCode LIKE '%{0}%'", pStrAFCode);
+                }
             }
 
             return lStrQuery;

@@ -27,5 +27,22 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
                 throw new Exception(string.Format("Error al obtener el query de activos fijos: {0}", lObjException.Message));
             }
         }
+
+        public string GetAssetRiseCFLQuery(string pStrSubida)
+        {
+            try
+            {
+                string lStrQuery = this.GetSQL("GetRiseAFCFL").InjectSingleValue("RiseId", pStrSubida);
+
+                return lStrQuery;
+            }
+            catch (Exception lObjException)
+            {
+                LogService.WriteError("AssetDAO [GetAssetRiseCFLQuery]: " + lObjException.Message);
+                LogService.WriteError(lObjException);
+
+                throw new Exception(string.Format("Error al obtener el query de activos fijos: {0}", lObjException.Message));
+            }
+        }
     }
 }
