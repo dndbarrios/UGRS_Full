@@ -1,4 +1,5 @@
-﻿using SAPbouiCOM;
+﻿using Microsoft.Reporting.WinForms;
+using SAPbouiCOM;
 using SAPbouiCOM.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,13 @@ using System.Linq;
 using System.Security.Principal;
 using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
 using UGRS.AddOn.FoodProduction.DTO;
 using UGRS.AddOn.FoodProduction.Enums;
 using UGRS.AddOn.FoodProduction.Services;
 using UGRS.AddOn.FoodProduction.UI;
 using UGRS.AddOn.FoodProduction.UI.Matriz;
+using UGRS.AddOn.FoodProduction.Utilities;
 using UGRS.Core.SDK.DI;
 using UGRS.Core.SDK.DI.DAO;
 using UGRS.Core.SDK.DI.Exceptions;
@@ -1284,7 +1287,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			try
 			{
 				StartService();
-				GetRemoteObjectPrint();
+				//GetRemoteObjectPrint();
 				//// string pStrCode = mObjQueryManager.GetValue("Code", "U_Folio", pStrFolio, "[@UG_PL_TCKT]");
 				string pStrCode = mObjQueryManager.GetValue("Code", "U_Folio", txtFolio.Value, "[@UG_PL_TCKT]");
 
@@ -1302,27 +1305,27 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
                     mIntLastPrintLines = lObjTicket.PrintLine;
                 
-                    if (lLstLines.Count != lObjTicket.PrintLine)
-                    {
-                        lBolUpdate = true;
-                        if (lLstLines.Count - lObjTicket.PrintLine > 0)
-                        {
-                            lIntPrintedLine = lObjTicket.PrintLine;
-                        }
-                    }
-                    else
-                    {
-                        if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea imprimir el ticket completo o la impresion anterior?", 1, "Anterior", "Completo", "") == 1)
-                        {
-                            LogService.WriteInfo("Impresión anterior");
-                            lBolUpdate = true;
-                            lIntPrintedLine = Convert.ToInt16(lObjTicket.RowName);
-                        }
-                        else
-                        {
-                            LogService.WriteInfo("Imprimiendo TODO el ticket");
-                        }
-                    }
+                    //if (lLstLines.Count != lObjTicket.PrintLine)
+                    //{
+                    //    lBolUpdate = true;
+                    //    if (lLstLines.Count - lObjTicket.PrintLine > 0)
+                    //    {
+                    //        lIntPrintedLine = lObjTicket.PrintLine;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea imprimir el ticket completo o la impresion anterior?", 1, "Anterior", "Completo", "") == 1)
+                    //    {
+                    //        LogService.WriteInfo("Impresión anterior");
+                    //        lBolUpdate = true;
+                    //        lIntPrintedLine = Convert.ToInt16(lObjTicket.RowName);
+                    //    }
+                    //    else
+                    //    {
+                    //        LogService.WriteInfo("Imprimiendo TODO el ticket");
+                    //    }
+                    //}
 
                     if (Print(lLstLines, lIntPrintedLine, lBolUpdate))
                     { 
@@ -1489,15 +1492,17 @@ namespace UGRS.AddOn.FoodProduction.Forms
             try
             {
                 //        {
-                if (pBolIsUpdate)
-                {
-                    PrintUpdate(pLstLines, pIntPrintedLines);
-                }
-                else
-                {
-                    PrintTicketPort(pLstLines);
-                    //PrintTicketPort()
-                }
+                //if (pBolIsUpdate)
+                //{
+                //    PrintUpdate(pLstLines, pIntPrintedLines);
+                //}
+                //else
+                //{
+                //    PrintTicketPort(pLstLines);
+                //    //PrintTicketPort()
+                //}
+
+                PrintTicketReport(pLstLines);
 
                 if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿La impresión fue realizada correctamente?", 2, "Si", "No", "") == 1)
                 {
@@ -1592,6 +1597,26 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 LogService.WriteInfo(lStrValue);
 			}
 		}
+
+        private void PrintTicketReport(List<string> pLstLine)
+        {
+            string pStrCopies = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINT_COPIES", "[@UG_Config]");
+
+            LocalReport lObjLocalReport = new LocalReport();
+            lObjLocalReport.ReportPath = @"Reports/Tickets/rptTicket.rdlc";
+
+            lObjLocalReport.SetParameters(new ReportParameter("Value", string.Join("|", pLstLine)));
+            lObjLocalReport.Refresh();
+
+            using (var doc = new ReportPrintDocument(lObjLocalReport))
+            {
+                int lIntCopies = string.IsNullOrEmpty(pStrCopies) ? 0 : int.Parse(pStrCopies);
+                for (int i = 0; i < lIntCopies; i++)
+                {
+                    doc.Print();
+                }
+            }
+        }
 
         private string Truncate(string pStrValue, int pIntMaxLength)
         {

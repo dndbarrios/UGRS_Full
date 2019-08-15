@@ -107,6 +107,7 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.2.0-beta1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -124,12 +125,8 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="SAPBusinessOneSDK" />
-    <Reference Include="UGRS.Object.WeighingMachine, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Git\UGRS.Object.WeighingMachine\bin\Debug\UGRS.Object.WeighingMachine.dll</HintPath>
-    </Reference>
     <Reference Include="UGRS.Object.WritePort">
-      <HintPath>..\..\..\Git\UGRS.Service.WritePort\bin\Debug\UGRS.Object.WritePort.dll</HintPath>
+      <HintPath>..\Dlls\UGRS.Object.WritePort.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -154,6 +151,9 @@
     <Compile Include="UI\Menu\Module.cs" />
     <Compile Include="UI\Menu\Section.cs" />
     <Compile Include="UI\UIApplication.cs" />
+    <Compile Include="Utilities\PinterUtility.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -186,6 +186,10 @@
     <ProjectReference Include="..\UGRS.Core\UGRS.Core.csproj">
       <Project>{94ecc66f-57e7-4637-902d-2873cc636320}</Project>
       <Name>UGRS.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UGRS.Object.WeighingMachine\UGRS.Object.WeighingMachine.csproj">
+      <Project>{6214fef9-9914-44c7-8a78-cf95c4fe58ce}</Project>
+      <Name>UGRS.Object.WeighingMachine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
