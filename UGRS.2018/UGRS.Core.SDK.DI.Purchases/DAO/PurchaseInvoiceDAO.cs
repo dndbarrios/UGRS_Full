@@ -80,7 +80,7 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
                 lStrCostAccount = mObjQueryManager.GetValue("U_GLO_Whouse", "PrcCode", pStrCostingCode, "OPRC");
                 if (string.IsNullOrEmpty(lStrCostAccount))
                 {
-                    UIApplication.ShowMessageBox(string.Format("No se encontro almacen en centro de costo {0}", pStrCostingCode));
+                    UIApplication.ShowWarning(string.Format("No se encontro almacen en centro de costo {0}", pStrCostingCode));
                 }
             }
             catch (Exception lObjException)
@@ -351,7 +351,7 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
                 else
                 {
                     lStrWhsMQ = "";
-                    UIApplication.ShowMessageBox(string.Format("No se encontro almacen en articulo {0}", pStrItemCode));
+                    UIApplication.ShowWarning(string.Format("No se encontro almacen en articulo {0}", pStrItemCode));
                 }
             }
             catch (Exception ex)
