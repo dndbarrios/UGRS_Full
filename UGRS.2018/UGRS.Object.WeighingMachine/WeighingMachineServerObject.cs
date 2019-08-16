@@ -146,7 +146,7 @@ namespace UGRS.Object.WeighingMachine
 
         protected void OnInternalDataReceived(SerialPortEventArgs pObjEventArgs)
         {
-            //LogService.WriteSuccess(string.Format("Dato recibido: {0}", pObjEventArgs.Value));
+            LogService.WriteSuccess(string.Format("Dato recibido: {0}", pObjEventArgs.Value));
             mStrDataReceived += pObjEventArgs.Value;
             ProcessDataReceived();
         }
@@ -164,14 +164,21 @@ namespace UGRS.Object.WeighingMachine
                     {
                         //lStrData = mStrDataReceived.Replace("G", "").Replace("N", "").Replace("kg", "").Replace("\r", "").Trim();
                         lStrData = Regex.Replace(mStrDataReceived, "[^0-9]", "");
-                        //LogService.WriteInfo("Cadena modificada : " + lStrData);
+                        LogService.WriteInfo("Cadena modificada : " + lStrData);
                         lStrData = lStrData.TrimStart('0');
-                        //LogService.WriteInfo("Cadena modificada trimstart 0 : " + lStrData);
-                        if (string.IsNullOrEmpty(lStrData) || Convert.ToDecimal(lStrData) == 0)
+                        LogService.WriteInfo("Cadena modificada trimstart 0 : " + lStrData);
+                        try
+                        {
+                            if (string.IsNullOrEmpty(lStrData) || lStrData.Length > 7 || Convert.ToDecimal(lStrData) == 0)
+                            {
+                                lStrData = "0";
+                            }
+                        }
+                        catch (Exception ex)
                         {
                             lStrData = "0";
+                            LogService.WriteError(ex);
                         }
-
                     }
                     break;
 

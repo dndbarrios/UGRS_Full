@@ -14,6 +14,6 @@ namespace UGRS.Object.WeighingMachine.Services
 
         bool IsOpen();
 
-        void Write(string pStrValue);
+        //void Write(string pStrValue);
     }
 }

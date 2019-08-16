@@ -8,7 +8,7 @@ namespace UGRS.Object.WeighingMachine.Services
     public class SerialPortService : ISerialPortService 
     {
         private SerialPort mObjSerialPort;
-        string mStrData;
+        //string mStrData;
         public SerialPortService()
         {
             mObjSerialPort = GetSerialPort();
