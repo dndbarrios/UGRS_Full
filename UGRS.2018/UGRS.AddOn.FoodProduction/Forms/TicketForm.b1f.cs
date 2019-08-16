@@ -23,7 +23,7 @@ using UGRS.Core.SDK.DI.FoodProduction.Tables;
 using UGRS.Core.Services;
 using UGRS.Core.Utility;
 using UGRS.Object.WeighingMachine;
-using UGRS.Object.WritePort;
+//using UGRS.Object.WritePort;
 
 
 
@@ -62,7 +62,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 		private bool mBolPriceModify = false;
 		private bool mBolIsUpdate = false;
 		private WeighingMachineServerObject mObjWeighingMachine;
-		private WritePortServerObject mObjWritePort;
+		//private WritePortServerObject mObjWritePort;
 		private WrapperObject mObjWrapperObject;
 		private Guid mObjConnection;
 		private Guid mObjConnectionPrinter;
@@ -470,10 +470,10 @@ namespace UGRS.AddOn.FoodProduction.Forms
 		{
 			loadMenu();
 			InitDataSources();
-			StartService();
-			GetRemoteObject();
+			//StartService();
+			//GetRemoteObject();
 			//GetRemoteObjectPrint();
-
+            mBolStarted = true;
 		}
 	  
 		
@@ -530,17 +530,18 @@ namespace UGRS.AddOn.FoodProduction.Forms
 					}
 
                     
-                    if (!mBolStarted && (string.IsNullOrEmpty(lblWeight.Caption.Trim()) || string.IsNullOrEmpty(mStrWeight)))
+                    if (mBolStarted && (string.IsNullOrEmpty(lblWeight.Caption.Trim()) || string.IsNullOrEmpty(mStrWeight)))
                     {
                         LogService.WriteError("No fue posible leer datos de la bascula");
                         ServiceController mObjServiceController = new ServiceController();
                         mObjServiceController.ServiceName = "WeighingMachineService";
 
-                        mObjServiceController.Close();
-                        mObjServiceController.Stop();
-                        LogService.WriteInfo("Deteniendo servicio de impresion");
-                        UIApplication.ShowWarning("Deteniendo servicio de impresion");
-                        mObjServiceController.WaitForStatus(ServiceControllerStatus.Stopped);
+                        //mObjServiceController.Close();
+                        //mObjServiceController.Stop();
+                      //  mObjServiceController.WaitForStatus(ServiceControllerStatus.Running);
+                        //LogService.WriteInfo("Deteniendo servicio de impresion");
+                        //UIApplication.ShowWarning("Deteniendo servicio de impresion");
+                        //mObjServiceController.WaitForStatus(ServiceControllerStatus.Stopped);
 
                         StartService();
                         GetRemoteObject();//Servicio de bascula
@@ -1286,7 +1287,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			BubbleEvent = true;
 			try
 			{
-				StartService();
+				//StartService();
 				//GetRemoteObjectPrint();
 				//// string pStrCode = mObjQueryManager.GetValue("Code", "U_Folio", pStrFolio, "[@UG_PL_TCKT]");
 				string pStrCode = mObjQueryManager.GetValue("Code", "U_Folio", txtFolio.Value, "[@UG_PL_TCKT]");
@@ -1327,7 +1328,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     //    }
                     //}
 
-                    if (Print(lLstLines, lIntPrintedLine, lBolUpdate))
+                    if (Print(lLstLines, lIntPrintedLine, lBolUpdate, lObjTicket.Status))
                     { 
                         if (lLstLines.Count != lObjTicket.PrintLine)
                         {
@@ -1448,12 +1449,12 @@ namespace UGRS.AddOn.FoodProduction.Forms
                                 }
 
                                 List<string> lLstLines = GetListToPrint(mObjTicket, lLstTicketDetail);
-                                if (Print(lLstLines, lIntPrintedLines, mBolIsUpdate))
+                                if (Print(lLstLines, lIntPrintedLines, mBolIsUpdate, mObjTicket.Status))
                                 {
-                                    mObjTicket.RowName = mObjTicket.PrintLine.ToString();
-                                    mObjTicket.PrintLine = lLstLines.Count();
+                                    //mObjTicket.RowName = mObjTicket.PrintLine.ToString();
+                                    //mObjTicket.PrintLine = lLstLines.Count();
 
-                                    mObjTicketServices.SaveTicket(mObjTicket, true);
+                                    //mObjTicketServices.SaveTicket(mObjTicket, true);
                                     mBolIsUpdate = true;
                                     //ClearControls();
                                     this.UIAPIRawForm.Freeze(false);
@@ -1487,33 +1488,31 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			}
 		}
 		#region Print reacomodar
-		private bool Print(List<string> pLstLines, int pIntPrintedLines, bool pBolIsUpdate )
+		private bool Print(List<string> pLstLines, int pIntPrintedLines, bool pBolIsUpdate, int pIntStatus )
 		{
             try
             {
+                PrintTicketLog(pLstLines);
+
                 //        {
-                //if (pBolIsUpdate)
-                //{
-                //    PrintUpdate(pLstLines, pIntPrintedLines);
-                //}
-                //else
-                //{
-                //    PrintTicketPort(pLstLines);
-                //    //PrintTicketPort()
-                //}
-
-                PrintTicketReport(pLstLines);
-
-                if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿La impresión fue realizada correctamente?", 2, "Si", "No", "") == 1)
+                if (pBolIsUpdate)
                 {
-                    LogService.WriteSuccess("Impresión correcta");
-                    return true;
+                    if ((pIntStatus == (int)TicketEnum.TicketStatus.Pending || pIntStatus == (int)TicketEnum.TicketStatus.Close))
+                    {
+                        PrintTicketReport(pLstLines);
+                        
+                    }
                 }
                 else
                 {
-                    LogService.WriteError("Impresión incorrecta");
-                    return false;
+                    PrintTicketReport(pLstLines);
+                   
+                    //PrintTicketPort()
                 }
+
+               
+
+               
             }
             catch (Exception ex)
             {
@@ -1521,7 +1520,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 LogService.WriteError("Imprimir: " + ex.Message);
                 LogService.WriteError(ex);
             }
-			 return false;
+			 return true;
 		}
 
 
@@ -1539,14 +1538,14 @@ namespace UGRS.AddOn.FoodProduction.Forms
             // lLstLine.Add("Peso Inicial: " + pObjTicket.InputWT);
 
             int i = 0;
-            foreach (TicketDetail lObjTicketDetail in pLstTicketDetail)
+            foreach (TicketDetail lObjTicketDetail in pLstTicketDetail.OrderBy(x => x.Line))
             {
                 i++;
                 //if ((!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0) || 
                 //    (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0) || lObjTicketDetail.WeighingM == 1)
                 //{
-                  //  //lLstLine.Add("Cod. Prod: " + lObjTicketDetail.Item);
-                    lLstLine.Add(i.ToString("00") + " Prod: " + mObjTicketServices.SearchItemName(lObjTicketDetail.Item));
+                //  //lLstLine.Add("Cod. Prod: " + lObjTicketDetail.Item);
+                lLstLine.Add(i.ToString("00") + " Prod: " + mObjTicketServices.SearchItemName(lObjTicketDetail.Item));
                 //}
 
             }
@@ -1555,26 +1554,25 @@ namespace UGRS.AddOn.FoodProduction.Forms
             //{
             //    lLstLine.Add("Peso salida: " + pObjTicket.OutputWT.ToString());
             //}
-
+            int j = 0;
+            foreach (TicketDetail lObjTicketDetail in pLstTicketDetail)
+            {
+                j++;
+                if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0)
+                {
+                    lLstLine.Add(j.ToString("00") + " Peso Ent: " + lObjTicketDetail.FirstWT);
+                }
+                if (!string.IsNullOrEmpty(lObjTicketDetail.SecondWT.ToString()) && lObjTicketDetail.SecondWT > 0)
+                {
+                    lLstLine.Add(j.ToString("00") + " Peso Sal: " + lObjTicketDetail.SecondWT);
+                }
+                if (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0)
+                {
+                    lLstLine.Add(j.ToString("00") + " Peso Neto: " + lObjTicketDetail.netWeight);
+                }
+            }
             if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close))
             {
-                int j = 0;
-                foreach (TicketDetail lObjTicketDetail in pLstTicketDetail)
-                {
-                    j++;
-                    if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0)
-                    {
-                        lLstLine.Add(j.ToString("00") + " Peso Ent: " + lObjTicketDetail.FirstWT);
-                    }
-                    if (!string.IsNullOrEmpty(lObjTicketDetail.SecondWT.ToString()) && lObjTicketDetail.SecondWT > 0)
-                    {
-                        lLstLine.Add(j.ToString("00") + " Peso Sal: " + lObjTicketDetail.SecondWT);
-                    }
-                    if (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0)
-                    {
-                        lLstLine.Add(j.ToString("00") + " Peso Neto: " + lObjTicketDetail.netWeight);
-                    }
-                }
 
                 DateTime lDtmDateOutput = mObjTicketServices.GetDateTime(pLstTicketDetail[pLstTicketDetail.Count - 1].OutputDate, pLstTicketDetail[pLstTicketDetail.Count - 1].OutputTime.ToString());
                 lLstLine.Add("Fecha cierre: " + lDtmDateOutput.ToString("dd/MM/yyyy HH:mm"));
@@ -1587,13 +1585,13 @@ namespace UGRS.AddOn.FoodProduction.Forms
             return lLstLine;
         }
 
-		private void PrintTicketPort(List<string> pLstLine)
+		private void PrintTicketLog(List<string> pLstLine)
 		{
 			LogService.WriteSuccess("********* Impresion de ticket **********");
 			foreach (string lStrLine in pLstLine)
 			{
                 string lStrValue = Truncate(lStrLine, 35);
-                mObjWritePort.WriteSerialPort(lStrValue);
+                //mObjWritePort.WriteSerialPort(lStrValue);
                 LogService.WriteInfo(lStrValue);
 			}
 		}
@@ -1634,12 +1632,12 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			{
 				if (i > pIntPrintedLine)
 				{
-					mObjWritePort.WriteSerialPort(pLstLine[i - 1]);
+					//mObjWritePort.WriteSerialPort(pLstLine[i - 1]);
 					LogService.WriteInfo(pLstLine[i - 1]);
 				}
 				else
 				{
-					mObjWritePort.WriteSerialPort("");
+					//mObjWritePort.WriteSerialPort("");
 					LogService.WriteInfo("");
 				}
 			}
@@ -1714,7 +1712,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 		private void btnWeight_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
 		{
 			BubbleEvent = true;
-
+            string lStrWeight = "0";
 			try
 			{
 				Form lObjForm = UIApplication.GetApplication().Forms.ActiveForm;
@@ -1727,19 +1725,19 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     LogService.WriteInfo(string.Format("Peso asignado por el usuario:{0}", lStrSim));
                     if (lStrSim.Length < 9 && Convert.ToDecimal(lStrSim) > 0)
                     {
-                        mStrWeight = lStrSim;
+                        lStrWeight = lStrSim;
                         mStrSimWeight = lStrSim;
                     }
                 }
                 else
                 {
-                    mStrWeight = lblWeight.Caption;
+                    lStrWeight = lblWeight.Caption;
                     mStrSimWeight = string.Empty;
 
                 }
-				
-				LogService.WriteInfo("Dato de bascula " + mStrWeight);
-				if (!string.IsNullOrEmpty(mStrWeight) && mStrWeight.Length < 9)
+
+                LogService.WriteInfo("Dato de bascula " + lStrWeight);
+                if (!string.IsNullOrEmpty(lStrWeight) && lStrWeight.Length < 9)
 				{
 					// RCordova UPDATE 31-10-2017 Ticket #71 
 					if (mIntRow == 0)
@@ -1762,14 +1760,14 @@ namespace UGRS.AddOn.FoodProduction.Forms
 							lBolCheck = (mObjMatrix.Columns.Item("Check").Cells.Item(mIntRow).Specific as CheckBox).Checked;
 						}
 						if (mObjMatrix.RowCount > 0 && mStrColumn != null && mObjMatrix.IsRowSelected(mIntRow) && !lBolCheck
-							&& mObjCalculation.VerifyWeightSecuence(mStrWeight, mStrSource, mObjMatrix, cboTypTic.Value))
+                            && mObjCalculation.VerifyWeightSecuence(lStrWeight, mStrSource, mObjMatrix, cboTypTic.Value))
 						{
 							if (((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso1").Cells.Item(mIntRow).Specific).Value == "0.0")
 							{
 								if (mObjValidations.VerificarSegundoPeso(mObjMatrix))
 								{
-									((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso1").Cells.Item(mIntRow).Specific).Value = mStrWeight;
-									mStrLastPeso = mStrWeight;//string.Empty;
+                                    ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso1").Cells.Item(mIntRow).Specific).Value = lStrWeight;
+                                    mStrLastPeso = lStrWeight;//string.Empty;
 								}
 							}
 							else
@@ -1777,13 +1775,13 @@ namespace UGRS.AddOn.FoodProduction.Forms
 								//if ((Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(mIntRow).Specific).Value) != 0)
 								//    || (mStrTipoDoc == "CFL_Traslado"))
 								//{
-								if (cbWTType.Value == "Doble" && mBolIsUpdate)//((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(mIntRow).Specific).Value == "0.0")
+								if (cbWTType.Value == "Doble" )//((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(mIntRow).Specific).Value == "0.0")
 								{
 									//string lStrBaseDoc = txtDoc.Value;
 									//if (WeightInvoice(lStrBaseDoc)) /// Valida si hay factura para concluir el proceso del pesaje
 									//{
-									((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(mIntRow).Specific).Value = mStrWeight;
-									mStrLastPeso = mStrWeight;
+                                    ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(mIntRow).Specific).Value = lStrWeight;
+                                    mStrLastPeso = lStrWeight;
 									//}
 									//else
 									//{
@@ -1805,7 +1803,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 							//{
 							if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value) == 0)
 							{
-								txtInWT.Value = mStrWeight;
+                                txtInWT.Value = lStrWeight;
 							}
 
 							int lIntSelectedRow = mObjMatrix.GetNextSelectedRow(0, SAPbouiCOM.BoOrderType.ot_RowOrder);
@@ -1816,7 +1814,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 							CalcImport(cboTypTic.Value);
 							if (mObjValidations.IsLastWeight(mObjMatrix))
 							{
-								txtOutputWT.Value = mStrWeight;
+                                txtOutputWT.Value = lStrWeight;
 							}
 							mObjMatrix.Item.Refresh();
 							//}
@@ -1886,7 +1884,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			try
 			{
 			   
-				StartService();
+				//StartService();
 				GetRemoteObject();//Servicio de bascula
 				//GetRemoteObjectPrint();
 				//mObjInternalWorker = new Thread(GetRemoteObject);
@@ -3809,7 +3807,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 			try
 			{
 				ServiceController mObjServiceControllerPrint = new ServiceController();
-				mObjWritePort = (WritePortServerObject)Activator.GetObject(typeof(WritePortServerObject), "http://localhost:8830/WritePort");
+				//mObjWritePort = (WritePortServerObject)Activator.GetObject(typeof(WritePortServerObject), "http://localhost:8830/WritePort");
 				mObjServiceControllerPrint.ServiceName = "WritePortService";
 
 				if (mObjServiceControllerPrint.Status == ServiceControllerStatus.Running)
@@ -3817,13 +3815,13 @@ namespace UGRS.AddOn.FoodProduction.Forms
 					try
 					{
 					   
-						mObjConnectionPrinter = mObjWritePort.Connect();
+						//mObjConnectionPrinter = mObjWritePort.Connect();
 					   
 					}
 					catch (Exception ex)
 					{
 						LogService.WriteError("[GetRemoteObjectPrint]: " + ex.Message);
-						mObjWritePort.DisconnectAll();
+						//mObjWritePort.DisconnectAll();
 						if (mObjServiceControllerPrint.CanStop)
 						{
 							if (!IsAdministrator())
@@ -3838,7 +3836,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 								UIApplication.ShowWarning("Deteniendo servicio de impresion");
 								mObjServiceControllerPrint.WaitForStatus(ServiceControllerStatus.Stopped);
 								
-								StartService();
+								//StartService();
 							}
 						}
 						else
@@ -3863,10 +3861,10 @@ namespace UGRS.AddOn.FoodProduction.Forms
 		{
 			LogService.WriteInfo("Iniciando servicio");
 			ServiceController mObjServiceController = new ServiceController();
-			ServiceController mObjServiceControllerPrint = new ServiceController();
+			//ServiceController mObjServiceControllerPrint = new ServiceController();
 			mObjServiceController.ServiceName = "WeighingMachineService";
-			mObjServiceControllerPrint.ServiceName = "WritePortService";
-			mObjServiceControllerPrint.MachineName = Environment.MachineName;
+			//mObjServiceControllerPrint.ServiceName = "WritePortService";
+			//.MachineName = Environment.MachineName;
 
 			try
 			{
@@ -3877,12 +3875,12 @@ namespace UGRS.AddOn.FoodProduction.Forms
 					
 				}
 
-				if (mObjServiceControllerPrint.Status == ServiceControllerStatus.Stopped)
-				{
-					LogService.WriteInfo("Iniciando servicio de Impresora");
-					StartService(mObjServiceControllerPrint);
+                //if (mObjServiceControllerPrint.Status == ServiceControllerStatus.Stopped)
+                //{
+                //    LogService.WriteInfo("Iniciando servicio de Impresora");
+                //    StartService(mObjServiceControllerPrint);
 				  
-				}
+                //}
 			}
 			catch (Exception lObjException)
 			{
@@ -3942,6 +3940,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 if (UIApplication.GetApplication().Forms.Count > 0)
                 {
                     Form lObjForm = UIApplication.GetApplication().Forms.ActiveForm;
+
                     //if (!string.IsNullOrEmpty(mStrSimWeight))
                     //{
                     //    //this.txtSim = ((SAPbouiCOM.EditText)(lObjForm.Items.Item("txtSim").Specific));
@@ -3977,7 +3976,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 				UIApplication.ShowMessage(string.Format("Recibir datos de báscula: {0}", lObjException.Message));
 			}
 
-            mBolStarted = true;
+          
 			// txtDoc.Value = pStrValue;
 
 			//lblWeight.Dispatcher.Invoke((Action)delegate

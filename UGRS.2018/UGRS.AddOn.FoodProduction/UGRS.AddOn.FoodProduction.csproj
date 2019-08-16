@@ -125,9 +125,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="SAPBusinessOneSDK" />
-    <Reference Include="UGRS.Object.WritePort">
-      <HintPath>..\Dlls\UGRS.Object.WritePort.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

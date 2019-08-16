@@ -57,6 +57,13 @@ namespace UGRS.Core.SDK.DI.FoodProduction.Tables
         [Field(Description = "Estado", Type = BoFieldTypes.db_Numeric)]
         public int Status { get; set; }
 
+        /*[Description("Cerrado")]
+            Close = 0,
+            [Description("Abierto")]
+            Open = 1,
+            [Description("Pendiente de facturar")]
+            Pending= 2,*/
+
         [Field(Description = "Lineas impresas", Type = BoFieldTypes.db_Numeric)]
         public int PrintLine { get; set; }
     }
