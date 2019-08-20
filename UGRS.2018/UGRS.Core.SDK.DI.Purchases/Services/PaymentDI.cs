@@ -40,6 +40,7 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
                 lObjPayment.UserFields.Fields.Item("U_FZ_Auxiliar").Value = pObjPurchase.Employee;
                 lObjPayment.UserFields.Fields.Item("U_GLO_CostCenter").Value = pObjPurchase.Area;
                 lObjPayment.UserFields.Fields.Item("U_GLO_CodeMov").Value = pObjPurchase.CodeMov;
+                lObjPayment.UserFields.Fields.Item("U_GLO_ObjType").Value = "frmReceipts";
 
                 if (lObjPayment.Add() != 0)
                 {
