@@ -23,204 +23,11 @@
         <rd:DefaultName>Value</rd:DefaultName>
         <Top>0.02778in</Top>
         <Height>0.2806in</Height>
-        <Width>2.20732in</Width>
+        <Width>2.39869in</Width>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox6">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>NUMERO DE SACOS:</Value>
-                <Style>
-                  <FontSize>8pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.55838in</Top>
-        <Height>0.26184in</Height>
-        <Width>1.19201in</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Line Name="Line6">
-        <Top>0.72133in</Top>
-        <Left>1.14267in</Left>
-        <Height>0in</Height>
-        <Width>0.6841in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-          </Border>
-        </Style>
-      </Line>
-      <Textbox Name="Textbox3">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>ENTREGO</Value>
-                <Style>
-                  <FontSize>6pt</FontSize>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">
-</Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Value>ALMACEN</Value>
-                <Style>
-                  <FontSize>5pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.88966in</Top>
-        <Left>0.30628in</Left>
-        <Height>0.31614in</Height>
-        <Width>0.69747in</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <TopBorder>
-            <Style>Solid</Style>
-          </TopBorder>
-          <VerticalAlign>Top</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox4">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>ENTREGO</Value>
-                <Style>
-                  <FontSize>6pt</FontSize>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">
-</Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Value>CLIENTE</Value>
-                <Style>
-                  <FontSize>5pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.88966in</Top>
-        <Left>1.00375in</Left>
-        <Height>0.31614in</Height>
-        <Width>0.69747in</Width>
-        <ZIndex>4</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <TopBorder>
-            <Style>Solid</Style>
-          </TopBorder>
-          <VerticalAlign>Top</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox5">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>ENTREGO</Value>
-                <Style>
-                  <FontSize>6pt</FontSize>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">
-</Value>
-                <Style />
-              </TextRun>
-              <TextRun>
-                <Value>PORTERO</Value>
-                <Style>
-                  <FontSize>5pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.88967in</Top>
-        <Left>1.70122in</Left>
-        <Height>0.31614in</Height>
-        <Width>0.69747in</Width>
-        <ZIndex>5</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <TopBorder>
-            <Style>Solid</Style>
-          </TopBorder>
-          <VerticalAlign>Top</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -228,7 +35,7 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>1.30793in</Height>
+    <Height>0.62248in</Height>
     <Style />
   </Body>
   <Width>2.769in</Width>
@@ -242,9 +49,9 @@
           <Source>Embedded</Source>
           <Value>unionlogo</Value>
           <Sizing>Fit</Sizing>
-          <Left>1.14267in</Left>
+          <Left>0.89267in</Left>
           <Height>0.64481in</Height>
-          <Width>0.92886in</Width>
+          <Width>0.64481in</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -272,7 +79,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox2</rd:DefaultName>
           <Top>0.67259in</Top>
-          <Left>1.00375in</Left>
+          <Left>0.62875in</Left>
           <Height>0.37202in</Height>
           <Width>1.2067in</Width>
           <ZIndex>1</ZIndex>

@@ -533,8 +533,8 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     if (mBolStarted && (string.IsNullOrEmpty(lblWeight.Caption.Trim()) || string.IsNullOrEmpty(mStrWeight)))
                     {
                         LogService.WriteError("No fue posible leer datos de la bascula");
-                        ServiceController mObjServiceController = new ServiceController();
-                        mObjServiceController.ServiceName = "WeighingMachineService";
+                       // ServiceController mObjServiceController = new ServiceController();
+                        //mObjServiceController.ServiceName = "WeighingMachineService";
 
                         //mObjServiceController.Close();
                         //mObjServiceController.Stop();
@@ -543,8 +543,8 @@ namespace UGRS.AddOn.FoodProduction.Forms
                         //UIApplication.ShowWarning("Deteniendo servicio de impresion");
                         //mObjServiceController.WaitForStatus(ServiceControllerStatus.Stopped);
 
-                        StartService();
-                        GetRemoteObject();//Servicio de bascula
+                       // StartService();
+                        //GetRemoteObject();//Servicio de bascula
                     }
                 }
             }
@@ -1328,16 +1328,17 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     //    }
                     //}
 
-                    if (Print(lLstLines, lIntPrintedLine, lBolUpdate, lObjTicket.Status))
-                    {
-                        if (lLstLines.Count != lObjTicket.PrintLine)
-                        {
-                            lObjTicket.RowName = lObjTicket.PrintLine.ToString();
-                        }
-                        lObjTicket.PrintLine = lLstLines.Count();
 
-                        mObjTicketServices.SaveTicket(lObjTicket, true);
+                    PrintTicketReport(lLstLines, 1);
+
+                    if (lLstLines.Count != lObjTicket.PrintLine)
+                    {
+                        lObjTicket.RowName = lObjTicket.PrintLine.ToString();
                     }
+                    lObjTicket.PrintLine = lLstLines.Count();
+
+                    mObjTicketServices.SaveTicket(lObjTicket, true);
+
                 }
             }
             catch (Exception ex)
@@ -1447,9 +1448,8 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
                                     mObjTicketDocCreation.CrearDocumento(lLstTickets, SAPbobsCOM.BoObjectTypes.oDeliveryNotes, "OINV", 13, "INV1");
                                 }
-
-                                List<string> lLstLines = GetListToPrint(mObjTicket, lLstTicketDetail);
-                                if (Print(lLstLines, lIntPrintedLines, mBolIsUpdate, mObjTicket.Status))
+                              
+                                if (Print(mObjTicket, lLstTicketDetail))
                                 {
                                     //mObjTicket.RowName = mObjTicket.PrintLine.ToString();
                                     //mObjTicket.PrintLine = lLstLines.Count();
@@ -1459,7 +1459,6 @@ namespace UGRS.AddOn.FoodProduction.Forms
                                     //ClearControls();
                                     this.UIAPIRawForm.Freeze(false);
                                     UIApplication.ShowMessageBox("Ticket guardado correctamente!");
-
                                 }
 
                                 btnPrint.Item.Visible = true;
@@ -1488,37 +1487,45 @@ namespace UGRS.AddOn.FoodProduction.Forms
             }
         }
         #region Print reacomodar
-        private bool Print(List<string> pLstLines, int pIntPrintedLines, bool pBolIsUpdate, int pIntStatus)
+        //private bool Print(List<string> pLstLines, int pIntPrintedLines, bool pBolIsUpdate, int pIntStatus)
+        private bool Print(Ticket pObjTicket, List<TicketDetail> pLstTicketDetail)
         {
             try
             {
-                PrintTicketLog(pLstLines);
-
+                string lStrCopies = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINT_COPIES", "[@UG_Config]");
+                int lIntCopies = string.IsNullOrEmpty(lStrCopies) ? 1 : int.Parse(lStrCopies);
+                List<string> lLstLines = GetListToPrint(pObjTicket, pLstTicketDetail);
                 //        {
-                if (pBolIsUpdate)
+                if (mBolIsUpdate)
                 {
-                    if ((pIntStatus == (int)TicketEnum.TicketStatus.Pending || pIntStatus == (int)TicketEnum.TicketStatus.Close))
+                    if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close))
                     {
-                        PrintTicketReport(pLstLines);
+
+                        PrintTicketReport(lLstLines, lIntCopies);
 
                     }
                 }
                 else
                 {
-                    PrintTicketReport(pLstLines);
+                    //Impresion por tarimera
+                    if (pLstTicketDetail.Where(x => x.WeighingM == 1).Count() == 0)
+                    {
+                        if (pObjTicket.PrintLine == 0)
+                        {
+                            lIntCopies = 1;
+                        }
+                        PrintTicketReport(lLstLines, lIntCopies);
+                    }
 
                     //PrintTicketPort()
                 }
-
-
-
-
             }
             catch (Exception ex)
             {
                 UIApplication.ShowError("Imprimir: " + ex.Message);
                 LogService.WriteError("Imprimir: " + ex.Message);
                 LogService.WriteError(ex);
+                return false;
             }
             return true;
         }
@@ -1528,7 +1535,18 @@ namespace UGRS.AddOn.FoodProduction.Forms
         {
             List<string> lLstLine = new List<string>();
             lLstLine.Add("Folio: " + pObjTicket.Folio);
-            lLstLine.Add("UNION GANADERA REGIONAL DE SONORA");
+            //lLstLine.Add("UNION GANADERA REGIONAL DE SONORA");
+            //TicketEntrada/Salida
+            string lStrEntradaSalida = "";
+            if((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close))
+            {
+                lStrEntradaSalida = "Salida";
+            }
+            else
+            {
+                lStrEntradaSalida = "Entrada";
+            }
+            lLstLine.Add("Ticket " + lStrEntradaSalida);
             lLstLine.Add("Código: " + pObjTicket.BPCode);
             lLstLine.Add("Cliente: " + mObjTicketServices.SearchBPName(pObjTicket.BPCode));
             lLstLine.Add("Chofer: " + pObjTicket.Driver);
@@ -1545,10 +1563,11 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 //    (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0) || lObjTicketDetail.WeighingM == 1)
                 //{
                 //  //lLstLine.Add("Cod. Prod: " + lObjTicketDetail.Item);
-                lLstLine.Add(i.ToString("00") + " Prod: " + mObjTicketServices.SearchItemName(lObjTicketDetail.Item));
+                lLstLine.Add(string.Format("{0} {1} {2}", i.ToString("00"), "Prod:", mObjTicketServices.SearchItemName(lObjTicketDetail.Item)));
                 //}
-
+             
             }
+          
 
             //if (!string.IsNullOrEmpty(pObjTicket.OutputWT.ToString()) && pObjTicket.OutputWT > 0)
             //{
@@ -1557,6 +1576,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             int j = 0;
             foreach (TicketDetail lObjTicketDetail in pLstTicketDetail)
             {
+                //lLstLine.Add("");
                 j++;
                 if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0)
                 {
@@ -1571,12 +1591,42 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     lLstLine.Add(j.ToString("00") + " Peso Neto: " + lObjTicketDetail.netWeight);
                 }
             }
+
             if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close))
             {
 
                 DateTime lDtmDateOutput = mObjTicketServices.GetDateTime(pLstTicketDetail[pLstTicketDetail.Count - 1].OutputDate, pLstTicketDetail[pLstTicketDetail.Count - 1].OutputTime.ToString());
                 lLstLine.Add("Fecha cierre: " + lDtmDateOutput.ToString("dd/MM/yyyy HH:mm"));
             }
+
+            if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close) || pObjTicket.CapType == 4 || pObjTicket.CapType == 5)
+            {
+                // ;)//Salida
+                lLstLine.Add("");
+                lLstLine.Add("");
+                lLstLine.Add("____________________________________");
+                lLstLine.Add("    ENTREGO                 ENTREGO ");
+                lLstLine.Add("    CLIENTE                   PORTERO ");
+                lLstLine.Add("");
+
+            }
+            else
+            {
+                lLstLine.Add("");
+                lLstLine.Add("      Firma                               Sacos");
+
+                int lIntI = 0;
+                foreach (TicketDetail lObjTicketDetail in pLstTicketDetail.OrderBy(x => x.Line))
+                {
+                    lIntI++;
+                   
+                    lLstLine.Add("");
+                    lLstLine.Add(string.Format("{0} {1}  {2}", lIntI.ToString("00"), "____________________", "________"));
+                    lLstLine.Add("");
+                   
+                }
+            }
+           
             //if (!string.IsNullOrEmpty(lObjTicket.OutputWT.ToString()) && lObjTicket.OutputWT > 0)
             //{
             //  //  lLstLine.Add("Peso Final: " + lObjTicket.OutputWT);
@@ -1596,32 +1646,36 @@ namespace UGRS.AddOn.FoodProduction.Forms
             }
         }
 
-        private void PrintTicketReport(List<string> pLstLine)
+        private void PrintTicketReport(List<string> pLstLine, int pIntCopies)
         {
-            string lStrCopies = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINT_COPIES", "[@UG_Config]");
+            PrintTicketLog(pLstLine);
+
+            //int lIntCopies = string.IsNullOrEmpty(lStrCopies) ? 1 : int.Parse(lStrCopies);
+
+        
+
+            //for (int i = 0; i < lIntCopies; i++)
+            //{
+            //string lStrCopies = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINT_COPIES", "[@UG_Config]");
             string lStrPrinterName = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINTER_NAME", "[@UG_Config]");
             if (string.IsNullOrEmpty(lStrPrinterName))
             {
                 throw new Exception("No se encontró valor para la cofiguración PL_PRINTER_NAME en la tabla de configuraciones, agreguela para continuar");
             }
-
+          
             LocalReport lObjLocalReport = new LocalReport();
             lObjLocalReport.ReportPath = @"Reports/Tickets/rptTicket.rdlc";
-
+            
             lObjLocalReport.SetParameters(new ReportParameter("Value", string.Join("|", pLstLine)));
             lObjLocalReport.Refresh();
 
             using (var doc = new ReportPrintDocument(lObjLocalReport))
             {
-                int lIntCopies = string.IsNullOrEmpty(lStrCopies) ? 1 : int.Parse(lStrCopies);
-
                 doc.PrinterSettings.PrinterName = lStrPrinterName;
-
-                for (int i = 0; i < lIntCopies; i++)
+                for (int i = 0; i < pIntCopies; i++)
                 {
                     doc.Print();
                 }
-                
             }
         }
 
@@ -1893,7 +1947,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             try
             {
 
-                //StartService();
+                StartService();
                 GetRemoteObject();//Servicio de bascula
                 //GetRemoteObjectPrint();
                 //mObjInternalWorker = new Thread(GetRemoteObject);
@@ -2263,10 +2317,19 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 LogService.WriteInfo("Amount " + lObjTicket.Amount);
                 lObjTicket.Coments = txtComents.Value;
 
-                if (mBolIsUpdate)
+                try
                 {
-                    lObjTicket.PrintLine = Convert.ToInt32(mObjQueryManager.GetValue("U_PrintLine", "U_Folio", pStrFolio, "[@UG_PL_TCKT]"));
+                    if (mBolIsUpdate)
+                    {
+                        lObjTicket.PrintLine = Convert.ToInt32(mObjQueryManager.GetValue("U_PrintLine", "U_Folio", pStrFolio, "[@UG_PL_TCKT]"));
+                    }
                 }
+                catch (Exception)
+                {
+
+                    lObjTicket.PrintLine = 0;
+                }
+               
 
             }
             catch (Exception ex)
@@ -3791,8 +3854,10 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     mObjWrapperObject = new WrapperObject();
 
                     //Events
-                    mObjWeighingMachine.DataReceived += new WeighingMachineEventHandler(mObjWrapperObject.WrapperOnDataReceived);
+
                     mObjWrapperObject.WrapperDataReceived += new WeighingMachineEventHandler(OnDataReceived);
+                    mObjWeighingMachine.DataReceived += new WeighingMachineEventHandler(mObjWrapperObject.WrapperOnDataReceived);
+
 
                     //Connection
                     mObjConnection = mObjWeighingMachine.Connect();
