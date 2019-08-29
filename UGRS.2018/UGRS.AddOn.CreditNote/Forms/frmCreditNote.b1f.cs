@@ -48,6 +48,7 @@ namespace UGRS.AddOn.CreditNote.Forms
             this.btnReport = ((SAPbouiCOM.Button)(this.GetItem("btnReport").Specific));
             this.btnReport.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.btnReport_ClickAfter);
             this.mtxInv = ((SAPbouiCOM.Matrix)(this.GetItem("mtxInv").Specific));
+            this.mtxInv.LinkPressedAfter += new SAPbouiCOM._IMatrixEvents_LinkPressedAfterEventHandler(this.mtxInv_LinkPressedAfter);
             this.lblDateTo = ((SAPbouiCOM.StaticText)(this.GetItem("lblDate").Specific));
             this.btnSearch = ((SAPbouiCOM.Button)(this.GetItem("btnSearch").Specific));
             this.btnSearch.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSearch_ClickBefore);
@@ -260,8 +261,30 @@ namespace UGRS.AddOn.CreditNote.Forms
             printUDO(txtFolio.Value);
 
         }
-      
 
+         private void mtxInv_LinkPressedAfter(object sboObject, SBOItemEventArg pVal)
+         {
+             try
+             {
+                 //ColUID = "C_DocEntrJ"
+
+                 if (pVal.ColUID == "C_CardCode")
+                 {
+                     string lStrCardCode = DtMatrix.GetValue("C_CardCode", pVal.Row - 1).ToString();
+                     SAPbouiCOM.Framework.Application.SBO_Application.OpenForm(BoFormObjectEnum.fo_BusinessPartner, "", lStrCardCode);
+                 }
+                 if (pVal.ColUID == "C_DocNum")
+                 {
+                     string lStrDocEntry = DtMatrix.GetValue("C_DocEntry", pVal.Row - 1).ToString();
+                     SAPbouiCOM.Framework.Application.SBO_Application.OpenForm(BoFormObjectEnum.fo_Invoice, "", lStrDocEntry);
+                 }
+             }
+             catch (Exception ex)
+             {
+                 LogService.WriteError("mtxReceipt_LinkPressedBefore: " + ex.Message);
+                 LogService.WriteError(ex);
+             }
+         }
         #endregion
 
         #region Methods
@@ -478,7 +501,7 @@ namespace UGRS.AddOn.CreditNote.Forms
                 }
                 else
                 {
-                    ShowMessageboxList("Algunos preliminares no fueron generadas correctamente: ", LstResult);
+                    ShowMessageboxList("Algunas notas no fueron generadas correctamente: ", LstResult);
                 }
             }
 
@@ -873,7 +896,6 @@ namespace UGRS.AddOn.CreditNote.Forms
         private SAPbouiCOM.Button btnCancel;
         #endregion
 
-       
 
 
 
