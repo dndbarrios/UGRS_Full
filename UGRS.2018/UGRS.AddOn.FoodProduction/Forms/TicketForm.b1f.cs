@@ -532,7 +532,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
                     if (mBolStarted && (string.IsNullOrEmpty(lblWeight.Caption.Trim()) || string.IsNullOrEmpty(mStrWeight)))
                     {
-                        LogService.WriteError("No fue posible leer datos de la bascula");
+                       // LogService.WriteError("No fue posible leer datos de la bascula");
                        // ServiceController mObjServiceController = new ServiceController();
                         //mObjServiceController.ServiceName = "WeighingMachineService";
 
@@ -749,6 +749,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
         private bool MakeCalculation(int pIntRow, string pStrColumn)
         {
+            LogService.WriteInfo("MakeCalculation");
             double lDblPesoNeto = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
             if (lDblPesoNeto > 0 && !pStrColumn.Equals("Price") && !pStrColumn.Equals("PesoN") && !pStrColumn.Equals("Sacos") && !pStrColumn.Equals("ItemCode") && !pStrColumn.Equals("WhsCode"))
             {
@@ -777,6 +778,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
         private void SelectedRowSettings()
         {
+            LogService.WriteInfo("SelectedRowSettings")
             bool lBolCheck = false;
             if (cboTypTic.Value != "Venta de pesaje")
             {
@@ -788,7 +790,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             {
                 if (mObjCalculation.getLargeNumber(mObjMatrix) > 0)
                 {
-                    mStrLastPeso = mObjCalculation.getLargeNumber(mObjMatrix).ToString();
+                    mStrLastPeso = mObjCalculation.getLargeNumber(mObjMatrix).ToString(); 
                 }
             }
             if (mStrSource == "POR1" || cboTypTic.Value == "Traslado - Entrada")
@@ -829,6 +831,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         /// </summary>
         private void ClicPesoN(SAPbouiCOM.ItemEvent pObjVal)
         {
+            LogService.WriteInfo("ClicPeso");
             if (pObjVal.ItemUID == "mtxArtLst2" && (pObjVal.ColUID == "PesoN" || pObjVal.ColUID == "Sacos" || pObjVal.ColUID == "Price"))
             {
                 if (!mBolPriceModify)
@@ -1547,8 +1550,15 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 lStrEntradaSalida = "Entrada";
             }
             lLstLine.Add("Ticket " + lStrEntradaSalida);
-            lLstLine.Add("Código: " + pObjTicket.BPCode);
-            lLstLine.Add("Cliente: " + mObjTicketServices.SearchBPName(pObjTicket.BPCode));
+            if (pObjTicket.CapType == 2 || pObjTicket.CapType == 3)
+            {
+                lLstLine.Add("Destino: "+ GetWhs(pObjTicket));
+            }
+            else
+            {
+                lLstLine.Add("Código: " + pObjTicket.BPCode);
+                lLstLine.Add("Cliente: " + mObjTicketServices.SearchBPName(pObjTicket.BPCode));
+            }
             lLstLine.Add("Chofer: " + pObjTicket.Driver);
             lLstLine.Add("Placas: " + pObjTicket.CarTag);
             DateTime lDtmDateEntry = mObjTicketServices.GetDateTime(pObjTicket.EntryDate, pLstTicketDetail[0].EntryTime.ToString());
@@ -1558,6 +1568,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             int i = 0;
             foreach (TicketDetail lObjTicketDetail in pLstTicketDetail.OrderBy(x => x.Line))
             {
+                
                 i++;
                 //if ((!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString()) && lObjTicketDetail.FirstWT > 0) || 
                 //    (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString()) && lObjTicketDetail.netWeight > 0) || lObjTicketDetail.WeighingM == 1)
@@ -2839,6 +2850,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         /// 
         private void CalcImport(string pStrTypeTicket)
         {
+            LogService.WriteInfo("CalcImport");
             this.UIAPIRawForm.Freeze(true);
             try
             {
@@ -4147,5 +4159,29 @@ namespace UGRS.AddOn.FoodProduction.Forms
         #endregion
         #endregion
 
+
+        private string GetWhs(Ticket pObjTicket)
+        {
+            string lStrDocEntry = string.Empty;
+            string lStrToWhsCode = string.Empty;
+            string lStrFromWhsCode = string.Empty;
+            try
+            {
+                SAPbobsCOM.Recordset lObjRecordSet = (SAPbobsCOM.Recordset)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                lObjRecordSet.DoQuery("select DocEntry, Filler, ToWhsCode from OWTQ where DocEntry = " + pObjTicket.Number);
+                if (lObjRecordSet.RecordCount == 1)
+                {
+                    lStrDocEntry = lObjRecordSet.Fields.Item(0).Value.ToString();
+                    lStrFromWhsCode = lObjRecordSet.Fields.Item(1).Value.ToString();
+                    lStrToWhsCode = lObjRecordSet.Fields.Item(2).Value.ToString();
+                }
+                MemoryUtility.ReleaseComObject(lObjRecordSet);
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError(ex.Message);
+            }
+            return lStrToWhsCode;
+        }
     }
 }
