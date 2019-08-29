@@ -67,19 +67,20 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
         {
             try
             {
-                double lDblPesoNeto = 0;
-                double lDblPeso1 = 0;
-                double lDblPeso2 = 0;
-                double lDblImporte = 0;
-                double lDblPrice = 0;
+                float lDblPesoNeto = 0;
+                float lDblPeso1 = 0;
+                float lDblPeso2 = 0;
+                float lDblImporte = 0;
+                float lDblPrice = 0;
                 string lStrSacos = "";
 
                 if (pIntRow <= pObjMatrix.RowCount && !string.IsNullOrEmpty((pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value.Trim()))
                 {
 
-                    lDblPeso1 = Convert.ToDouble((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim());  //itemcode = VALUE OF CELL. COLUMN "1": ITEMCODE COLUMN. CURRENT ROW: pVal.Row
-                    lDblPeso2 = Convert.ToDouble((pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
-                    lDblPrice = Convert.ToDouble((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                    lDblPeso1 = float.Parse((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim());  //itemcode = VALUE OF CELL. COLUMN "1": ITEMCODE COLUMN. CURRENT ROW: pVal.Row
+                    LogService.WriteInfo("Peso1 " + lDblPeso1.ToString());
+                    lDblPeso2 = float.Parse((pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                    lDblPrice = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
                     if (pStrTypeTicket != "Venta de pesaje" && pStrTypeTicket != "Pesaje")
                     {
                         lStrSacos = ((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Sacos").Cells.Item(pIntRow).Specific).Value;
@@ -98,13 +99,16 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                     else
                     {
                         pDBDataSourceD.SetValue("TreeType", pIntRow - 1, "Y");
-                        lDblPesoNeto = Convert.ToDouble((pObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                        lDblPesoNeto = float.Parse((pObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
                     }
+                    LogService.WriteInfo("Peso2 " + lDblPeso1.ToString());
 
-                    lDblPrice = Convert.ToDouble((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                    lDblPrice = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
 
+                    LogService.WriteInfo("Peso3" + lDblPeso1.ToString());
                     if (mObjValidations.ValidateWeight(pStrTypeTicket, lDblPesoNeto, lDblPeso2, pObjMatrix, pIntRow))
                     {
+                        LogService.WriteInfo("Peso4" + lDblPeso1.ToString());
                         //Valida el tipo de peso
                         if (lDblPesoNeto < 0)
                         {
@@ -120,7 +124,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                         pDBDataSourceD.SetValue("Price", pIntRow - 1, lDblPrice.ToString());
                       //  (pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value = lDblPeso1.ToString();
                       //  (pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value = lDblPeso2.ToString();
-
+                        LogService.WriteInfo("Peso5  " + lDblPeso1.ToString());
                         pDBDataSourceD.SetValue("Weight1", pIntRow - 1, lDblPeso1.ToString());
                         pDBDataSourceD.SetValue("Weight2", pIntRow - 1, lDblPeso2.ToString());
 
