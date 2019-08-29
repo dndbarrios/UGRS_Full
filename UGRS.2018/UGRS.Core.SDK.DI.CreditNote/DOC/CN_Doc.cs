@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UGRS.Core.SDK.DI.CreditNote.Tables;
 using UGRS.Core.SDK.UI;
 using UGRS.Core.Services;
-
+using System.Linq;
 
 namespace UGRS.Core.SDK.DI.CreditNote.DOC
 {
@@ -29,12 +29,19 @@ namespace UGRS.Core.SDK.DI.CreditNote.DOC
                 lObjCreditNote.UserFields.Fields.Item("U_MQ_OrigenFol_Det").Value = pObjCreditNoteDoc.FolioDoc;
                 lObjCreditNote.UserFields.Fields.Item("U_B1SYS_MainUsage").Value = "G02";
                 lObjCreditNote.DocObjectCode = SAPbobsCOM.BoObjectTypes.oCreditNotes;
+                //lObjCreditNote.Lines.CostingCode = //"??";
                 lObjCreditNote.EDocGenerationType = SAPbobsCOM.EDocGenerationTypeEnum.edocNotRelevant;
-                lObjCreditNote.Lines.ItemCode = mObjFactory.GetCreditNoteService().GetBonusItemCode();
-                lObjCreditNote.Lines.Quantity = 1;
-                lObjCreditNote.Lines.UnitPrice = pObjCreditNoteDoc.Amount;
-                lObjCreditNote.Lines.TaxCode = pObjCreditNoteDoc.TaxCode;
-                lObjCreditNote.Lines.Add();
+
+                foreach (CreditNoteDet lObjDet in pObjCreditNoteDoc.LstCreditNoteDet.GroupBy(x => x.Area).Select(y => new CreditNoteDet {Area = y.First().Area}).ToList())
+                {
+                    lObjCreditNote.Lines.ItemCode = mObjFactory.GetCreditNoteService().GetBonusItemCode();
+                    lObjCreditNote.Lines.Quantity = 1;
+                    lObjCreditNote.Lines.UnitPrice = pObjCreditNoteDoc.Amount;
+                    lObjCreditNote.Lines.TaxCode = pObjCreditNoteDoc.TaxCode;
+                    lObjCreditNote.Lines.CostingCode = lObjDet.Area;
+                    lObjCreditNote.Lines.Add();
+                }
+              
 
                 int intError = lObjCreditNote.Add();
                 string lStrErrMsg;

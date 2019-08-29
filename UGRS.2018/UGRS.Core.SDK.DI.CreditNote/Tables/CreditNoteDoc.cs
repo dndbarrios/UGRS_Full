@@ -69,6 +69,9 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         [Field(Description = "UserMod", Size = 32)]
         public string UserMod { get; set; }
 
+
+       
+
         public List<CreditNoteDet> LstCreditNoteDet;
 
 

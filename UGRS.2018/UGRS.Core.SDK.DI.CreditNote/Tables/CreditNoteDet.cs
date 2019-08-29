@@ -80,6 +80,10 @@ namespace UGRS.Core.SDK.DI.CreditNote.Tables
         public string FolioFiscal { get; set; }
 
 
+        [Field(Description = "Area", Size = 32)]
+        public string Area { get; set; }
+
+
 
     }
 }

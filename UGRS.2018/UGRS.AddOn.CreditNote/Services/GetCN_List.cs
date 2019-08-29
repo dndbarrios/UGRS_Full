@@ -92,7 +92,10 @@ namespace UGRS.AddOn.CreditNote.Services
                 QtyInv = Convert.ToInt32(mDtMatrix.GetValue("C_InvHead", pIntRow).ToString()),
                 FolioFiscal = mDtMatrix.GetValue("UUID", pIntRow).ToString(),
                 SerieINV = mDtMatrix.GetValue("C_Series", pIntRow).ToString(),
+                Area = mDtMatrix.GetValue("C_OcrCode", pIntRow).ToString(),
                 DateINV = Convert.ToDateTime(mDtMatrix.GetValue("C_DocDate", pIntRow).ToString())
+
+
             };
 
 
