@@ -112,14 +112,15 @@ namespace UGRS.AddOn.Machinery.Forms
                                     if (string.IsNullOrEmpty(mObjFrmFolios.mStrFolio))
                                         return;
 
-                                    //Validar si la comprobación esta autorizada
-                                    //Se elimina validación a petición de UGRS
-                                    /*int lIntStatus = mObjMachineryServiceFactory.GetRiseService().GetVoucherStatus(mObjFrmFolios.mStrFolio);
+                                    // Validar si la comprobación esta autorizada
+                                    // Se elimina validación a petición de UGRS
+                                    // Se agrega de nuevo validación a petición de UGRS
+                                    int lIntStatus = mObjMachineryServiceFactory.GetRiseService().GetVoucherStatus(mObjFrmFolios.mStrFolio);
                                     if (lIntStatus != 4) //Autorizado
                                     {
                                         UIApplication.ShowError(string.Format("El folio de comprobación de gastos de la subida {0} no está autirzado, favor de revisar", mObjFrmFolios.mStrFolio));
                                         return;
-                                    }*/
+                                    }
 
                                     txtFolioRise.Value = mObjFrmFolios.mStrFolio;
 
