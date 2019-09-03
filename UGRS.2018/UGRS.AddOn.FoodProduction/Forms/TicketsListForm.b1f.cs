@@ -3,6 +3,7 @@ using SAPbouiCOM;
 using SAPbouiCOM.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UGRS.AddOn.FoodProduction.Forms;
 using UGRS.AddOn.FoodProduction.Services;
 using UGRS.AddOn.FoodProduction.UI;
@@ -1126,9 +1127,9 @@ namespace UGRS.AddOn.FoodProduction
                         lStrOpenQty = mObjTicketServices.GetOpenLine("OPCH", "PCH1", "OpenCreQty", lObjTicket.Number.ToString(), lObjTicketDetail.BaseLine.ToString());
                     }
 
-                    if (pBolIsInventory && lStrOpenQty != "" && lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty))
+                    if (pBolIsInventory && lStrOpenQty != "" && lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture))
                     {
-                        lFloNetWeight = lObjTicketDetail.netWeight - Convert.ToDouble(lStrOpenQty);
+                        lFloNetWeight = lObjTicketDetail.netWeight - Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture);
                     }
 
                     if (pBolIsInventory)
@@ -1137,9 +1138,9 @@ namespace UGRS.AddOn.FoodProduction
                     }
                     else
                     {
-                        if (lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty))
+                        if (lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture))
                         {
-                            lObjTicketDetail.netWeight = Convert.ToDouble(lStrOpenQty);
+                            lObjTicketDetail.netWeight = Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture);
                         }
                     }
                     if (lObjTicketDetail.netWeight > 0)
@@ -1708,8 +1709,8 @@ namespace UGRS.AddOn.FoodProduction
                 {
 
                     ((SAPbouiCOM.EditText)mtxItems.Columns.Item(3).Cells.Item(i).Specific).Value = lObjTicketDetail.Item;
-                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(20).Cells.Item(i).Specific).Value = lObjTicketDetail.Price.ToString();
-                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(13).Cells.Item(i).Specific).Value = lObjTicketDetail.netWeight.ToString();
+                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(20).Cells.Item(i).Specific).Value = lObjTicketDetail.Price.ToString(CultureInfo.InvariantCulture);
+                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(13).Cells.Item(i).Specific).Value = lObjTicketDetail.netWeight.ToString(CultureInfo.InvariantCulture);
                     ((SAPbouiCOM.EditText)mtxItems.Columns.Item(404).Cells.Item(i).Specific).Value = lObjTicketDetail.Folio.ToString();
 
                     ((SAPbouiCOM.EditText)mtxItems.Columns.Item(54).Cells.Item(i).Specific).Active = true;

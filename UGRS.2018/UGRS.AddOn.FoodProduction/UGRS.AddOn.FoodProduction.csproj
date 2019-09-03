@@ -156,6 +156,7 @@
     <None Include="App.config" />
     <None Include="Forms\TicketForm.b1f">
       <FormCategory>UserForm</FormCategory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Forms\TicketsListForm.b1f">
       <FormCategory>UserForm</FormCategory>
