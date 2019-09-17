@@ -38,23 +38,30 @@ namespace UGRS.AddOn.EmailSender
                 if (!pVal.FormTypeEx.Equals("188"))
                     return;
 
-                if (pVal.BeforeAction)
+                if (!pVal.BeforeAction)
                     return;
 
+                string typeExPO = string.Empty;
                 switch (pVal.EventType)
                 {
                     case SAPbouiCOM.BoEventTypes.et_FORM_LOAD:
                         //mBoolFormLoaded = true;
 
-                        this.FormEmail = UIApplication.GetApplication().Forms.GetFormByTypeAndCount(pVal.FormType, pVal.FormTypeCount);
-                        AddEmailRecipient();
+                        //this.FormEmail = UIApplication.GetApplication().Forms.GetFormByTypeAndCount(pVal.FormType, pVal.FormTypeCount);
+                        //AddEmailRecipient();
 
                         break;
-                    case SAPbouiCOM.BoEventTypes.et_VALIDATE:
-
+                    case SAPbouiCOM.BoEventTypes.et_FORM_DRAW: //et_FORM_ACTIVATE
+                        typeExPO = UIApplication.GetApplication().Forms.ActiveForm.TypeEx;
+                        if (typeExPO == "142" || typeExPO == "-142") //PO Form
+                        {
+                            this.FormEmail = UIApplication.GetApplication().Forms.GetFormByTypeAndCount(pVal.FormType, pVal.FormTypeCount);
+                            AddEmailRecipient();
+                        }
                         break;
                     case SAPbouiCOM.BoEventTypes.et_FORM_CLOSE:
-
+                        //SAPbouiCOM.Form formPO = UIApplication.GetApplication().Forms.GetForm("142", pVal.FormTypeCount);
+                        //formPO.Items.Item("16").Click();
                         break;
                 }
             }
@@ -69,14 +76,34 @@ namespace UGRS.AddOn.EmailSender
         #endregion
 
         #region Functions
+        private bool isParentForm(string pStrFormTypeEx)
+        {
+            bool lBolResult = false;
+            string lStrTypeEx = string.Empty;
+            foreach (SAPbouiCOM.Form form in UIApplication.GetApplication().Forms)
+            {
+                if (form.TypeEx == "188")
+                {
+                    if (pStrFormTypeEx == lStrTypeEx)
+                    {
+                        return true;
+                    }
+                }
+
+                lStrTypeEx = form.TypeEx;
+            }
+
+            return lBolResult;
+        }
+
         private void AddEmailRecipient()
         {
+            string lStrEmail = new QueryManager().GetValue("U_Email", "USER_CODE", DIApplication.Company.UserName, "OUSR");
             try
             {
                 if (this.FormEmail == null)
                     return;
 
-                string lStrEmail = new QueryManager().GetValue("U_Email", "USER_CODE", DIApplication.Company.UserName, "OUSR");
                 if (string.IsNullOrEmpty(lStrEmail))
                     return;
 
@@ -85,15 +112,64 @@ namespace UGRS.AddOn.EmailSender
                 if (!mtxRecipients.Item.Enabled)
                     return;
 
-                mtxRecipients.AddRow();
-                ((SAPbouiCOM.EditText)mtxRecipients.Columns.Item("1").Cells.Item(mtxRecipients.VisualRowCount).Specific).Value = DIApplication.Company.UserName;
+                int visualRowCount = mtxRecipients.VisualRowCount;
+
+                //if (visualRowCount > 0)
+                //{
+                //    mtxRecipients.Columns.Item("1").Cells.Item(visualRowCount).Click(SAPbouiCOM.BoCellClickType.ct_Right);
+                //}
+
+                UIApplication.GetApplication().ActivateMenuItem("1292");
+
                 ((SAPbouiCOM.CheckBox)mtxRecipients.Columns.Item("3").Cells.Item(mtxRecipients.VisualRowCount).Specific).Checked = true;
                 ((SAPbouiCOM.EditText)mtxRecipients.Columns.Item("4").Cells.Item(mtxRecipients.VisualRowCount).Specific).Value = lStrEmail;
+                ((SAPbouiCOM.EditText)mtxRecipients.Columns.Item("1").Cells.Item(mtxRecipients.VisualRowCount).Specific).Value = DIApplication.Company.UserName;
             }
             catch (Exception lObjException)
             {
-                LogService.WriteError(string.Format("Error al agregar el correo del usuario {0} como destinatario: {1}", DIApplication.Company.UserName, lObjException.Message));
-                throw new Exception(string.Format("Error al agregar el correo del usuario {0} como destinatario: {1}", DIApplication.Company.UserName, lObjException.Message));
+                if (lObjException.Message.Contains("Form item is not editable") || lObjException.Message.Contains("Cannot activate disabled menu item") || lObjException.Message.Contains("Invalid index"))
+                {
+                    LogService.WriteError(string.Format("Error al agregar el valor {0} a la columna Hasta: {1}", DIApplication.Company.UserName, lObjException.Message));
+                    throw new Exception(string.Format("Error al agregar el valor {0} a la columna Hasta: {1}", DIApplication.Company.UserName, lObjException.Message));
+                    //AddEmailRecipientDefault(lStrEmail);
+                }
+                else
+                {
+                    LogService.WriteError(string.Format("Error al agregar el correo del usuario {0} como destinatario: {1}", DIApplication.Company.UserName, lObjException.Message));
+                    throw new Exception(string.Format("Error al agregar el correo del usuario {0} como destinatario: {1}", DIApplication.Company.UserName, lObjException.Message));
+                }
+            }
+        }
+
+        private void AddEmailRecipientDefault(string pStrEmail)
+        {
+            try
+            {
+                //Matrix Recipients
+                SAPbouiCOM.Matrix mtxRecipients = ((SAPbouiCOM.Matrix)this.FormEmail.Items.Item("3").Specific);
+                if (!mtxRecipients.Item.Enabled)
+                    return;
+
+                mtxRecipients.AddRow();
+                int visualRowCount = mtxRecipients.VisualRowCount;
+
+                bool value = ((SAPbouiCOM.CheckBox)mtxRecipients.Columns.Item("3").Cells.Item(mtxRecipients.VisualRowCount).Specific).Item.Enabled;
+                bool value2 = mtxRecipients.Columns.Item("3").Editable;
+                ((SAPbouiCOM.CheckBox)mtxRecipients.Columns.Item("3").Cells.Item(mtxRecipients.VisualRowCount).Specific).Checked = true;
+                ((SAPbouiCOM.EditText)mtxRecipients.Columns.Item("4").Cells.Item(mtxRecipients.VisualRowCount).Specific).Value = pStrEmail;
+                ((SAPbouiCOM.EditText)mtxRecipients.Columns.Item("1").Cells.Item(mtxRecipients.VisualRowCount).Specific).Value = DIApplication.Company.UserName;
+            }
+            catch (Exception lObjException)
+            {
+                if (lObjException.Message.Contains("Item - Form item is not editable"))
+                {
+                    LogService.WriteError(string.Format("Error al agregar el valor {0} a la columna Hasta: {1}", DIApplication.Company.UserName, lObjException.Message));
+                }
+                else
+                {
+                    LogService.WriteError(string.Format("Error al agregar el correo del usuario {0} como destinatario: {1}", DIApplication.Company.UserName, lObjException.Message));
+                    //throw new Exception(string.Format("Error al agregar el correo del usuario {0} como destinatario: {1}", DIApplication.Company.UserName, lObjException.Message));
+                }
             }
         }
         #endregion
