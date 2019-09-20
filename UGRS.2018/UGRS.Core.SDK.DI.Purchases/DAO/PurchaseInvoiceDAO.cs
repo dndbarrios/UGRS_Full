@@ -436,6 +436,46 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
             return lBolTranSuccess;
         }
 
+        public string GetCreatedInvoice(string  pStrVoucherCode, string pStrVoucherLine)
+        {
+            SAPbobsCOM.Recordset lObjRecordset = null;
+            string lStrDocEntry = "";
+            try
+            {
+                Dictionary<string, string> lLstStrParameters = new Dictionary<string, string>();
+                //pDblRate = Math.Truncate(pDblRate);
+                lLstStrParameters.Add("VoucherCode", pStrVoucherCode);
+                lLstStrParameters.Add("VoucherLine", pStrVoucherLine);
+
+                string lStrQuery = this.GetSQL("GetCreatedInvoice").Inject(lLstStrParameters);
+                //this.UIAPIRawForm.DataSources.DataTables.Item("RESULT").ExecuteQuery(lStrQuery);
+
+                lObjRecordset = (SAPbobsCOM.Recordset)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                lObjRecordset.DoQuery(lStrQuery);
+
+                if (lObjRecordset.RecordCount > 0)
+                {
+                    lStrDocEntry = lObjRecordset.Fields.Item("DocEntry").Value.ToString();
+                }
+                else
+                {
+                    UIApplication.ShowMessageBox(string.Format("No se encontro la factura creada folio: {0}, det {1}", pStrVoucherCode, pStrVoucherLine));
+                }
+            }
+            catch (Exception ex)
+            {
+                UIApplication.ShowMessageBox(string.Format("InitDataSourcesException: {0}", ex.Message));
+                LogService.WriteError("PurchasesDAO (GetVoucherCode): " + ex.Message);
+                LogService.WriteError(ex);
+            }
+            finally
+            {
+                MemoryUtility.ReleaseComObject(lObjRecordset);
+            }
+            return lStrDocEntry;
+        }
+
+
         #endregion
     }
 }

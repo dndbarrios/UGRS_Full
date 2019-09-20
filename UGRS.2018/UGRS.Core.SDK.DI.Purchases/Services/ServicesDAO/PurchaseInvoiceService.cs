@@ -89,6 +89,11 @@ namespace UGRS.Core.SDK.DI.Purchases.Services.ServicesDAO
         {
             return lObjPurchaseInvoice.UpdateStatus(pObjVouchersDetail);
         }
-        
+
+        public string GetCreatedInvoice(string pStrVoucherCode, string pStrVoucherLine)
+        {
+            return lObjPurchaseInvoice.GetCreatedInvoice(pStrVoucherCode, pStrVoucherLine);
+        }
+
     }
 }
