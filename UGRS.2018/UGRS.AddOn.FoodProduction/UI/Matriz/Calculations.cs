@@ -84,7 +84,10 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                     if (ddd != eee )
                     {
                         LogService.WriteError(string.Format("Conversion incorrecta Valor: {0} Conversion: {1} ", eee, ddd));
-                        int i = 0;
+                        float price1 = float.Parse((pObjMatrix.Columns.Item("price1").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                        float price2 = float.Parse((pObjMatrix.Columns.Item("price2").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                        LogService.WriteError(string.Format("Conversion incorrecta Valor: {0} Conversion: {1} ", price1, price2));
+                        
                     }
                     lDblPeso1 = float.Parse((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);  //itemcode = VALUE OF CELL. COLUMN "1": ITEMCODE COLUMN. CURRENT ROW: pVal.Row
                     LogService.WriteInfo("Peso1 " + lDblPeso1.ToString());
@@ -117,7 +120,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                     LogService.WriteInfo("Peso3" + lDblPeso1.ToString());
                     if (mObjValidations.ValidateWeight(pStrTypeTicket, lDblPesoNeto, lDblPeso2, pObjMatrix, pIntRow))
                     {
-                        LogService.WriteInfo("Peso4" + lDblPeso1.ToString());
+                        LogService.WriteInfo("Peso4 "  + lDblPeso1.ToString());
                         //Valida el tipo de peso
                         if (lDblPesoNeto < 0)
                         {
@@ -131,6 +134,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                         //(pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value = lDblPrice.ToString("C");
                         pDBDataSourceD.SetValue("Quantity", pIntRow - 1, lDblPesoNeto.ToString(CultureInfo.InvariantCulture));
                         pDBDataSourceD.SetValue("Price", pIntRow - 1, lDblPrice.ToString(CultureInfo.InvariantCulture));
+                        LogService.WriteInfo("Price  " + lDblPrice.ToString(CultureInfo.InvariantCulture));
                         string ss = lDblPrice.ToString(CultureInfo.InvariantCulture);
                         string sssfef = pDBDataSourceD.GetValue("Price", pIntRow - 1);
                       //  (pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value = lDblPeso1.ToString();
@@ -320,7 +324,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
         /// <summary>
         /// Obtiene los datos de ticket del formuario por linea
         /// </summary>
-        public List<TicketDetail> GetTicketDetailMatrix(string pStrFolio, SAPbouiCOM.IMatrix mObjMatrix, bool mBolIsUpdate, bool lBolPesaje, DBDataSource pOBjDataSource)
+        public List<TicketDetail> GetTicketDetailMatrix(string pStrFolio, SAPbouiCOM.IMatrix mObjMatrix, bool mBolIsUpdate, bool pBolPesaje, DBDataSource pOBjDataSource, bool pBolIsSimple)
         {
             List<TicketDetail> lLstTicketDetail = new List<TicketDetail>();
             List<string> lLstDateTime = mObjTicketServices.GetServerDatetime();
@@ -362,7 +366,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                             lObjTicketDetail.WeighingM = 0;
                         }
 
-                        if (!lBolPesaje)
+                        if (!pBolPesaje)
                         {
                             lObjTicketDetail.WhsCode = ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("WhsCode").Cells.Item(i).Specific).Value;
                             lObjTicketDetail.BagsBales = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Sacos").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
@@ -401,12 +405,12 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                         }
                         else
                         {
-                            if (lFloFirstWt > 0 || lObjTicketDetail.WeighingM == 1)
+                            if (lFloFirstWt > 0 || lObjTicketDetail.WeighingM == 1 )
                             {
                                 lObjTicketDetail.EntryTime = Convert.ToInt32(lLstDateTime[1].Replace(":", ""));
                                 lObjTicketDetail.EntryDate = Convert.ToDateTime(lLstDateTime[0]);
                             }
-                            if (lFloSecondWT > 0)
+                            if (lFloSecondWT > 0 || pBolIsSimple)
                             {
                                 lObjTicketDetail.OutputTime = Convert.ToInt32(lLstDateTime[1].Replace(":", ""));
                                 lObjTicketDetail.OutputDate = Convert.ToDateTime(lLstDateTime[0]);

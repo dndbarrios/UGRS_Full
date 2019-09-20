@@ -21,7 +21,7 @@ namespace UGRS.Core.SDK.DI.FoodProduction.Tables
         [Field(Description = "Tipo de Documento", Type = BoFieldTypes.db_Numeric)]
         public int DocType { get; set; }
 
-        [Field(Description = "Tipo de pesada", Type = BoFieldTypes.db_Numeric)]
+        [Field(Description = "Tipo de pesada", Type = BoFieldTypes.db_Numeric)] //1 simple 0 double
         public int WTType { get; set; }
 
         [Field(Description = "Tipo de captura", Type = BoFieldTypes.db_Numeric)]

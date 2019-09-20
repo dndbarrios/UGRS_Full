@@ -1,6 +1,7 @@
 ﻿using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UGRS.Core.Exceptions;
 using UGRS.Core.Extension;
 using UGRS.Core.SDK.DI.DAO;
@@ -59,6 +60,16 @@ namespace UGRS.Core.SDK.DI.FoodProduction.DAO
                 if (lObjRecordset.RecordCount > 0)
                 {
                     lStrPrice = lObjRecordset.Fields.Item(1).Value.ToString();
+                    LogService.WriteInfo(string.Format("Precio DB {0}", lStrPrice));
+                    //if (Convert.ToDouble(lStrPrice) > 100)
+                    //{
+                    //    int ii = 0;
+                    //}
+
+                    lStrPrice = Convert.ToDouble(lObjRecordset.Fields.Item(1).Value, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
+                    LogService.WriteInfo(string.Format("Precio convertido {0}", lStrPrice));
+                   
+                   
                 }
             }
             catch (Exception ex)
@@ -403,7 +414,6 @@ namespace UGRS.Core.SDK.DI.FoodProduction.DAO
             }
 
             return lStrWareHouse;
-
         }
     }
 }

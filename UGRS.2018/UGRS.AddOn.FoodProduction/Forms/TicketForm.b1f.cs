@@ -864,11 +864,10 @@ namespace UGRS.AddOn.FoodProduction.Forms
                         double ldblPesoNet = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(mIntRowModify).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
                         double ldblSacos = Convert.ToDouble((mObjMatrix.Columns.Item("Sacos").Cells.Item(mIntRowModify).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
                         double ldblPrice = Convert.ToDouble((mObjMatrix.Columns.Item("Price").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
-                        if (ldblPesoNet == 0)
-                        {
-                            mDBDataSourceD.SetValue("Quantity", mIntRowModify - 1, ldblPesoNet.ToString(CultureInfo.InvariantCulture));
-                            CalcImport(cboTypTic.Value);
-                        }
+
+                        mDBDataSourceD.SetValue("Quantity", mIntRowModify - 1, ldblPesoNet.ToString(CultureInfo.InvariantCulture));
+                        CalcImport(cboTypTic.Value);
+
                         mDBDataSourceD.SetValue("U_GLO_BagsBales", mIntRowModify - 1, ldblSacos.ToString(CultureInfo.InvariantCulture));
                         mDBDataSourceD.SetValue("Price", pObjVal.Row - 1, ldblPrice.ToString(CultureInfo.InvariantCulture));
                         mIntRowModify = pObjVal.Row;
@@ -1401,7 +1400,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
 
                     //Obtiene las lineas de almatriz
-                    List<TicketDetail> lLstTicketDetail = mObjCalculation.GetTicketDetailMatrix(lStrFolio, mObjMatrix, mBolIsUpdate, lBolPesada, mDBDataSourceD);
+                    List<TicketDetail> lLstTicketDetail = mObjCalculation.GetTicketDetailMatrix(lStrFolio, mObjMatrix, mBolIsUpdate, lBolPesada, mDBDataSourceD, mObjTicket.WTType == 1? true : false);
 
                     //Verifica si el item requiere numero de pacas
                     bool lBolVerify = true;
@@ -1563,7 +1562,16 @@ namespace UGRS.AddOn.FoodProduction.Forms
             else
             {
                 lLstLine.Add("Código: " + pObjTicket.BPCode);
-                lLstLine.Add("Cliente: " + mObjTicketServices.SearchBPName(pObjTicket.BPCode));
+                string lStrCliProv = string.Empty;
+                if (pObjTicket.CapType == 1) // 1 compra
+                {
+                    lStrCliProv = "Proveedor: ";
+                }
+                else
+                {
+                    lStrCliProv = "Cliente: ";
+                }
+                lLstLine.Add(lStrCliProv + mObjTicketServices.SearchBPName(pObjTicket.BPCode));
             }
             lLstLine.Add("Chofer: " + pObjTicket.Driver);
             lLstLine.Add("Placas: " + pObjTicket.CarTag);
@@ -1611,9 +1619,12 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close))
             {
-
                 DateTime lDtmDateOutput = mObjTicketServices.GetDateTime(pLstTicketDetail[pLstTicketDetail.Count - 1].OutputDate, pLstTicketDetail[pLstTicketDetail.Count - 1].OutputTime.ToString());
                 lLstLine.Add("Fecha cierre: " + lDtmDateOutput.ToString("dd/MM/yyyy HH:mm"));
+                if (!string.IsNullOrEmpty(pObjTicket.Coments))
+                {
+                    lLstLine.Add("Comentario: \n" + pObjTicket.Coments);
+                }
             }
 
             if ((pObjTicket.Status == (int)TicketEnum.TicketStatus.Pending || pObjTicket.Status == (int)TicketEnum.TicketStatus.Close) || pObjTicket.CapType == 4 || pObjTicket.CapType == 5)
@@ -1630,7 +1641,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             else
             {
                 lLstLine.Add("");
-                lLstLine.Add("      Firma                               Sacos");
+                lLstLine.Add("      Firma                             Sacos/Pacas");
 
                 int lIntI = 0;
                 foreach (TicketDetail lObjTicketDetail in pLstTicketDetail.OrderBy(x => x.Line))
@@ -2445,7 +2456,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         ///<summary>    </summary>
         ///<remarks>    Amartinez, 08/05/2017. </remarks>
         private void loadMenu()
-        {
+        { 
             this.UIAPIRawForm.EnableMenu("520", true); // Print
             this.UIAPIRawForm.EnableMenu("6659", false);  // Fax
             this.UIAPIRawForm.EnableMenu("1281", true); // Search Record
@@ -2774,7 +2785,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 this.UIAPIRawForm.Freeze(true);
                 mObjRowCtrl = mObjMatrix.CommonSetting; // Guarda la fila seleccionada
 
-                mObjMatrix.LoadFromDataSource();
+               // mObjMatrix.LoadFromDataSourceEx();
                 mObjMatrix.SelectRow(pIntRow, true, false);
 
 
