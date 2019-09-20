@@ -76,33 +76,35 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 					TypeFactor = y.First().TypeFactor,
 					Rate = y.First().Rate,
 					Amount = y.Sum(c => float.Parse(c.Amount)).ToString()*/
+                if (pObjPurchase.WithholdingTax != null)
+                {
+                    pObjPurchase.WithholdingTax = pObjPurchase.WithholdingTax.GroupBy(x => x.Rate).Select(y => new TaxesXMLDTO
+                     {
+                         Base = y.First().Base,
+                         Tax = y.First().Tax,
+                         TypeFactor = y.First().TypeFactor,
+                         Rate = y.First().Rate,
+                         Amount = y.Sum(c => float.Parse(c.Amount)).ToString()
 
-			   pObjPurchase.WithholdingTax= pObjPurchase.WithholdingTax.GroupBy(x => x.Rate).Select(y => new TaxesXMLDTO
-				{
-					Base = y.First().Base,
-					Tax = y.First().Tax,
-					TypeFactor = y.First().TypeFactor,
-					Rate = y.First().Rate,
-					Amount = y.Sum(c => float.Parse(c.Amount)).ToString()
+                     }).ToList();
 
-				}).ToList();
-			  
-				
 
-				foreach (TaxesXMLDTO lObjTax in pObjPurchase.WithholdingTax)
-				{
-					lObjDocument.WithholdingTaxData.WTCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetWithholdingTaxCodeBP(Convert.ToDouble(lObjTax.Rate) * 100, lObjDocument.CardCode);
-					if (!string.IsNullOrEmpty(lObjDocument.WithholdingTaxData.WTCode))
-					{
-						lObjDocument.WithholdingTaxData.WTAmount = Convert.ToDouble(lObjTax.Amount);
-						lObjDocument.WithholdingTaxData.Add();
-					}
-					else
-					{
-						lbolWithholdingTax = false;
-					}
-				}
 
+                    foreach (TaxesXMLDTO lObjTax in pObjPurchase.WithholdingTax)
+                    {
+                        lObjDocument.WithholdingTaxData.WTCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetWithholdingTaxCodeBP(Convert.ToDouble(lObjTax.Rate) * 100, lObjDocument.CardCode);
+                        if (!string.IsNullOrEmpty(lObjDocument.WithholdingTaxData.WTCode))
+                        {
+                            lObjDocument.WithholdingTaxData.WTAmount = Convert.ToDouble(lObjTax.Amount);
+                            lObjDocument.WithholdingTaxData.Add();
+                        }
+                        else
+                        {
+                            lbolWithholdingTax = false;
+                        }
+                    }
+                }
+               
 
 				foreach (ConceptsXMLDTO lObjConcept in pObjPurchase.ConceptLines)
 				{
@@ -145,26 +147,27 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 					}
 
 
-					double lDblUnitPrice = Convert.ToDouble(lObjConcept.UnitPrice);
-					lDblUnitPrice = Math.Round(100 * lDblUnitPrice) / 100;
+                    //double lDblUnitPrice = Convert.ToDouble(lObjConcept.UnitPrice);
+                    //lDblUnitPrice = Math.Round(100 * lDblUnitPrice) / 100;
 
-					double lDblQuantity = Convert.ToDouble(lObjConcept.Quantity);
-					double lDblAmountXML = Convert.ToDouble(lObjConcept.Subtotal);
+                    //double lDblQuantity = Convert.ToDouble(lObjConcept.Quantity);
+                    //double lDblAmountXML = Convert.ToDouble(lObjConcept.Subtotal);
 
-					double lDblAmount = lDblUnitPrice * lDblQuantity;
+                    //double lDblAmount = lDblUnitPrice * lDblQuantity;
 
-					lDblAmount = Math.Round(100 * lDblAmount) / 100;
-					lDblAmountXML = Math.Round(100 * lDblAmountXML) / 100;
+                    //lDblAmount = Math.Round(100 * lDblAmount) / 100;
+                    //lDblAmountXML = Math.Round(100 * lDblAmountXML) / 100;
 
 
-					if (lDblAmount != lDblAmountXML)
-					{
-						double lDblnewDesc = 0;
-						lDblnewDesc = (lDblAmount / lDblAmountXML) - 1;
-						lObjDocument.Lines.DiscountPercent += lDblnewDesc * 100;
+                    //if (lDblAmount != lDblAmountXML)
+                    //{
+                    //    double lDblnewDesc = 0;
+                    //    lDblnewDesc = (lDblAmount / lDblAmountXML) - 1;
+                    //    lObjDocument.Lines.DiscountPercent += lDblnewDesc * 100;
 
-					}
+                    //}
 					//lObjDocument.Lines.LineTotal = Convert.ToDouble(lObjConcept.Amount);
+                  
 					lObjDocument.Lines.Add();
 
 					
@@ -173,13 +176,14 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 				
 			
 
-				if (lbolWithholdingTax)
+                if (lbolWithholdingTax)
 				{
 					
 					if (lObjDocument.Add() != 0)
 					{
 						string lStrError = DIApplication.Company.GetLastErrorDescription();
-						UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Company.GetLastErrorDescription()));
+						
+UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Company.GetLastErrorDescription()));
 						LogService.WriteError("InvoiceDI (CreateDocument) " + DIApplication.Company.GetLastErrorDescription());
 					}
 					else
@@ -199,20 +203,20 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 						lObjDocInvoice.GetByKey(Convert.ToInt32(lStrDocEntry));
 
                         double sss = 0.0;
-                        for (int i = 0; i < lObjDocInvoice.Lines.Count; i++)
-                        {
-                            sss += lObjDocInvoice.Lines.TaxTotal;
+                        //for (int i = 0; i < lObjDocInvoice.Lines.Count; i++)
+                        //{
+                        //    sss += lObjDocInvoice.Lines.TaxTotal;
 
-                        }
+                        //}
                           
 
-						pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
-                        LogService.WriteInfo(string.Format("UUID: {0} Total: {1}  Retenciones: {2} Impuesto: {3} ",
-                            lObjDocInvoice.UserFields.Fields.Item("U_UDF_UUID").Value //UUID
-                            , lObjDocInvoice.DocTotal //TOTAL
-                            , lObjDocInvoice.WithholdingTaxData.WTAmount //Retenciones
-                            , sss //IVA
-                            ));
+                        //pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
+                        //LogService.WriteInfo(string.Format("UUID: {0} Total: {1}  Retenciones: {2} Impuesto: {3} ",
+                        //    lObjDocInvoice.UserFields.Fields.Item("U_UDF_UUID").Value //UUID
+                        //    , lObjDocInvoice.DocTotal //TOTAL
+                        //    , lObjDocInvoice.WithholdingTaxData.WTAmount //Retenciones
+                        //    , sss //IVA
+                        //    ));
                           //  , lObjDocInvoice.Lines.TaxTotal.total lOBj.Ieps, lOBj.Iva, lOBj.RetIva, lOBj.RetIva4));
 
                         //PaymentDI lObjPaymentDI = new PaymentDI();
