@@ -27,18 +27,22 @@ namespace UGRS.AddOn.Purchases.Forms
         ChooseFromList mObjCFLAsset;
         ChooseFromList mObjCFLProject;
         string mStrArea;
+        string mStrFolio;
         string mStrCodeVoucher;
+        string mStrCodeLineVoucher;
         string mStrEmployee;
         string mStrUUID;
         int mIntRowSelected = 0;
         double mDblTotal = 0;
         string mStrAccount;
         bool mFlagSaveItem = false;
+        bool mFlagSaveInv= false;
         bool mFlagPurshaseAddon = false;
         string mStrType = String.Empty;
         DateTime mDtmDate = DateTime.Now;
         Vouchers mObjVoucher = new Vouchers();
         private frmModalAF mObjModalAF = null;
+        frmReceipts mObjBaseForm;
 
 
         PurchaseXMLDTO mObjPurchaseXMLDTO = new PurchaseXMLDTO();
@@ -49,18 +53,19 @@ namespace UGRS.AddOn.Purchases.Forms
         /// <summary>
         /// Inicia la ventana
         /// </summary>
-        public frmPurchaseXML(string pStrCodeVoucher, string pStrArea, string pStrEmployee, string Folio, string pStrAccount, Vouchers pObjVoucher, bool pBolCopyComent, DateTime pDtmDate)
+        public frmPurchaseXML(frmReceipts pObjForm, string pStrCodeVoucher, string pStrArea, string pStrEmployee, string pStrFolio, string pStrAccount, Vouchers pObjVoucher, bool pBolCopyComent, DateTime pDtmDate)
         {
             try
             {
-
+                mObjBaseForm = pObjForm;
                 mFlagPurshaseAddon = true;
                 mtxXML.AutoResizeColumns();
                 mStrArea = pStrArea;
                 mStrEmployee = pStrEmployee;
                 SetChooseToTxt();
                 mStrCodeVoucher = pStrCodeVoucher;
-                txtFolio.Value = Folio;
+                txtFolio.Value = pStrFolio;
+                mStrFolio = pStrFolio;
                 mStrAccount = pStrAccount;
                 mObjVoucher = pObjVoucher;
                 mDtmDate = pDtmDate;
@@ -71,7 +76,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 {
                     txtObs.Value = pObjVoucher.Coments;
                 }
-
+              
 
             }
             catch (Exception ex)
@@ -313,6 +318,9 @@ namespace UGRS.AddOn.Purchases.Forms
                     mFlagSaveItem = false;
                 }
 
+
+             
+
             }
             catch (Exception ex)
             {
@@ -340,9 +348,11 @@ namespace UGRS.AddOn.Purchases.Forms
                         VerifyInvntItems();
                         mtxXML.LoadFromDataSource();
                         mFlagSaveItem = true;
-
+                       
                     }
                 }
+
+               
             }
             catch (Exception ex)
             {
@@ -350,6 +360,38 @@ namespace UGRS.AddOn.Purchases.Forms
                 LogService.WriteError(ex);
             }
 
+        }
+
+
+        private void SBO_Application_FormDataEventDraft(ref BusinessObjectInfo BusinessObjectInfo, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            try
+            {
+                if (mFormDraftInv.UniqueID == BusinessObjectInfo.FormUID && !BusinessObjectInfo.BeforeAction &&
+                     (BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD || BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE))
+                {
+
+                    string pStrDocEntryInv = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetCreatedInvoice(mStrFolio, mStrCodeLineVoucher);
+                    mFlagSaveInv = true;
+                    if (!string.IsNullOrEmpty(pStrDocEntryInv))
+                    { 
+                        
+                        mObjBaseForm.UpdateMatriz();
+                    }
+                }
+
+                if (mFlagSaveInv && mFormDraftInv.UniqueID == BusinessObjectInfo.FormUID && BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED)
+                {
+                    mFormDraftInv.Close();
+                    mFlagSaveInv = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError(ex);
+            }
+          
         }
 
         /// <summary>
@@ -439,7 +481,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                     if (lObjPurchaseXML != null)
                     {
-                        if (lObjPurchaseXML.ConceptLines != null && lObjPurchaseXML.ConceptLines.Count > 0 && lObjReadXMLService.CheckVoucherStatus(lObjPurchaseXML))
+                        if (lObjPurchaseXML.ConceptLines != null && lObjPurchaseXML.ConceptLines.Count > 0)//&& lObjReadXMLService.CheckVoucherStatus(lObjPurchaseXML))
                         {
 
                             if (DtMatrix == null)
@@ -670,9 +712,11 @@ namespace UGRS.AddOn.Purchases.Forms
                         UIApplication.ShowMessageBox(string.Format("Documento realizado correctamente"));
 
                         //open invoice draft form
+                       
                         SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
                         this.UIAPIRawForm.Close();
-
+                        mFormDraftInv = lObjFormDraft;
+                        SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
                     }
                     else
                     {
@@ -1866,21 +1910,14 @@ namespace UGRS.AddOn.Purchases.Forms
             try
             {
                 string lStrItemCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetLocalTaxt();
-
-
                 if (!string.IsNullOrEmpty(lStrItemCode))
                 {
-
                     int i = DtMatrix.Rows.Count;
-
                     foreach (TaxesXMLDTO lObjTaxes in pLstTaxesLocal)
                     {
                         string lStrTaxCode = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetTaxCode((Convert.ToDouble(lObjTaxes.Rate) * 100).ToString()); //
-
                         DtMatrix.Rows.Add();
-
                         DtMatrix.SetValue("#", i, i + 1);
-
                         DtMatrix.SetValue("C_Item", i, lStrItemCode);
                         DtMatrix.SetValue("C_ItemSAP", i, "ISH");
                         DtMatrix.SetValue("C_Cant", i, 1);
@@ -1892,10 +1929,7 @@ namespace UGRS.AddOn.Purchases.Forms
                         DtMatrix.SetValue("C_Area", i, txtArea.Value);
                         DtMatrix.SetValue("C_AF", i, txtAF.Value);
                         DtMatrix.SetValue("C_Admin", i, string.IsNullOrEmpty(cboAdminOper.Value) ? "A" : cboAdminOper.Value);
-
                         DtMatrix.SetValue("C_Whs", i, mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetWhouse(txtArea.Value));
-
-
                         i++;
                     }
                 }
@@ -2229,6 +2263,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 mObjPurchaseXMLDTO.TaxDate = string.IsNullOrEmpty(txtDate.Value) ? DateTime.Now :
                                 DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 mObjPurchaseXMLDTO.DocDate = mDtmDate;
+                mStrCodeLineVoucher = mObjPurchaseXMLDTO.RowLine;
 
                 List<ConceptsXMLDTO> lLstObjConceptsXML = new List<ConceptsXMLDTO>();
                 for (int i = 0; i < DtMatrix.Rows.Count; i++)
@@ -2313,14 +2348,14 @@ namespace UGRS.AddOn.Purchases.Forms
                     lDblTax += Convert.ToDouble(DtMatrix.GetValue("C_Tax", i));
                 }
 
-                lDblTax = Math.Round(100 * lDblTax) / 100;
-                lDblSubTotal = Math.Round(100 * lDblSubTotal) / 100;
-                lDblTotal = Math.Round(100 * lDblTotal) / 100;
-                lDblIeps = Math.Round(100 * lDblIeps) / 100;
-                lDblRetIva = Math.Round(100 * lDblRetIva) / 100;
-                lDblRet4 = Math.Round(100 * lDblRet4) / 100;
-                lDblRetISR = Math.Round(100 * lDblRetISR) / 100;
-                lDblDesc = Math.Round(100 * lDblDesc) / 100;
+                //lDblTax = Math.Round(100 * lDblTax) / 100;
+                //lDblSubTotal = Math.Round(100 * lDblSubTotal) / 100;
+                //lDblTotal = Math.Round(100 * lDblTotal) / 100;
+                //lDblIeps = Math.Round(100 * lDblIeps) / 100;
+                //lDblRetIva = Math.Round(100 * lDblRetIva) / 100;
+                //lDblRet4 = Math.Round(100 * lDblRet4) / 100;
+                //lDblRetISR = Math.Round(100 * lDblRetISR) / 100;
+                //lDblDesc = Math.Round(100 * lDblDesc) / 100;
 
                 txtIEPS.Value = lDblIeps.ToString();
                 txtSubT.Value = lDblSubTotal.ToString();
@@ -2566,6 +2601,8 @@ namespace UGRS.AddOn.Purchases.Forms
         private SAPbouiCOM.EditText txtItemDescription;
         private SAPbouiCOM.EditText txtItemClassificationCode;
 
+        private SAPbouiCOM.Form mFormDraftInv;
+
         private StaticText lblSub;
         private ComboBox cboSubida;
 
@@ -2646,12 +2683,6 @@ namespace UGRS.AddOn.Purchases.Forms
             }
 
         }
-
-
-
-
-
-
 
 
     }

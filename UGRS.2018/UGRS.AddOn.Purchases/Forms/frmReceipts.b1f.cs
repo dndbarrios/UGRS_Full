@@ -1283,7 +1283,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 if (ValidateSaveVoucher(lStrArea, lObjVouchers))
                 {
                     DateTime lDtmDate = Convert.ToDateTime(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Date").Value);
-                    frmPurchaseXML lObjfrmPurchaseXML = new frmPurchaseXML(mStrRowCode, lStrArea, mStrEmployeId, txtFolio.Value, GetAccountRefound(lStrArea),
+                    frmPurchaseXML lObjfrmPurchaseXML = new frmPurchaseXML(this, mStrRowCode, lStrArea, mStrEmployeId, txtFolio.Value, GetAccountRefound(lStrArea),
                                                                         lObjVouchers, chkCopy.Checked, lDtmDate);
                     lObjfrmPurchaseXML.UIAPIRawForm.Left = 500;
                     lObjfrmPurchaseXML.UIAPIRawForm.Top = 10;
@@ -1820,6 +1820,13 @@ namespace UGRS.AddOn.Purchases.Forms
 
         }
 
+
+        public void UpdateMatriz()
+        {
+            FillMatrixInvoice();
+            DoPayments("");
+        }
+
         private void btnInv_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
         {
 
@@ -1832,7 +1839,7 @@ namespace UGRS.AddOn.Purchases.Forms
         {
             BubbleEvent = true;
 
-            DoPayments();
+            DoPayments("");
 
 
         }
@@ -1975,7 +1982,7 @@ namespace UGRS.AddOn.Purchases.Forms
         /// <summary>
         /// Realizar los pagos
         /// </summary>
-        private void DoPayments()
+        private void DoPayments(string pStrVoucherLine)
         {
 
             var lLstVoucherDetail = new List<PurchaseXMLDTO>();
@@ -2030,7 +2037,7 @@ namespace UGRS.AddOn.Purchases.Forms
                             {
                                 DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
                                 LogService.WriteError("DoPayments: Fallo en Crearse el pago de la factura: " + lObjPayment.DocEntry);
-                                UIApplication.ShowMessageBox("Fallo en Crearse el pago con total: " + lObjPayment.Total + " los pagos anteriores fueron revertidos");
+                                UIApplication.ShowError("Fallo en Crearse el pago con total: " + lObjPayment.Total + " los pagos anteriores fueron revertidos");
                                 return;
                             }
                         }
