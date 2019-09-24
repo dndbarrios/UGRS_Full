@@ -371,16 +371,15 @@ namespace UGRS.AddOn.Purchases.Forms
                 if (mFormDraftInv.UniqueID == BusinessObjectInfo.FormUID && !BusinessObjectInfo.BeforeAction &&
                      (BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD || BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE))
                 {
-
                     string pStrDocEntryInv = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetCreatedInvoice(mStrFolio, mStrCodeLineVoucher);
                     mFlagSaveInv = true;
                     if (!string.IsNullOrEmpty(pStrDocEntryInv))
-                    { 
-                        
+                    {
+                       // DeleteDraft(lIntDraftEntry);
                         mObjBaseForm.UpdateMatriz();
+
                     }
                 }
-
                 if (mFlagSaveInv && mFormDraftInv.UniqueID == BusinessObjectInfo.FormUID && BusinessObjectInfo.EventType == SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED)
                 {
                     mFormDraftInv.Close();
@@ -463,8 +462,6 @@ namespace UGRS.AddOn.Purchases.Forms
         /// </summary>
         private void btnXML_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
         {
-
-
             BubbleEvent = true;
             mStrFileName = "XML";
             CreateFolderBroserThread();
@@ -481,7 +478,7 @@ namespace UGRS.AddOn.Purchases.Forms
 
                     if (lObjPurchaseXML != null)
                     {
-                        if (lObjPurchaseXML.ConceptLines != null && lObjPurchaseXML.ConceptLines.Count > 0)//&& lObjReadXMLService.CheckVoucherStatus(lObjPurchaseXML))
+                        if (lObjPurchaseXML.ConceptLines != null && lObjPurchaseXML.ConceptLines.Count > 0 && lObjReadXMLService.CheckVoucherStatus(lObjPurchaseXML)) //timbre
                         {
 
                             if (DtMatrix == null)
@@ -631,7 +628,7 @@ namespace UGRS.AddOn.Purchases.Forms
             BubbleEvent = true;
             bool lBolSuccess = false;
             string lStrDocEntry = String.Empty;
-
+            PurchaseXMLDTO lObjPurchaseXmlDTO = null;
             try
             {
                 InvoiceDI lObjInvioceDI = new InvoiceDI();
@@ -639,7 +636,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 //if(ValidateTotals()){ Cambio por factura preliminar
                 if (true)
                 {
-                    PurchaseXMLDTO lObjPurchaseXmlDTO = GetInvoiceInfo();
+                    lObjPurchaseXmlDTO = GetInvoiceInfo();
                     lObjPurchaseXmlDTO.Folio = txtFolio.Value;
 
                     DIApplication.Company.StartTransaction();
@@ -711,12 +708,22 @@ namespace UGRS.AddOn.Purchases.Forms
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
                         UIApplication.ShowMessageBox(string.Format("Documento realizado correctamente"));
 
+                        DraftToDocument(lObjPurchaseXmlDTO, true);
+                        if (mObjBaseForm != null && lObjPurchaseXmlDTO != null && !lObjPurchaseXmlDTO.IsDraft )
+                        {
+                            this.UIAPIRawForm.Close();
+                            mObjBaseForm.UpdateMatriz();
+                        }
                         //open invoice draft form
-                       
-                        SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
-                        this.UIAPIRawForm.Close();
-                        mFormDraftInv = lObjFormDraft;
-                        SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                        else
+                        {
+                           
+                        }
+
+                        //SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
+                        //this.UIAPIRawForm.Close();
+                        //mFormDraftInv = lObjFormDraft;
+                        //SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
                     }
                     else
                     {
@@ -735,6 +742,105 @@ namespace UGRS.AddOn.Purchases.Forms
                     LogService.WriteError(ex);
                 }
             }
+        }
+
+        private void DraftToDocument(PurchaseXMLDTO pObjPurchase, bool pBolCreatePayment)
+        {
+            //string lStrDocEntry = DIApplication.Company.GetNewObjectKey().ToString();
+            //pObjPurchase.DocEntry = Convert.ToInt32(lStrDocEntry);
+            //SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
+            SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+            lObjDocInvoice.GetByKey(Convert.ToInt32(pObjPurchase.DocEntry));
+
+            decimal lFlDif = decimal.Parse(pObjPurchase.XMLTotal) - decimal.Parse(lObjDocInvoice.DocTotal.ToString());
+
+            decimal lFlDifConfg = GetDifFact();
+            if (lFlDif < lFlDifConfg && lFlDif > lFlDifConfg * (-1))
+            {
+                SAPbobsCOM.Documents lObjDocDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+                if (lFlDif != 0)
+                {
+                  
+                    /*lObjDocInvoice.Rounding = BoYesNoEnum.tYES;
+                    lObjDocInvoice.RoundingDiffAmount = Convert.ToDouble(lFlDif);
+                   */
+                    SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
+
+                    //SaveAsDraft
+                    UIApplication.GetApplication().Menus.Item("5907").Activate();
+
+                    lObjFormDraft.Close();
+                    //lObjDocDraft.GetByKey(Convert.ToInt32(lStrDocEntry));
+                    //lObjDocDraft.Rounding = BoYesNoEnum.tYES;
+                    //lObjDocDraft.RoundingDiffAmount = Convert.ToDouble(lFlDif);
+                    //lObjDocDraft.Add();
+                    //string lStrDraftEntry = DIApplication.Company.GetNewObjectKey().ToString();
+                    //lObjDocInvoice.GetByKey(Convert.ToInt32(lStrDraftEntry));
+                    //pObjPurchase.DocEntry = Convert.ToInt32( lStrDraftEntry);
+                }
+
+                lObjDocDraft.GetByKey(Convert.ToInt32(pObjPurchase.DocEntry));
+                if (lObjDocDraft.SaveDraftToDocument() == 0)
+                {
+                    pObjPurchase.IsDraft = false;
+                    int lIntDraftEntry = pObjPurchase.DocEntry;
+
+                    pObjPurchase.DocEntry = Convert.ToInt32(DIApplication.Company.GetNewObjectKey());
+
+                    if (pBolCreatePayment)
+                    {
+                        PaymentDI lObjPaymentDI = new PaymentDI();
+                        pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
+                        lObjPaymentDI.CreatePayment(pObjPurchase);
+                    }
+                    DeleteDraft(lIntDraftEntry);
+                }
+            }
+            else
+            {
+                this.UIAPIRawForm.Close();
+                pObjPurchase.IsDraft = true;
+                UIApplication.ShowMessageBox(string.Format("El redondeo {0} es mayor al indicado en configuración \n Se abrirá la pantalla de borrador", lFlDif));
+                 SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
+                mFormDraftInv = lObjFormDraft;
+               
+        
+               
+              
+            }
+        }
+
+
+        private SAPbouiCOM.Form AddRoundByUI(int pIntDraftEntry, decimal pDecDif)
+        {
+            SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", pIntDraftEntry.ToString());
+            CheckBox lObjChk = (CheckBox)lObjFormDraft.Items.Item("105").Specific;
+            lObjChk.Checked = true;
+            lObjChk.Checked = false;
+            lObjChk.Checked = true;
+            EditText lObjTxtRound = (EditText)lObjFormDraft.Items.Item("103").Specific;
+            lObjTxtRound.Value = pDecDif.ToString();
+
+            return lObjFormDraft;
+        }
+
+        private decimal GetDifFact()
+        {
+            string lStrDifFact = mObjPurchaseServiceFactory.GetPurchaseInvoiceService().GetDifFact();
+            decimal lFltDifFact = 0;
+            if (!string.IsNullOrEmpty(lStrDifFact))
+            {
+                lFltDifFact = decimal.Parse(lStrDifFact);
+            }
+            return lFltDifFact;
+        }
+
+        public int DeleteDraft(int pIntDocEntryDraft)
+        {
+            SAPbobsCOM.Documents lObjDraft = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
+            lObjDraft.GetByKey(pIntDocEntryDraft);
+            return lObjDraft.Remove();
         }
 
         /// <summary>
@@ -2264,6 +2370,7 @@ namespace UGRS.AddOn.Purchases.Forms
                                 DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 mObjPurchaseXMLDTO.DocDate = mDtmDate;
                 mStrCodeLineVoucher = mObjPurchaseXMLDTO.RowLine;
+               // mObjPurchaseXMLDTO.XMLTotal = mObjPurchaseXMLDTO.XMLTotal;
 
                 List<ConceptsXMLDTO> lLstObjConceptsXML = new List<ConceptsXMLDTO>();
                 for (int i = 0; i < DtMatrix.Rows.Count; i++)

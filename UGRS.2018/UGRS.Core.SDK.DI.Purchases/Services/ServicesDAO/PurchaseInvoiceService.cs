@@ -95,5 +95,9 @@ namespace UGRS.Core.SDK.DI.Purchases.Services.ServicesDAO
             return lObjPurchaseInvoice.GetCreatedInvoice(pStrVoucherCode, pStrVoucherLine);
         }
 
+        public string GetDifFact()
+        {
+            return lObjPurchaseInvoice.GetDifFact();
+        }
     }
 }

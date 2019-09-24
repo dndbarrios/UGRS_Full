@@ -476,6 +476,22 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
         }
 
 
+        public string GetDifFact()
+        {
+            string lStrItemCode = "";
+            try
+            {
+                lStrItemCode = mObjQueryManager.GetValue("U_Value", "Name", "GLO_DIF_FACT", "[@UG_CONFIG]");
+            }
+            catch (Exception ex)
+            {
+                UIApplication.ShowError(string.Format("GetDocNum: {0}", ex.Message));
+                LogService.WriteError("PurchasesDAO (GetDocNum): " + ex.Message);
+                LogService.WriteError(ex);
+            }
+
+            return lStrItemCode;
+        }
         #endregion
     }
 }

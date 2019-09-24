@@ -1851,8 +1851,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 DtMatrix.Rows.Clear();
                 if (!string.IsNullOrEmpty(txtArea.Value))
                 {
-                    txtComents.Item.Click();
-
+                    ///txtComents.Item.Click(); General failure
 
                     bool lBolUpdateStatus = false;
                     List<VouchersDetailDTO> lLstVouchersDetail = mObjPurchasesServiceFactory.GetPurchaseVouchersService().GetInvoiceVouchesDetail(txtArea.Value, txtFolio.Value);
@@ -2002,7 +2001,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 for (int i = 0; i < DtMatrix.Rows.Count; i++)
                 {
                     int lIntPago = i + 1;
-                    UIApplication.ShowSuccess("Generando pago " + lIntPago + " de " + DtMatrix.Rows.Count);
+                    //UIApplication.ShowSuccess("Generando pago " + lIntPago + " de " + DtMatrix.Rows.Count);
                     var lObjPayment = new PurchaseXMLDTO();
                     var lStrtype = DtMatrix.GetValue("C_Type", i).ToString();
 
@@ -2074,8 +2073,6 @@ namespace UGRS.AddOn.Purchases.Forms
                 CommitTransaction(lBolIsSuccess);
                 FillMatrixInvoice();
             }
-
-
         }
 
 

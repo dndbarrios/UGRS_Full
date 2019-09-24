@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UGRS.Core.Services;
 using System.IO;
+using SAPbouiCOM;
 
 namespace UGRS.Core.SDK.DI.Purchases.Services
 {
@@ -47,6 +48,7 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 				lObjDocument.UserFields.Fields.Item("U_GLO_ObjTUG").Value = "frmReceipts";
 				lObjDocument.UserFields.Fields.Item("U_FolioFiscal").Value = pObjPurchase.FolioFiscal;
                 lObjDocument.UserFields.Fields.Item("U_GLO_Memo").Value = pObjPurchase.Obs;
+                //lObjDocument.Rounding = BoYesNoEnum.tYES;
                 string lStrFile = AttatchFile(pObjPurchase.XMLFile);
                 if (!string.IsNullOrEmpty(lStrFile))
                 {
@@ -168,47 +170,42 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
                     //}
 					//lObjDocument.Lines.LineTotal = Convert.ToDouble(lObjConcept.Amount);
                   
+                    
 					lObjDocument.Lines.Add();
 
 					
 					// lObjDocument.Lines.
 				}
-				
-			
+                lObjDocument.Rounding = BoYesNoEnum.tYES;
+              //  lObjDocument.RoundingDiffAmount = -0.01;
+                
+                //lObjDocument.DocTotal = Convert.ToDouble(pObjPurchase.Total);
+               // var sfesf = lObjDocument.TotalDiscount;
+
 
                 if (lbolWithholdingTax)
-				{
-					
-					if (lObjDocument.Add() != 0)
-					{
-						string lStrError = DIApplication.Company.GetLastErrorDescription();
-						
-UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Company.GetLastErrorDescription()));
-						LogService.WriteError("InvoiceDI (CreateDocument) " + DIApplication.Company.GetLastErrorDescription());
-					}
-					else
-					{
+                {
 
-						lBolIsSuccess = true;
-						
-						string lStrDocEntry = DIApplication.Company.GetNewObjectKey().ToString();
+                    if (lObjDocument.Add() != 0)
+                    {
+                        string lStrError = DIApplication.Company.GetLastErrorDescription();
 
-					  
-						pObjPurchase.DocEntry = Convert.ToInt32(lStrDocEntry);
+                        UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Company.GetLastErrorDescription()));
+                        LogService.WriteError("InvoiceDI (CreateDocument) " + DIApplication.Company.GetLastErrorDescription());
+                    }
+                    else
+                    {
+                        pObjPurchase.DocEntry = Convert.ToInt32(DIApplication.Company.GetNewObjectKey().ToString());
+                        pObjPurchase.IsDraft = false;
+                        lBolIsSuccess = true;
 
-						
-
-						//SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
-						SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
-						lObjDocInvoice.GetByKey(Convert.ToInt32(lStrDocEntry));
-
-                        double sss = 0.0;
+                      
                         //for (int i = 0; i < lObjDocInvoice.Lines.Count; i++)
                         //{
                         //    sss += lObjDocInvoice.Lines.TaxTotal;
 
                         //}
-                          
+
 
                         //pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
                         //LogService.WriteInfo(string.Format("UUID: {0} Total: {1}  Retenciones: {2} Impuesto: {3} ",
@@ -217,22 +214,17 @@ UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Compa
                         //    , lObjDocInvoice.WithholdingTaxData.WTAmount //Retenciones
                         //    , sss //IVA
                         //    ));
-                          //  , lObjDocInvoice.Lines.TaxTotal.total lOBj.Ieps, lOBj.Iva, lOBj.RetIva, lOBj.RetIva4));
+                        //  , lObjDocInvoice.Lines.TaxTotal.total lOBj.Ieps, lOBj.Iva, lOBj.RetIva, lOBj.RetIva4));
 
                         //PaymentDI lObjPaymentDI = new PaymentDI();
-						if (lBolCreatePayment)
-						{
-						   
-							//lBolIsSuccess = lObjPaymentDI.CreatePayment(pObjPurchase);
-							//AddVoucherDetail(pObjPurchase, pObjVoucher);
-						}
-						 
-						if (lBolIsSuccess)
-						{
-							LogService.WriteSuccess("Documento realizado correctamente: " + lStrDocEntry);
-						}
-					}
-				}
+
+
+                        if (lBolIsSuccess)
+                        {
+                            LogService.WriteSuccess("Documento realizado correctamente: " );
+                        }
+                    }
+                }
 			}
 			catch (Exception ex)
 			{
@@ -248,6 +240,8 @@ UIApplication.ShowMessageBox(string.Format("Exception: {0}", DIApplication.Compa
 			}
 			return lBolIsSuccess;
 		}
+
+       
 
 
 		private string AttatchFile(string pStrFile)

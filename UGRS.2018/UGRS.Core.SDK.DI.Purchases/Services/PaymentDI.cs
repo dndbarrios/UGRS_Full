@@ -28,7 +28,7 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
 
                 lObjPayment.CashSum = Convert.ToDouble(pObjPurchase.Total);
 
-                lObjPayment.CashAccount = pObjPurchase.Account;// lObjPurchasesDAO.GetAccountRefund(pObjPurchase.Area);
+                lObjPayment.CashAccount = GetAccountRefound(pObjPurchase.Area, pObjPurchase.CodeMov);
 
                 lObjPayment.Invoices.DocEntry = pObjPurchase.DocEntry;
                 lObjPayment.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_PurchaseInvoice;
@@ -61,6 +61,23 @@ namespace UGRS.Core.SDK.DI.Purchases.Services
             }
             return lBolIsSuccess;
         }
+
+        private string GetAccountRefound(string pStrArea, string pStrCodeMov)
+        {
+            // Si es de tipo viaticos
+            string lStrAccountRefound;
+             PurchasesServiceFactory mObjPurchasesServiceFactory = new PurchasesServiceFactory();
+            if (pStrCodeMov != null && string.IsNullOrEmpty(pStrCodeMov))//Error
+            {
+                lStrAccountRefound = mObjPurchasesServiceFactory.GetPurchaseReceiptsService().GetAccountRefund(pStrArea);
+            }
+            else
+            {
+                lStrAccountRefound = mObjPurchasesServiceFactory.GetPurchaseReceiptsService().GetAccountInConfig("MQ_DEUDORESVIAT");
+            }
+            return lStrAccountRefound;
+        }
+
 
         public bool CancelPayment(string pStrDocEntry)
         {

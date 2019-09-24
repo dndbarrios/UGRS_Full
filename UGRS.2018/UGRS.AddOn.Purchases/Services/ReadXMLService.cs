@@ -280,6 +280,7 @@ namespace UGRS.AddOn.Purchases.Services {
                             }
                         }
                         //}
+                        lObjXML.XMLTotal = lObjXML.Total;
                     }
                 }
                 catch(Exception ex) {
@@ -299,6 +300,7 @@ namespace UGRS.AddOn.Purchases.Services {
                 SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(lStrMessage);
                 LogService.WriteError("ReadXMLService (ReadXML) " + lStrMessage);
             }
+           
             return lObjXML;
         }
 

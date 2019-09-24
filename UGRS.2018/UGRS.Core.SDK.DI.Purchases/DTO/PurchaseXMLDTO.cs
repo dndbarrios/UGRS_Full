@@ -43,6 +43,7 @@ namespace UGRS.Core.SDK.DI.Purchases.DTO
         public string Type { get; set; }
         public string RowLine { get; set; }
         public string ReferenceFolio { get; set; }
+        public bool IsDraft { get; set; }
        
     }
 }
