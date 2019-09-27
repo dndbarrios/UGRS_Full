@@ -399,6 +399,7 @@ namespace UGRS.AddOn.Transports.Forms
                 Commissions lObjCommissionHeader = GetCommisionHeader(mObjTxtFolio.Value);
                 if (UpdateCommissionAuth(lObjCommissionHeader))
                 {
+                    VisibleAuthControls(false);
                     SendAlertByAuthorizer(lObjCommissionHeader);
                     UIApplication.ShowMessageBox(string.Format("Folio: {0} fue autorizado correctamente", lObjCommissionHeader.Folio));
                     SetStatusControls(GetCommisionHeader(mObjTxtFolio.Value));
@@ -649,7 +650,7 @@ namespace UGRS.AddOn.Transports.Forms
             VisibleStatusControls(true);
 
             //Coloca los controles dependiendo del permiso
-            SetControlsByPermissionUser();
+            SetControlsByPermissionUser(mAuthorizerEnum, pObjCommissionHeader);
             mObjTxtFolio.Item.Click();
             mObjMtxDrv.Columns.Item("cGenerate").Editable = false;
         }
@@ -1639,14 +1640,13 @@ namespace UGRS.AddOn.Transports.Forms
                 default:
                     mAuthorizerEnum = AuthorizerEnum.NoAut;
                     break;
-
             }
         }
 
         /// <summary>
         /// Establece el permiso de autorizacion del usuario
         /// </summary>
-        private void SetControlsByPermissionUser()
+        private void SetControlsByPermissionUser(AuthorizerEnum pObjAuthEnum, Commissions pObjCommissions)
         {
             if (mAuthorizerEnum == AuthorizerEnum.NoAut)
             {
@@ -1654,7 +1654,44 @@ namespace UGRS.AddOn.Transports.Forms
             }
             else
             {
-                VisibleAuthControls(true);
+                switch (pObjAuthEnum)
+                {
+                    case AuthorizerEnum.AutTrans:
+                        if (!pObjCommissions.AutTrans && !pObjCommissions.AutOperations && !pObjCommissions.AutBanks)
+                        {
+                            VisibleAuthControls(true);
+                        }
+                        else
+                        {
+                            VisibleAuthControls(false);
+                        }
+                        break;
+
+                    case AuthorizerEnum.AutOperations:
+                        if (pObjCommissions.AutTrans && !pObjCommissions.AutOperations && !pObjCommissions.AutBanks)
+                        {
+                            VisibleAuthControls(true);
+                        }
+                        else
+                        {
+                            VisibleAuthControls(false);
+                        }
+                        break;
+
+                    case AuthorizerEnum.AutBanks:
+                        if (pObjCommissions.AutTrans && pObjCommissions.AutOperations && !pObjCommissions.AutBanks)
+                        {
+                            VisibleAuthControls(true);
+                        }
+                        else
+                        {
+                            VisibleAuthControls(false);
+                        }
+                        break;
+                    default:
+                        VisibleAuthControls(false);
+                        break;
+                }
             }
         }
 
@@ -1706,7 +1743,7 @@ namespace UGRS.AddOn.Transports.Forms
             switch (mAuthorizerEnum)
             {
                 case AuthorizerEnum.AutTrans:
-                    if (!pObjCommissionHeader.AutTrans)
+                    if (!pObjCommissionHeader.AutTrans && !pObjCommissionHeader.AutOperations && !pObjCommissionHeader.AutBanks)
                     {
                         pObjCommissionHeader.AutTrans = true;
                     }
@@ -1717,7 +1754,7 @@ namespace UGRS.AddOn.Transports.Forms
                     break;
                 case AuthorizerEnum.AutOperations:
 
-                    if (!pObjCommissionHeader.AutOperations)
+                    if (pObjCommissionHeader.AutTrans && !pObjCommissionHeader.AutOperations && !pObjCommissionHeader.AutBanks)
                     {
                         pObjCommissionHeader.AutOperations = true;
                     }
@@ -1729,7 +1766,7 @@ namespace UGRS.AddOn.Transports.Forms
 
                 case AuthorizerEnum.AutBanks:
 
-                    if (!pObjCommissionHeader.AutBanks)
+                    if (pObjCommissionHeader.AutTrans && pObjCommissionHeader.AutOperations && !pObjCommissionHeader.AutBanks)
                     {
                         pObjCommissionHeader.AutBanks = true;
                     }
