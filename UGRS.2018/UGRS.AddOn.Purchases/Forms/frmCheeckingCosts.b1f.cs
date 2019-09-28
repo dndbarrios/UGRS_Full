@@ -333,7 +333,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 {
                     DtMatrix.Rows.Clear();
                 }
-                List<PaymentDTO> lLstPaymentDTO = mObjPurchasesServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, cboStatus.Value).ToList();
+                List<PaymentDTO> lLstPaymentDTO = mObjPurchasesServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, cboStatus.Value, !txtArea.Item.Enabled).ToList();
 
                 int i = 0;
 

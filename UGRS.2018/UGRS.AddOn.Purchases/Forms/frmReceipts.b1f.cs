@@ -861,6 +861,30 @@ namespace UGRS.AddOn.Purchases.Forms
             }
         }
 
+        private void UpdateStatus(Vouchers pObjVouchers)
+        {
+            try
+            {
+                if (mObjPurchasesServiceFactory.GetVouchersService().Update(pObjVouchers) != 0)
+                {
+                    string lStrerror = DIApplication.Company.GetLastErrorDescription();
+                    UIApplication.ShowMessageBox(lStrerror);
+                }
+                else
+                {
+                    //cboStatus.Select(((int)pObjStatus).ToString(), BoSearchKey.psk_ByValue);
+                    UIApplication.ShowMessageBox("Autorizacion realizada correctamente");
+                    LogService.WriteSuccess("Autorizacion realizada correctamente");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteError("UpdateStatus: " + ex.Message);
+                LogService.WriteError(ex);
+            }
+        }
+
+
         /// <summary>
         /// Visibilidad de los botones dependiendo de los permisos
         /// <summary>
@@ -914,15 +938,15 @@ namespace UGRS.AddOn.Purchases.Forms
                         btnCancel.Item.Visible = false;
                         break;
 
-                    case PermissionsEnum.Permission.AuthorizeOperations:
-                        btnAuthor.Item.Visible = true;
-                        btnNotify.Item.Visible = false;
-                        btnReject.Item.Visible = true;
-                        btnSave.Item.Visible = true;
-                        btnCFDI.Item.Visible = false;
-                        btnNotes.Item.Visible = false;
-                        btnCancel.Item.Visible = false;
-                        break;
+                    //case PermissionsEnum.Permission.AuthorizeFinance:
+                    //    btnAuthor.Item.Visible = true;
+                    //    btnNotify.Item.Visible = false;
+                    //    btnReject.Item.Visible = true;
+                    //    btnSave.Item.Visible = true;
+                    //    btnCFDI.Item.Visible = false;
+                    //    btnNotes.Item.Visible = false;
+                    //    btnCancel.Item.Visible = false;
+                    //    break;
                 }
             }
             catch (Exception ex)
@@ -1399,7 +1423,7 @@ namespace UGRS.AddOn.Purchases.Forms
                         lNoteType = TypeEnum.Type.Refund;
                     }
                     lObjVouchers.RowCode = mStrRowCode;
-                    frmPurchaseNotes lObjfrmPurchaseNotes = new frmPurchaseNotes(lObjVouchers, GetAccountRefound(lStrArea), lNoteType, GetAccountDU(), lBolIsCheeckingCost, txtEmpF.Value, chkCopy.Checked);
+                    frmPurchaseNotes lObjfrmPurchaseNotes = new frmPurchaseNotes(this, lObjVouchers, GetAccountRefound(lStrArea), lNoteType, GetAccountDU(), lBolIsCheeckingCost, txtEmpF.Value, chkCopy.Checked);
                     lObjfrmPurchaseNotes.UIAPIRawForm.Left = 500;
                     lObjfrmPurchaseNotes.UIAPIRawForm.Top = 10;
                     lObjfrmPurchaseNotes.Show();
@@ -1647,11 +1671,17 @@ namespace UGRS.AddOn.Purchases.Forms
                             if (lObjVoucher.Area == "MQ_MAQUI")
                             {
                                 lLstMessageDTO = mObjPurchasesServiceFactory.GetPurchaseMessageService().GetMessage("CO_MAQUI_1").ToList();
+                                if (!string.IsNullOrEmpty(lObjVoucher.CodeMov))
+                                {
+                                    lObjVoucher.Status = (int)StatusEnum.Authorized_Ope_Admon;
+                                }
                             }
                             else
                             {
                                 lLstMessageDTO = mObjPurchasesServiceFactory.GetPurchaseMessageService().GetMessage("CO_COMP_3").ToList();// mObjPurchasesDAO.GetUsersMessage(lStrMessageDTO, lObjVoucher.Area).ToList();
                             }
+
+
 
                             foreach (MessageDTO lObjMessage in lLstMessageDTO)
                             {
