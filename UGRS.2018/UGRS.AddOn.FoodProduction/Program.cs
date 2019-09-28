@@ -24,7 +24,7 @@ namespace UGRS_AddOn.FoodProduction
                try
                {
                    LogService.Filename("FoodProduction");
-                   LogService.WriteInfo("Inicio del addon 1.3.10");
+                   LogService.WriteInfo("Inicio del addon 1.3.13");
 
                    Application lObjApplication = null;
 
@@ -69,7 +69,7 @@ namespace UGRS_AddOn.FoodProduction
 
 
                    UIApplication.ShowSuccess(string.Format("Addon Iniciado correctamente"));
-                   LogService.WriteSuccess("[AddOn FoodProduction 1.3.10 STARTED]");
+                   LogService.WriteSuccess("[AddOn FoodProduction 1.3.13 STARTED]");
                    //Ticket instance = (Ticket)Activator.CreateInstance(typeof(Ticket));
 
                    //Init application

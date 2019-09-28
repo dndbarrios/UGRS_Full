@@ -84,8 +84,8 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                     if (ddd != eee )
                     {
                         LogService.WriteError(string.Format("Conversion incorrecta Valor: {0} Conversion: {1} ", eee, ddd));
-                        float price1 = float.Parse((pObjMatrix.Columns.Item("price1").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
-                        float price2 = float.Parse((pObjMatrix.Columns.Item("price2").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                        float price1 = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                        float price2 = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
                         LogService.WriteError(string.Format("Conversion incorrecta Valor: {0} Conversion: {1} ", price1, price2));
                         
                     }
