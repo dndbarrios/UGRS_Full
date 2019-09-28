@@ -41,13 +41,15 @@ namespace UGRS.AddOn.Purchases.Forms
         TypeEnum.Type mNoteType;
         string mStrLine;
         private frmModalAF mObjModalAF = null;
+        frmReceipts mObjBaseForm;
         #endregion
 
         #region Constructor
-        public frmPurchaseNotes(Vouchers pObjVouchers, string pStrAffectable, TypeEnum.Type pNoteType, string pStrAccountDEU, bool pBolIsCheeckingCost, string pStrEmployeName, bool pBolCopyComents)
+        public frmPurchaseNotes(frmReceipts pObjForm, Vouchers pObjVouchers, string pStrAffectable, TypeEnum.Type pNoteType, string pStrAccountDEU, bool pBolIsCheeckingCost, string pStrEmployeName, bool pBolCopyComents)
         {
             try
             {
+                mObjBaseForm = pObjForm;
                 CreateDatatableMatrix();
                 //mStrArea = pObjVouchers.Area;
                 //mStrFolio = pObjVouchers.Folio; //Folio de comprobante
@@ -317,6 +319,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 {
                     if (lBolSuccess)
                     {
+                        mObjBaseForm.UpdateMatriz();
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
 
                         UIApplication.ShowMessageBox("Asiento guardado correctamente");
@@ -1182,7 +1185,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 }
 
 
-                List<PaymentDTO> lLstPayment = mObjPurchaseServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, "").Where(x => x.EmpId == pStrEmpId).ToList();
+                List<PaymentDTO> lLstPayment = mObjPurchaseServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, "", !txtArea.Item.Enabled).Where(x => x.EmpId == pStrEmpId).ToList();
                 cboMovement.ValidValues.Add("", "");
                 foreach (PaymentDTO lObjPayment in lLstPayment)
                 {
