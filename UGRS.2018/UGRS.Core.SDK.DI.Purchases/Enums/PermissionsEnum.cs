@@ -11,8 +11,8 @@ namespace UGRS.Core.SDK.DI.Purchases.Enums
             [Description("Compras")]
             Purchase = 1,
 
-            [Description("Autorizar Compras")]
-            AuthorizePurchase = 2,
+            //[Description("Autorizar Compras")]
+            //AuthorizePurchase = 2,
 
             [Description("Autorizar Operaciones")]
             AuthorizeOperations = 3

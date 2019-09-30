@@ -33,7 +33,7 @@ namespace UGRS.AddOn.Purchases.Forms
         string mStrType;
         string mStrTypePrefix;
         private UGRS.Core.SDK.UI.ProgressBar.ProgressBarManager mObjProgressBar = null;
-
+        string mStrArea = string.Empty;
         // int mIntQtyRefresh = 0;
         #endregion
 
@@ -63,10 +63,11 @@ namespace UGRS.AddOn.Purchases.Forms
         /// <summary>
         /// inicia la ventana seleccionando un codigo
         /// <summary>
-        public frmReceipts(string pStrRowCode, TypeEnum.Type pEnumType)
+        public frmReceipts(string pStrArea, string pStrRowCode, TypeEnum.Type pEnumType)
         {
             // OnCustomInitialize();
             mEnumType = pEnumType;// TypeEnum.Type.Refund;
+            mStrArea = pStrArea;
             if (mEnumType == TypeEnum.Type.Refund)
             {
                 mStrType = "U_GLO_Refund";
@@ -111,7 +112,8 @@ namespace UGRS.AddOn.Purchases.Forms
 
                 int lIntFolio = (Convert.ToInt32(mObjPurchasesServiceFactory.GetPurchaseReceiptsService().GetVoucherFolio(txtArea.Value, ((int)mEnumType).ToString())));
                 txtFolio.Value = (lIntFolio + 1).ToString();
-
+                string lStrCostCenter = mObjPurchasesServiceFactory.GetPurchaseInvoiceService().GetCostCenter();
+                SetPermission(mObjPurchasesServiceFactory.GetPurchasePermissionsService().GetPermissionType(lStrCostCenter, mStrType, txtAreaF.Value));
                 LogService.WriteInfo("Pantalla de comprobantes desde una solicitud de viaticos cargada correctamente");
 
             }
@@ -233,9 +235,9 @@ namespace UGRS.AddOn.Purchases.Forms
                 txtCodeMov.Item.Visible = false;
 
                 txtEmploye.Item.Enabled = true;
-                string lStrCostCenter = mObjPurchasesServiceFactory.GetPurchaseInvoiceService().GetCostCenter();
-
-                SetPermission(mObjPurchasesServiceFactory.GetPurchasePermissionsService().GetPermissionType(lStrCostCenter, mStrType));
+               
+               
+              
                 EnableControls();
 
                 if (string.IsNullOrEmpty(txtDate.Value))
@@ -482,7 +484,7 @@ namespace UGRS.AddOn.Purchases.Forms
             Vouchers lObjVoucher = new Vouchers();
             try
             {
-                string lStrArea = txtArea.Value == "" ? txtAreaF.Value : txtArea.Value;
+                mStrArea = txtArea.Value == "" ? txtAreaF.Value : txtArea.Value;
 
                 mStrTypePrefix = String.IsNullOrEmpty(txtCodeMov.Value) ? "CG_" : "";
 
@@ -491,7 +493,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 // Si es un comprobante nuevo o uno ya registrado
                 if (string.IsNullOrEmpty(mStrRowCode))
                 {
-                    int lIntFolio = (Convert.ToInt32(mObjPurchasesServiceFactory.GetPurchaseReceiptsService().GetVoucherFolio(lStrArea, ((int)mEnumType).ToString())));
+                    int lIntFolio = (Convert.ToInt32(mObjPurchasesServiceFactory.GetPurchaseReceiptsService().GetVoucherFolio(mStrArea, ((int)mEnumType).ToString())));
                     string lStrFolio = (String.IsNullOrEmpty(txtCodeMov.Value)) ?
                     String.Format("{0}{1}_{2}", mStrTypePrefix, txtArea.Value, lIntFolio + 1) :
                     String.Format(mStrTypePrefix + txtCodeMov.Value);
@@ -504,7 +506,7 @@ namespace UGRS.AddOn.Purchases.Forms
                     lObjVoucher.Folio = txtFolio.Value;
                 }
                 lObjVoucher.TypeVoucher = (int)mEnumType;
-                lObjVoucher.Area = lStrArea;
+                lObjVoucher.Area = mStrArea;
                 lObjVoucher.Coments = txtComents.Value;
                 lObjVoucher.Date = Convert.ToDateTime(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Date").Value);// DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
                 lObjVoucher.Employee = mStrEmployeId;
@@ -819,7 +821,7 @@ namespace UGRS.AddOn.Purchases.Forms
                         EnableControls();
                     }
                     string lStrCostCenter = mObjPurchasesServiceFactory.GetPurchaseInvoiceService().GetCostCenter();
-                    SetPermission(mObjPurchasesServiceFactory.GetPurchasePermissionsService().GetPermissionType(lStrCostCenter, mStrType));
+                    SetPermission(mObjPurchasesServiceFactory.GetPurchasePermissionsService().GetPermissionType(lStrCostCenter, mStrType, mStrArea));
                     FillMatrixInvoice();
                     LogService.WriteSuccess("Carga correcta de comprobante Code:" + pStrRowCode);
                 }
@@ -928,15 +930,15 @@ namespace UGRS.AddOn.Purchases.Forms
                         }
                         break;
 
-                    case PermissionsEnum.Permission.AuthorizePurchase:
-                        btnAuthor.Item.Visible = true;
-                        btnNotify.Item.Visible = false;
-                        btnReject.Item.Visible = true;
-                        btnSave.Item.Visible = true;
-                        btnCFDI.Item.Visible = false;
-                        btnNotes.Item.Visible = false;
-                        btnCancel.Item.Visible = false;
-                        break;
+                    //case PermissionsEnum.Permission.AuthorizePurchase:
+                    //    btnAuthor.Item.Visible = true;
+                    //    btnNotify.Item.Visible = false;
+                    //    btnReject.Item.Visible = true;
+                    //    btnSave.Item.Visible = true;
+                    //    btnCFDI.Item.Visible = false;
+                    //    btnNotes.Item.Visible = false;
+                    //    btnCancel.Item.Visible = false;
+                    //    break;
 
                     //case PermissionsEnum.Permission.AuthorizeFinance:
                     //    btnAuthor.Item.Visible = true;
@@ -1519,7 +1521,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 MessageDTO lObjMessageDTO = new MessageDTO();
                 lObjMessageDTO.UserCode = lObjVoucher.UserCode;
                 //GetUserPermission
-                PermissionsEnum.Permission lObjPermissionEnum = mObjPurchasesServiceFactory.GetPurchasePermissionsService().GetPermissionType(lObjVoucher.Area, mStrType);
+                PermissionsEnum.Permission lObjPermissionEnum = mObjPurchasesServiceFactory.GetPurchasePermissionsService().GetPermissionType(lObjVoucher.Area, mStrType, mStrArea);
 
                 ////Verifiacion si el permiso y el estatus es correcto para autorizar
                 //if (lObjStatusEnum == StatusEnum.PendingArea && lObjPermissionEnum == PermissionsEnum.Permission.AuthorizePurchase)

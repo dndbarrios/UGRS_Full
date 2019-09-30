@@ -333,7 +333,9 @@ namespace UGRS.AddOn.Purchases.Forms
                 {
                     DtMatrix.Rows.Clear();
                 }
-                List<PaymentDTO> lLstPaymentDTO = mObjPurchasesServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, cboStatus.Value, !txtArea.Item.Enabled).ToList();
+                bool lBolMaqui = txtArea.Value == "MQ_MAQUI" ? true : false;
+
+                List<PaymentDTO> lLstPaymentDTO = mObjPurchasesServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, cboStatus.Value).ToList();
 
                 int i = 0;
 
@@ -607,7 +609,7 @@ namespace UGRS.AddOn.Purchases.Forms
                     }
                     else if (!string.IsNullOrEmpty(lStrCode))
                     {
-                        frmReceipts lObjfrmReceipts = new frmReceipts(lStrCode, TypeEnum.Type.Voucher);
+                        frmReceipts lObjfrmReceipts = new frmReceipts(lStrArea, lStrCode, TypeEnum.Type.Voucher);
                         lObjfrmReceipts.UIAPIRawForm.Left = 500;
                         lObjfrmReceipts.UIAPIRawForm.Top = 10;
                         lObjfrmReceipts.Show();

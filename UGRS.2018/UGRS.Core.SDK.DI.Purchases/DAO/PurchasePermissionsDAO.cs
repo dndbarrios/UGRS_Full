@@ -13,14 +13,43 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
     {
         #region Permissions
 
-        public PermissionsEnum.Permission GetPermissionType(string pStrCostCenter, string pStrType)
+        public PermissionsEnum.Permission GetPermissionType(string pStrCostCenter, string pStrType, string pStrArea)
         {
             PermissionsEnum.Permission lObjPermissionEnum = new PermissionsEnum.Permission();
             lObjPermissionEnum = PermissionsEnum.Permission.None;
             string lStrUserCode = UIApplication.GetCompany().UserName;
 
-            if (Permission_Purchases(lStrUserCode, "Permission_Authorizes_Operations", "", pStrType) || (lStrUserCode == "MAQUINARIA" && pStrCostCenter == "MQ_MAQUI"))
+            bool lBolAutoOP = false;
+            if ((pStrType == "U_GLO_ExpeCheck" && lStrUserCode == "MAQUINARIA" && pStrCostCenter == "MQ_MAQUI" && pStrArea == "MQ_MAQUI"))
             {
+                lBolAutoOP = true;
+            }
+            else
+            {
+                if (Permission_Purchases(lStrUserCode, "Permission_Authorizes_Operations", "", pStrType))
+                {
+                    if (pStrType == "U_GLO_ExpeCheck")
+                    {
+                        if (pStrArea != "MQ_MAQUI")
+                        {
+                            lBolAutoOP = true;
+                        }
+                    }
+                    else if (pStrType == "U_GLO_Refund")
+                    {
+                        if (lStrUserCode != "MAQUINARIA")
+                        {
+                            lBolAutoOP = true;
+                        }
+                    }
+                }
+            }
+
+            //if (Permission_Purchases(lStrUserCode, "Permission_Authorizes_Operations", "", pStrType) && (pStrType == "U_GLO_ExpeCheck" && pStrArea != "MQ_MAQUI") && (pStrType == "U_GLO_Refund" && lStrUserCode != "MAQUINARIA")
+            //    || (pStrType == "U_GLO_ExpeCheck" && lStrUserCode == "MAQUINARIA" && pStrCostCenter == "MQ_MAQUI" && pStrArea == "MQ_MAQUI"))
+           if(lBolAutoOP)
+            {
+
                 lObjPermissionEnum = PermissionsEnum.Permission.AuthorizeOperations;
             }
             else if (Permission_Purchases(lStrUserCode, "Permission_Purchases", "", pStrType))
@@ -29,7 +58,7 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
             }
             else if (Permission_Purchases(lStrUserCode, "Permission_Authorize_Purchases", pStrCostCenter, pStrType))
             {
-                lObjPermissionEnum = PermissionsEnum.Permission.AuthorizePurchase;
+                //lObjPermissionEnum = PermissionsEnum.Permission.AuthorizePurchase;
             }
             return lObjPermissionEnum;
         }

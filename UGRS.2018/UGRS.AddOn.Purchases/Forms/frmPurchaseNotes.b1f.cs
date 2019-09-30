@@ -319,9 +319,8 @@ namespace UGRS.AddOn.Purchases.Forms
                 {
                     if (lBolSuccess)
                     {
-                        mObjBaseForm.UpdateMatriz();
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
-
+                        mObjBaseForm.UpdateMatriz();
                         UIApplication.ShowMessageBox("Asiento guardado correctamente");
                         LogService.WriteSuccess("Asiento guardado correctamente Folio: " + mObjVouchers.RowCode);
                         this.UIAPIRawForm.Close();
@@ -1185,7 +1184,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 }
 
 
-                List<PaymentDTO> lLstPayment = mObjPurchaseServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, "", !txtArea.Item.Enabled).Where(x => x.EmpId == pStrEmpId).ToList();
+                List<PaymentDTO> lLstPayment = mObjPurchaseServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, "").Where(x => x.EmpId == pStrEmpId).ToList();
                 cboMovement.ValidValues.Add("", "");
                 foreach (PaymentDTO lObjPayment in lLstPayment)
                 {

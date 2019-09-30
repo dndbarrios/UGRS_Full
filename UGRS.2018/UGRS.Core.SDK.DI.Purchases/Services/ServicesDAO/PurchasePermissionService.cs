@@ -12,9 +12,9 @@ namespace UGRS.Core.SDK.DI.Purchases.Services.ServicesDAO
             lObjPurchasePermission = new PurchasePermissionsDAO();
         }
 
-        public PermissionsEnum.Permission GetPermissionType(string pStrCostCenter, string pStrType)
+        public PermissionsEnum.Permission GetPermissionType(string pStrCostCenter, string pStrType, string pStrArea)
         {
-            return lObjPurchasePermission.GetPermissionType(pStrCostCenter, pStrType);
+            return lObjPurchasePermission.GetPermissionType(pStrCostCenter, pStrType, pStrArea);
         }
 
         

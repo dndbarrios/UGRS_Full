@@ -231,7 +231,8 @@ namespace UGRS.AddOn.Purchases.Forms
                 if (mIntRowSelected > 0)
                 {
                     string pStrRowCode = DtMatrix.GetValue("C_RowCode", mIntRowSelected - 1).ToString();
-                    frmReceipts lObjfrmReceipts = new frmReceipts(pStrRowCode, TypeEnum.Type.Refund);
+                    string lStrArea = DtMatrix.GetValue("C_Area", mIntRowSelected -1).ToString();
+                    frmReceipts lObjfrmReceipts = new frmReceipts(lStrArea, pStrRowCode, TypeEnum.Type.Refund);
                     lObjfrmReceipts.UIAPIRawForm.Left = 500;
                     lObjfrmReceipts.Show();
                     
