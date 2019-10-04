@@ -32,7 +32,7 @@ select
 	T4.U_RetIVA,
 	--T0.BaseAmnt as U_Subtotal,
 	sum(T5.LineTotal) as U_Subtotal,
-	T0.DocTotal as U_Total, 
+	(T0.DocTotal) as U_Total, 
 	T4.U_IEPS as IEPS,
 	T0.DocNum,
 	T0.CardCode as U_Provider,
@@ -54,7 +54,7 @@ select
 	 left join [@UG_GLO_VOUC] T3 with (Nolock) on T3.U_Folio = '{Folio}'
 	 left join [@UG_GLO_VODE] T4 with (Nolock) on T4.U_CodeVoucher = T3.Code and T0.U_MQ_OrigenFol_Det = T4.U_Line and U_Type = 'XML'
 	where  T3.U_Folio = T0.U_MQ_OrigenFol and T0.CANCELED != 'C' and T3.U_Area = '{Area}'
-	group by T0.VatSum,T0.NumAtCard, T4.U_RetIVA, T0.BaseAmnt, T0.DocTotal, T4.U_IEPS , T0.DocNum, T0.CardCode, T4.U_Status, T4.U_Coment, T0.Comments, U1.USER_CODE, T0.DocDate, T4.U_Type, T4.U_NA, T4.U_CodeVoucher, T4.Code, T0.DocEntry, T4.U_Line
+	group by T0.VatSum,T0.NumAtCard, T4.U_RetIVA, T0.BaseAmnt, T0.DocTotal,  T0.PaidToDate, T4.U_IEPS , T0.DocNum, T0.CardCode, T4.U_Status, T4.U_Coment, T0.Comments, U1.USER_CODE, T0.DocDate, T4.U_Type, T4.U_NA, T4.U_CodeVoucher, T4.Code, T0.DocEntry, T4.U_Line
 	) dum
 	order by Code
 	
