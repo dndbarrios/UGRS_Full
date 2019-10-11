@@ -1,88 +1,43 @@
-select T0.Code, T0.U_Folio, T0.U_Status, U_Area, U_Employee, U_Date, U_Total, T1.DocTotal from [@UG_GLO_VOUC] T0 with (Nolock)
-left join OVPM T1 with (Nolock) on T1.U_GLO_CodeMov = T0.U_Folio and T0.U_Area = T1.U_GLO_CostCenter and DocType = 'A' and U_GLO_PaymentType = 'GLREM'
-where  T0.U_TypeVoucher = '0' --and  (T0.U_Total >  ISNULL(T1.DocTotal, 0 ) or (T0.U_Total = 0  and ISNULL(T1.DocTotal, 0 ) = 0))
-
-/*	--select * from OPCH where DocNum ='8471'
-
-	select T0.Code, T0.U_Folio, T0.U_Status, T0.U_Area, T0.U_Employee, T0.U_Date,  OPCH.DocEntry  ,
-	 sum( (case when OPCH.DocTotal  is null then 0 else OPCH.DocTotal  end) 
-	- (case when S1.DocTotal is null then 0 else S1.DocTotal end) 
-	- (case when S2.ReconSum is null then 0 else S2.ReconSum end)
-	- (case when S3.DocTotal is null then 0 else S3.DocTotal end)
-	--+ (case when S4.Total is null then 0 else S4.Total end)
-	)
-	--(case when OPCH.DocTotal  is null then 0 else OPCH.DocTotal  end) 
-	--, (case when S1.DocTotal is null then 0 else S1.DocTotal end) as NC
-	--, (case when S2.ReconSum is null then 0 else S2.ReconSum end) as Reconciliacines
-	--, (case when S3.DocTotal is null then 0 else S3.DocTotal end) as Cancelado
-	----, (case when S4.Total is null then 0 else S4.Total end) as Asiento
-
-	-- as DocTotal--, VODE.U_DocEntry, OPCH.DocNum
-	from  OPCH with(nolock)
-	
-	left join [@UG_GLO_VOUC] T0  with (Nolock) on OPCH.U_MQ_OrigenFol = T0.U_Folio
-	
-	 left join [@UG_GLO_VODE] VODE with (nolock) on VODE.U_CodeVoucher = T0.Code  and VODE.U_DocEntry = OPCH.DocEntry
- left join OVPM T1 with (Nolock) on T1.U_GLO_CodeMov = T0.U_Folio and T0.U_Area = T1.U_GLO_CostCenter and OPCH.DocType = 'A' and U_GLO_PaymentType = 'GLREM' 
-	left join (
-
-	-- Notas de credito
-	SELECT  T0.DocEntry,  T2.DocTotal --T2.[ObjType], T2.[DocDate], T2.[CardCode], T2.[CardName],
-	FROM PCH1  T1 with (Nolock)
-	INNER JOIN OPCH T0 with (Nolock) ON T0.DocEntry = T1.DocEntry 
-	INNER JOIN RPC1 T3 with (Nolock) ON T3.BaseRef = T0.DocNum 
-	INNER JOIN ORPC T2 with (Nolock) ON T2.DocEntry = T3.DocEntry
-	where T2.CANCELED = 'N'
-	group by T0.DocEntry, T2.DocTotal
-	) S1 on S1.DocEntry = OPCH.DocEntry
-
-	left join 
-	(
-	-- Reconciliaciones
-	select t1.SrcObjAbs, t1.ReconSum--, t1.ReconSumSC 
-			from OITR T0 with (Nolock)
-			inner join ITR1 T1 with (Nolock) on t1.ReconNum= t0.ReconNum
-			where T0.IsSystem = 'N' and t0.Canceled='N' and t1.SrcObjTyp=18
-			group by  t1.SrcObjAbs, t1.ReconSum
-	) S2 on S2.SrcObjAbs = OPCH.DocEntry
-
-	-- Canceladas
-	left join 
-	(
-	select OPCH.DocEntry, OPCH.DocTotal
-	from OPCH
-	where OPCH.CANCELED = 'Y'
-	) S3 on S3.DocEntry = OPCH.DocEntry
-	--select * from  [@UG_GLO_VODE] where U_Type = 'Nota'
-
-	where  T0.U_TypeVoucher = '0' and T0.U_Folio = 'CG_TR_TRANS_7'  --and  (T0.U_Total >  ISNULL(T1.DocTotal, 0 ) or (T0.U_Total = 0  and ISNULL(T1.DocTotal, 0 ) = 0)) 
-	group by  T0.Code, T0.U_Folio, T0.U_Status, U_Area, U_Employee, T0.U_Date, OPCH.DocEntry, OPCH.DocTotal, S1.DocTotal, S2.ReconSum, S3.DocTotal--, S4.Total
-	order by Code desc
-	union all
+--select T0.Code, T0.U_Folio, T0.U_Status, U_Area, U_Employee, U_Date, U_Total, T1.DocTotal from [@UG_GLO_VOUC] T0 with (Nolock)
+--left join OVPM T1 with (Nolock) on T1.U_GLO_CodeMov = T0.U_Folio and T0.U_Area = T1.U_GLO_CostCenter and DocType = 'A' and U_GLO_PaymentType = 'GLREM'
+--where  T0.U_TypeVoucher = '0' --and  (T0.U_Total >  ISNULL(T1.DocTotal, 0 ) or (T0.U_Total = 0  and ISNULL(T1.DocTotal, 0 ) = 0))
 
 
-
-
-	--Asiento
-	
-		select VOUC.Code, VOUC.U_Folio, VOUC.U_Status, VOUC.U_Area, VOUC.U_Employee, VOUC.U_Date
-		
-		from OJDT A0 with (Nolock)
-		inner join JDT1 A1 with (Nolock) on A0.TransId = A1.TransId  
-		inner join [@UG_GLO_VODE] VODE with (Nolock) on VODE.U_DocEntry = A1.TransId and Vode.U_Type = 'Nota' 
-		inner join [@UG_GLO_VOUC] VOUC with (Nolock) on VODE.U_CodeVoucher = VOUC.Code and VOUC.U_TypeVoucher=0
-		--inner join [@UG_Config] A4 with (Nolock) on A4.Name = 'MQ_DEUDORESVIAT' and A1.Account = A4.U_Value
-	
-		full outer join OJDT A5 with (Nolock) on A5.StornoToTr = A0.TransId 
-		where A0.AutoStorno='N' and A5.TransId is null and A1.Debit > 0 and VOUC.U_Folio = 'CG_TR_TRANS_7'
-		--group by A0.Ref1
-	)
-	--S4 on T0.U_Folio = S4.Ref1 and VODE.U_Type = 'Nota' and VODE.U_DocEntry = S4.TransId
-
-		
-		--select * from OPCH where docNum = '8464'
-		
-		--select * from  [@UG_GLO_VOUC] where U_Folio = 'CG_TR_TRANS_7'
-
-
-	*/
+select b0.Code, B0.U_Folio, B0.U_Status, B0.U_Area, B0.U_Employee, B0.U_Date, sum(isnull(dum.U_Total,0)) U_Total , max(isnull(B1.DocTotal,0)) DocTotal
+from 
+[@UG_GLO_VOUC] B0
+left join
+(
+SELECT 
+    T1.Code, T1.U_Folio,
+       sum(T3.Debit) as U_Total
+FROM  
+       [dbo].[@UG_GLO_VODE]  T0
+       INNER JOIN [@UG_GLO_VOUC] T1 with (Nolock) ON T0.U_CodeVoucher = T1.Code
+       INNER JOIN OJDT T2 with (Nolock) on (T1.U_Folio = T2.Ref1 or T1.U_CodeMov = T2.Ref1) and T0.U_DocEntry = T2.TransId
+       INNER JOIN JDT1 T3 with (Nolock) on T2.TransId = T3.TransId and T3.Debit > 0
+       WHERE T0.U_Type = 'Nota' AND T1.U_TypeVoucher = '0'
+       group by T1.Code, T1.U_Folio
+   UNION ALL
+    select T3.Code, T3.U_Folio,
+       sum(T0.DocTotal-isnull(t6.PaidSum,0) - isnull(t7.PaidRecon,0)) as U_Total
+       from OPCH T0 
+       inner join OUSR U1 with (Nolock) on T0.UserSign = U1.USERID
+       inner join [@UG_GLO_VOUC] T3 with (Nolock) on T3.U_Folio = t0.U_MQ_OrigenFol AND T3.U_TypeVoucher = '0'
+       left join [@UG_GLO_VODE] T4 with (Nolock) on T4.U_CodeVoucher = T3.Code and T0.U_MQ_OrigenFol_Det = T4.U_Line and U_Type = 'XML'
+     left join (
+       --- NOTAS DE CREDITO
+                        select max(t0.doctotal) PaidSum, t1.baseentry DocEntry from ORPC T0
+                        left join RPC1 T1 on t0.docentry=t1.DocEntry and t1.BaseType =18 
+                        where t0.CANCELED='N' and t1.baseentry is not null group by t1.baseentry) T6 on T6.DocEntry = t0.DocEntry
+       --- RECONCILIACIONES
+       left join (SELECT t1.SrcObjAbs DocEntry, Sum(t1.ReconSum) PaidRecon FROM OITR T0
+                           inner join ITR1 T1 on T0.ReconNum= t1.ReconNum and t1.SrcObjTyp=18
+                           where t0.IsSystem='N' group by t1.SrcObjAbs) T7 on t7.DocEntry = t0.DocEntry
+       where T0.CANCELED != 'C' and isnull(T4.U_Status,'') <>'Cancelado'
+       group by T3.Code, T3.U_Folio
+) dum on dum.Code = B0.Code
+left join OVPM B1 with (Nolock) on B1.U_GLO_CodeMov = dum.U_Folio and B0.U_Area = B1.U_GLO_CostCenter and DocType = 'A' and U_GLO_PaymentType = 'GLREM' and b1.Canceled='N'
+where B0.U_TypeVoucher = '0'
+--group by b0.Code, B0.U_Folio, B0.U_Status, B0.U_Area, B0.U_Employee, B0.U_Date
+--order by Code

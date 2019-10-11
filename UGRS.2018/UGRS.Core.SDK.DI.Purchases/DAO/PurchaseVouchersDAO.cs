@@ -209,7 +209,7 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
                     lStrQuery += " " + lStrFilter;
                 }
 
-                lStrQuery += " order by Code desc";
+                lStrQuery += "group by b0.Code, B0.U_Folio, B0.U_Status, B0.U_Area, B0.U_Employee, B0.U_Date order by Code desc";
 
                 //this.UIAPIRawForm.DataSources.DataTables.Item("RESULT").ExecuteQuery(lStrQuery);
 
