@@ -44,8 +44,8 @@ namespace UGRS.AddOn.Purchases
                 UIApplication.ShowSuccess(string.Format("Inicializar las tablas"));
                 PurchasesServiceFactory lObjFoodProductionFactory = new PurchasesServiceFactory();
                 lObjFoodProductionFactory.GetSetupService().InitializeTables();
-               UIApplication.ShowSuccess(string.Format("AddonCompras 1.3.1 iniciado correctamente"));
-                LogService.WriteSuccess(string.Format("AddonCompras 1.3.1 iniciado correctamente"));
+               UIApplication.ShowSuccess(string.Format("AddonCompras 1.3.3 iniciado correctamente"));
+                LogService.WriteSuccess(string.Format("AddonCompras 1.3.3 iniciado correctamente"));
                 oApp.Run();
 
             }
