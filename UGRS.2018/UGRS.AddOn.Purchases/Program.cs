@@ -38,14 +38,13 @@ namespace UGRS.AddOn.Purchases
                 oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 DIApplication.DIConnect((SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany());
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
-                //TestXML();
-               // TestValidateXML();
+              
                 //Initialize Tables 
                 UIApplication.ShowSuccess(string.Format("Inicializar las tablas"));
                 PurchasesServiceFactory lObjFoodProductionFactory = new PurchasesServiceFactory();
                 lObjFoodProductionFactory.GetSetupService().InitializeTables();
-               UIApplication.ShowSuccess(string.Format("AddonCompras 1.3.3 iniciado correctamente"));
-                LogService.WriteSuccess(string.Format("AddonCompras 1.3.3 iniciado correctamente"));
+               UIApplication.ShowSuccess(string.Format("AddonCompras 1.3.5 iniciado correctamente"));
+                LogService.WriteSuccess(string.Format("AddonCompras 1.3.5 iniciado correctamente"));
                 oApp.Run();
 
             }

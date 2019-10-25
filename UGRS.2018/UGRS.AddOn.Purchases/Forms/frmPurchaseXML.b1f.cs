@@ -790,10 +790,10 @@ namespace UGRS.AddOn.Purchases.Forms
                     if (pBolCreatePayment)
                     {
                         PaymentDI lObjPaymentDI = new PaymentDI();
-                        pObjPurchase.Total = lObjDocInvoice.DocTotal.ToString();
+                        pObjPurchase.Total = lObjDocDraft.DocTotal.ToString();// lObjDocInvoice.DocTotal.ToString();
                         lObjPaymentDI.CreatePayment(pObjPurchase);
                     }
-                    DeleteDraft(lIntDraftEntry);
+                    DeleteDraft(lIntDraftEntry); 
                 }
             }
             else
