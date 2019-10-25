@@ -52,8 +52,9 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
                 }
                 else
                 {
-                    lLstStrParameters.Add("Status", ((int)StatusEnum.Closed).ToString());
-                    lStrQuery += " and (U_Status != '{Status}' or U_Status is null)";
+                    //Solicitud para ver todos menos los ya cerrados
+                   // lLstStrParameters.Add("Status", ((int)StatusEnum.Closed).ToString());
+                   // lStrQuery += " and (U_Status != '{Status}' or U_Status is null)";
                 }
 
                 lStrQuery += " group by T0.DocEntry, T0.U_GLO_CodeMov, /*DocEntry, DocNum, */U_FZ_Auxiliar, CardName, U_GLO_CostCenter,  DocTotal, isnull(A1.GLFSV,0) + isnull(B1.GLFSV,0), A2.GLSSV, A3.U_Total, A3.U_Status, MQ1.Debit, MQ1.Credit";
