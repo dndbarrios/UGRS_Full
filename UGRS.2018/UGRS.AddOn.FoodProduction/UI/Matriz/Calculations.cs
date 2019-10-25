@@ -344,11 +344,21 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
 
                         lObjTicketDetail.Folio = pStrFolio;
                         lObjTicketDetail.Item = ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("ItemCode").Cells.Item(i).Specific).Value;
+
+
+                        LogService.WriteInfo("GUARDAR DETALLE: " +((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(i).Specific).Value.ToString() + "Precio sin conversión");
                         lObjTicketDetail.Price = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                        LogService.WriteInfo("GUARDAR DETALLE: " + lObjTicketDetail.Price + "Precio con conversión");
+
                         lObjTicketDetail.FirstWT = lFloFirstWt;
                         lObjTicketDetail.SecondWT = lFloSecondWT;
+                        //Log
+                        LogService.WriteInfo("GUARDAR DETALLE: " + ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value.ToString() + "Cantidad sin conversión");
                         lObjTicketDetail.netWeight = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                        LogService.WriteInfo("GUARDAR DETALLE: " + lObjTicketDetail.netWeight + "Cantidad con conversión");
+                        
                         lObjTicketDetail.Amount = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Importe").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+           
                         //lObjTicketDetail.WeighingM =
                         //    bool lBolWeighingM = ((SAPbouiCOM.CheckBox)mObjMatrix.Columns.Item("Check").Cells.Item(i).Specific).Checked);
                         lObjTicketDetail.Line = i - 1;
