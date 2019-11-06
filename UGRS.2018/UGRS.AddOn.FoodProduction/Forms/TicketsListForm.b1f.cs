@@ -559,6 +559,11 @@ namespace UGRS.AddOn.FoodProduction
                                 //lBolCorrect = CrearDocumento(lLstTickets, BoObjectTypes.oDrafts, "ORDR", 17, "RDR1");
                                 lBolSuccess = CrearFacturaVenta(lLstTickets);
                                 break;
+
+                            default:
+                                UIApplication.ShowError("[btnAction_ClickBefore]: Favor de seleccionar una acción");
+                                LogService.WriteError("favor de seleccionar una accion");
+                                break;
                         }
                         if (lBolSuccess)
                         {
@@ -584,6 +589,11 @@ namespace UGRS.AddOn.FoodProduction
                     //{
                     //    lObjForm.Select();
                     //}
+                }
+                else
+                {
+                    LogService.WriteError("[btnAction_ClickBefore]: Favor de seleccionar factura");
+                    UIApplication.ShowError("Favor de seleccionar factura");
                 }
             }
             catch (Exception ex)
