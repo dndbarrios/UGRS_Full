@@ -20,7 +20,7 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
 
     public class StockEntryDI {
 
-        public static Result CreateDocument(DocumentProduction document, User user, bool cancellation) {
+        public static Result CreateDocument(DocumentProduction document, User user, bool cancellation, DateTime prodDate) {
 
             var result = new Result();
             FoodTransferDAO foodPlantDAO = new FoodTransferDAO();
@@ -34,7 +34,10 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
                     oStockEntry.Series = foodPlantDAO.GetSeries(user.IsFoodPlant ? user.WhsCode : document.Lines[0].Whs, "59", "Series");
                     oStockEntry.UserFields.Fields.Item("U_GLO_ObjType").Value = user.FormID;
                     oStockEntry.UserFields.Fields.Item("U_GLO_InMo").Value = !cancellation ? "E-PROD" : "E-PRODCANCEL";
-                    oStockEntry.DocDate = DateTime.Now;
+                    oStockEntry.DocDate = prodDate;
+                    if (!user.IsFoodPlant) {
+                        oStockEntry.TaxDate = DateTime.Now;
+                    }
 
                     if(!user.IsFoodPlant && cancellation) {
                         oStockEntry.UserFields.Fields.Item("U_GLO_Status").Value = "C";

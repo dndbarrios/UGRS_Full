@@ -16,7 +16,6 @@ using UGRS.Core.SDK.DI.FoodTransfer.DAO;
 using UGRS.Core.SDK.DI.FoodTransfer.DTO;
 using UGRS.Core.SDK.DI.FoodTransfer.Services;
 using UGRS.Core.SDK.UI;
-using UGRS.Core.Services;
 
 namespace UGRS.AddOnFoodTransfer.Forms {
     [FormAttribute("UGRS.AddOnFoodTransfer.Forms.frmTransfer", "Forms/frmTransfer.b1f")]
@@ -151,8 +150,6 @@ namespace UGRS.AddOnFoodTransfer.Forms {
             var transferDocument = new DocumentTransfer();
 
             try {
-
-                LogService.WriteInfo("Begin Create Transfer");
                 transferDocument.Document = pendingTransfers[selectedRow - 1];
                 transferDocument.Lines = transferItems;
                 transferDocument.Series = seriesNumbers;
@@ -185,7 +182,6 @@ namespace UGRS.AddOnFoodTransfer.Forms {
                     }
 
                     UIApplication.ShowMessageBox(t.Result.Message);
-                    LogService.WriteInfo("End Create Transfer");
                 });
             }
             catch(AggregateException ae) {

@@ -18,7 +18,7 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
 
     public static class StockExitDI {
 
-        public static Result CreateDocument(DocumentProduction document, User user, bool cancellation) {
+        public static Result CreateDocument(DocumentProduction document, User user, bool cancellation, DateTime prodDate) {
 
             var result = new Result();
             FoodTransferDAO foodTransferDAO = new FoodTransferDAO();
@@ -31,7 +31,10 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
                     oStockExit.UserFields.Fields.Item("U_MQ_OrigenFol").Value = user.IsFoodPlant ? document.DocNum : (!cancellation ? String.Empty : document.DocNum);
                     oStockExit.UserFields.Fields.Item("U_GLO_ObjType").Value = user.FormID;
                     oStockExit.UserFields.Fields.Item("U_GLO_InMo").Value = !cancellation ? "S-PROD" : "S-PRODCANCEL";
-                    oStockExit.DocDate = DateTime.Now;
+                    oStockExit.DocDate = prodDate;
+                    if (!user.IsFoodPlant) {
+                        oStockExit.TaxDate = DateTime.Now;
+                    }
 
                     if(cancellation) {
                         oStockExit.UserFields.Fields.Item("U_GLO_Status").Value = "C";
@@ -75,7 +78,10 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
                     result.DocEntry = int.Parse(DIApplication.Company.GetNewObjectKey());
                     oStockExit.GetByKey(result.DocEntry);
                     result.Success = true;
-                    result.DocTotal = oStockExit.DocTotal;
+                    //result.DocTotal = oStockExit.DocTotal;
+                    result.DocTotal = foodTransferDAO.GetDocTotalFromJournalEntry(oStockExit.TransNum);
+                  
+                   
                     result.Message = String.Format("La salida de mercancia#{0} se realizó con éxito!", oStockExit.DocNum);
                 }
             }

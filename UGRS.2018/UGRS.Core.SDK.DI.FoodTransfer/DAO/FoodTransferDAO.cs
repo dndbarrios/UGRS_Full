@@ -247,12 +247,14 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.DAO {
             try {
 
                 string query = (whs.Equals("PLHE") ? "GetComponents" : !cancellation ? "GetMaterialList" : "GetComponentsFSE");
-                var test = this.GetSQL(query).Inject(new Dictionary<string, string>() { { "Param", param }, { "Whs", whs } });
-                recordset.DoQuery(this.GetSQL(query).Inject(new Dictionary<string, string>() { { "Param", param }, { "Whs", whs } }));
+                //var test = (this.GetSQL(query).Inject(new Dictionary<string, string>() { { "Param", param }, { "Whs", whs } }));
 
+                recordset.DoQuery(this.GetSQL(query).Inject(new Dictionary<string, string>() { { "Param", param }, { "Whs", whs } }));
                 if(recordset.RecordCount > 0) {
                     components = new Component[recordset.RecordCount];
+
                     for(int i = 0; i < recordset.RecordCount; i++) {
+
                         var component = new Component();
                         Parallel.ForEach(recordset.Fields.OfType<Field>(), field => {
                             component.GetType().GetProperty(field.Name).SetValue(component, field.Value);
@@ -547,7 +549,6 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.DAO {
 
                 var query = this.GetSQL("GetRevalorizationCost").Inject(new Dictionary<string, string>() { { "ExitID", exitID }, { "OrderID", orderID } });
 
-
                 recordset.DoQuery(this.GetSQL("GetRevalorizationCost").Inject(new Dictionary<string, string>() { { "ExitID", exitID }, { "OrderID", orderID } }));
                 if(recordset.RecordCount > 0) {
                     result = (double)recordset.Fields.Item(0).Value;
@@ -555,7 +556,7 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.DAO {
 
             }
             catch(Exception ex) {
-                HandleException(ex, "GetRevalirizationCost");
+                HandleException(ex, "GetRevalorizationCost");
             }
             finally {
                 MemoryUtility.ReleaseComObject(recordset);
@@ -564,6 +565,39 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.DAO {
             return result;
         }
         #endregion
+
+
+
+        #region GetDocTotalFromJournalEntry
+        public double GetDocTotalFromJournalEntry(int transID) {
+
+            var recordset = (Recordset)DIApplication.Company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            double result = 0;
+
+            try {
+
+                var query = this.GetSQL("GetDocTotalFromJournalEntry").Inject(new Dictionary<string, string>() { { "TransId", transID.ToString() } });
+                recordset.DoQuery(query);
+                if(recordset.RecordCount > 0) {
+                    result = (double)recordset.Fields.Item(0).Value;
+                }
+            }
+            catch(Exception ex) {
+                HandleException(ex, "GetRevalorizationCost");
+            }
+            finally {
+                MemoryUtility.ReleaseComObject(recordset);
+            }
+
+            return result;
+        }
+        #endregion
+
+
+
+
+        
+
 
         #region GetAccCodeRevaluation
         public string GetAccCodeRevaluation() {
@@ -628,8 +662,6 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.DAO {
             return itemStockPrices;
         }
         #endregion
-
-
 
         #region GetInventoryExitByDocNum
         public int GetInventoryExitByDocNum(string docNum) {
