@@ -269,7 +269,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 string lStrBaseLine = mDBDataSourceD.GetValue("LineNum", mIntRow - 1);
                 string lStrStatus = txtStatus.Value;
                 /*(lStrBaseLine == "" || cboTypTic.Value == "Traslado - Entrada" || cboTypTic.Value == "Traslado - Salida") &&*/
-                if (lStrStatus == "Abierto" && Convert.ToDouble(lStrPeso, CultureInfo.InvariantCulture) == 0)
+                if (lStrStatus == "Abierto" && Convert.ToDouble(lStrPeso, CultureInfo.GetCultureInfo("en-US")) == 0)
                 {
                     if (SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("¿Desea elimiar el item seleccionado?", 2, "Si", "No", "") == 1)
                     {
@@ -317,8 +317,8 @@ namespace UGRS.AddOn.FoodProduction.Forms
             double lDbSecondW = 0;
             for (int i = 1; i < mObjMatrix.RowCount; i++)
             {
-                lDbSecondW = Convert.ToDouble((mObjMatrix.Columns.Item("Peso2").Cells.Item(i).Specific as EditText).Value, CultureInfo.InvariantCulture);
-                if (lDbSecondW.Equals(Convert.ToDouble(txtOutputWT.Value, CultureInfo.InvariantCulture)))
+                lDbSecondW = Convert.ToDouble((mObjMatrix.Columns.Item("Peso2").Cells.Item(i).Specific as EditText).Value, CultureInfo.GetCultureInfo("en-US"));
+                if (lDbSecondW.Equals(Convert.ToDouble(txtOutputWT.Value, CultureInfo.GetCultureInfo("en-US"))))
                 {
                     mIntRow = i;
                 }
@@ -332,7 +332,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         {
             double lFlMaxOrMinValue = MaxAndMinValues();
 
-            txtOutputWT.Value = lFlMaxOrMinValue.ToString(CultureInfo.InvariantCulture);
+            txtOutputWT.Value = lFlMaxOrMinValue.ToString(CultureInfo.GetCultureInfo("en-US"));
 
         }
         /// <summary>
@@ -755,7 +755,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         private bool MakeCalculation(int pIntRow, string pStrColumn)
         {
             LogService.WriteInfo("MakeCalculation");
-            double lDblPesoNeto = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+            double lDblPesoNeto = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
             if (lDblPesoNeto > 0 && !pStrColumn.Equals("Price") && !pStrColumn.Equals("PesoN") && !pStrColumn.Equals("Sacos") && !pStrColumn.Equals("ItemCode") && !pStrColumn.Equals("WhsCode"))
             {
                 this.UIAPIRawForm.Freeze(true);
@@ -795,14 +795,14 @@ namespace UGRS.AddOn.FoodProduction.Forms
             {
                 if (mObjCalculation.getLargeNumber(mObjMatrix) > 0)
                 {
-                    mStrLastPeso = mObjCalculation.getLargeNumber(mObjMatrix).ToString(CultureInfo.InvariantCulture); 
+                    mStrLastPeso = mObjCalculation.getLargeNumber(mObjMatrix).ToString(CultureInfo.GetCultureInfo("en-US")); 
                 }
             }
             if (mStrSource == "POR1" || cboTypTic.Value == "Traslado - Entrada")
             {
                 if (mObjCalculation.getSmallerNumber(mObjMatrix) > 0)
                 {
-                    mStrLastPeso = mObjCalculation.getSmallerNumber(mObjMatrix).ToString(CultureInfo.InvariantCulture);
+                    mStrLastPeso = mObjCalculation.getSmallerNumber(mObjMatrix).ToString(CultureInfo.GetCultureInfo("en-US"));
                 }
             }
 
@@ -845,31 +845,31 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     mBolPriceModify = true;
 
                     mIntRowModify = pObjVal.Row;
-                    double ldblPesoNet = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
-                    double ldblSacos = Convert.ToDouble((mObjMatrix.Columns.Item("Sacos").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
-                    double ldblPrice = Convert.ToDouble((mObjMatrix.Columns.Item("Price").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                    double ldblPesoNet = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
+                    double ldblSacos = Convert.ToDouble((mObjMatrix.Columns.Item("Sacos").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
+                    double ldblPrice = Convert.ToDouble((mObjMatrix.Columns.Item("Price").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
                     if (ldblPesoNet == 0)
                     {
-                        mDBDataSourceD.SetValue("Quantity", pObjVal.Row - 1, ldblPesoNet.ToString(CultureInfo.InvariantCulture));
+                        mDBDataSourceD.SetValue("Quantity", pObjVal.Row - 1, ldblPesoNet.ToString(CultureInfo.GetCultureInfo("en-US")));
                         CalcImport(cboTypTic.Value);
                     }
-                    mDBDataSourceD.SetValue("U_GLO_BagsBales", pObjVal.Row - 1, ldblSacos.ToString(CultureInfo.InvariantCulture));
-                    mDBDataSourceD.SetValue("Price", pObjVal.Row - 1, ldblPrice.ToString(CultureInfo.InvariantCulture));
+                    mDBDataSourceD.SetValue("U_GLO_BagsBales", pObjVal.Row - 1, ldblSacos.ToString(CultureInfo.GetCultureInfo("en-US")));
+                    mDBDataSourceD.SetValue("Price", pObjVal.Row - 1, ldblPrice.ToString(CultureInfo.GetCultureInfo("en-US")));
                 }
                 else
                 {
                     if (mIntRowModify != pObjVal.Row)
                     {
 
-                        double ldblPesoNet = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(mIntRowModify).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
-                        double ldblSacos = Convert.ToDouble((mObjMatrix.Columns.Item("Sacos").Cells.Item(mIntRowModify).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
-                        double ldblPrice = Convert.ToDouble((mObjMatrix.Columns.Item("Price").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                        double ldblPesoNet = Convert.ToDouble((mObjMatrix.Columns.Item("PesoN").Cells.Item(mIntRowModify).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
+                        double ldblSacos = Convert.ToDouble((mObjMatrix.Columns.Item("Sacos").Cells.Item(mIntRowModify).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
+                        double ldblPrice = Convert.ToDouble((mObjMatrix.Columns.Item("Price").Cells.Item(pObjVal.Row).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
 
-                        mDBDataSourceD.SetValue("Quantity", mIntRowModify - 1, ldblPesoNet.ToString(CultureInfo.InvariantCulture));
+                        mDBDataSourceD.SetValue("Quantity", mIntRowModify - 1, ldblPesoNet.ToString(CultureInfo.GetCultureInfo("en-US")));
                         CalcImport(cboTypTic.Value);
 
-                        mDBDataSourceD.SetValue("U_GLO_BagsBales", mIntRowModify - 1, ldblSacos.ToString(CultureInfo.InvariantCulture));
-                        mDBDataSourceD.SetValue("Price", pObjVal.Row - 1, ldblPrice.ToString(CultureInfo.InvariantCulture));
+                        mDBDataSourceD.SetValue("U_GLO_BagsBales", mIntRowModify - 1, ldblSacos.ToString(CultureInfo.GetCultureInfo("en-US")));
+                        mDBDataSourceD.SetValue("Price", pObjVal.Row - 1, ldblPrice.ToString(CultureInfo.GetCultureInfo("en-US")));
                         mIntRowModify = pObjVal.Row;
                     }
                 }
@@ -1179,7 +1179,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             mDBDataSourceD = this.UIAPIRawForm.DataSources.DBDataSources.Item(mStrSource);
             mDBDataSourceD.SetValue("ItemCode", pObjValEvent.Row - 1, pStrValChoose);
             mDBDataSourceD.SetValue("Dscription", pObjValEvent.Row - 1, pStrDescription);// lObjoDataTable.GetValue(1, 0).ToString());
-            mDBDataSourceD.SetValue("Price", pObjValEvent.Row - 1, Convert.ToDouble(lStrPrice, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture));
+            mDBDataSourceD.SetValue("Price", pObjValEvent.Row - 1, Convert.ToDouble(lStrPrice, CultureInfo.GetCultureInfo("en-US")).ToString(CultureInfo.GetCultureInfo("en-US")));
             mDBDataSourceD.SetValue("Weight1", pObjValEvent.Row - 1, "0");
             mDBDataSourceD.SetValue("Weight2", pObjValEvent.Row - 1, "0");
             if (IsSetWhsCode(pStrValChoose))
@@ -1242,7 +1242,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             BubbleEvent = true;
             try
             {
-                if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value, CultureInfo.InvariantCulture) == 0)
+                if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value, CultureInfo.GetCultureInfo("en-US")) == 0)
                 {
                     txtInWT.Value = mStrWeight;
                     //mStrWeight = mObjTicketServices.RandomNumber(1, 100).ToString();
@@ -1345,7 +1345,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     }
                     lObjTicket.PrintLine = lLstLines.Count();
 
-                    mObjTicketServices.SaveTicket(lObjTicket, true);
+                    //mObjTicketServices.SaveTicket(lObjTicket, true);
 
                 }
             }
@@ -1363,6 +1363,10 @@ namespace UGRS.AddOn.FoodProduction.Forms
         private void btnSave_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            CultureInfo ci = new CultureInfo("es-MX");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+
 
             this.UIAPIRawForm.Freeze(true);
             for (int i = 1; i <= mObjMatrix.RowCount; i++)
@@ -1603,15 +1607,15 @@ namespace UGRS.AddOn.FoodProduction.Forms
             {
                 //lLstLine.Add("");
                 j++;
-                if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString(CultureInfo.InvariantCulture)) && lObjTicketDetail.FirstWT > 0)
+                if (!string.IsNullOrEmpty(lObjTicketDetail.FirstWT.ToString(CultureInfo.GetCultureInfo("en-US"))) && lObjTicketDetail.FirstWT > 0)
                 {
                     lLstLine.Add(j.ToString("00") + " Peso Ent: " + lObjTicketDetail.FirstWT);
                 }
-                if (!string.IsNullOrEmpty(lObjTicketDetail.SecondWT.ToString(CultureInfo.InvariantCulture)) && lObjTicketDetail.SecondWT > 0)
+                if (!string.IsNullOrEmpty(lObjTicketDetail.SecondWT.ToString(CultureInfo.GetCultureInfo("en-US"))) && lObjTicketDetail.SecondWT > 0)
                 {
                     lLstLine.Add(j.ToString("00") + " Peso Sal: " + lObjTicketDetail.SecondWT);
                 }
-                if (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString(CultureInfo.InvariantCulture)) && lObjTicketDetail.netWeight > 0)
+                if (!string.IsNullOrEmpty(lObjTicketDetail.netWeight.ToString(CultureInfo.GetCultureInfo("en-US"))) && lObjTicketDetail.netWeight > 0)
                 {
                     lLstLine.Add(j.ToString("00") + " Peso Neto: " + lObjTicketDetail.netWeight);
                 }
@@ -1680,31 +1684,55 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             //int lIntCopies = string.IsNullOrEmpty(lStrCopies) ? 1 : int.Parse(lStrCopies);
 
-        
+
 
             //for (int i = 0; i < lIntCopies; i++)
             //{
             //string lStrCopies = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINT_COPIES", "[@UG_Config]");
+
+
             string lStrPrinterName = mObjQueryManager.GetValue("U_Value", "Name", "PL_PRINTER_NAME", "[@UG_Config]");
             if (string.IsNullOrEmpty(lStrPrinterName))
             {
                 throw new Exception("No se encontró valor para la cofiguración PL_PRINTER_NAME en la tabla de configuraciones, agreguela para continuar");
             }
-          
+
             LocalReport lObjLocalReport = new LocalReport();
             lObjLocalReport.ReportPath = @"Reports/Tickets/rptTicket.rdlc";
-            
+
             lObjLocalReport.SetParameters(new ReportParameter("Value", string.Join("|", pLstLine)));
             lObjLocalReport.Refresh();
 
-            using (var doc = new ReportPrintDocument(lObjLocalReport))
-            {
-                doc.PrinterSettings.PrinterName = lStrPrinterName;
-                for (int i = 0; i < pIntCopies; i++)
-                {
-                    doc.Print();
-                }
-            }
+            LogService.WriteSuccess("Reporte generado");
+
+            CultureInfo culture = CultureInfo.CurrentCulture;
+            LogService.WriteInfo(string.Format("The current culture before print is {0} [{1}]",
+                        culture.NativeName, culture.Name));
+
+            PinterUtility.PrintReport(lObjLocalReport);
+
+             culture = CultureInfo.CurrentCulture;
+            LogService.WriteInfo(string.Format("The current culture after print is {0} [{1}]",
+                        culture.NativeName, culture.Name));
+
+
+            CultureInfo ci = new CultureInfo("es-MX");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+
+            culture = CultureInfo.CurrentCulture;
+            LogService.WriteInfo(string.Format("Change th current culture to {0} [{1}]",
+                 culture.NativeName, culture.Name));
+
+            //using (var doc = new ReportPrintDocument(lObjLocalReport))
+            //{
+
+            //    doc.PrinterSettings.PrinterName = lStrPrinterName;
+            //    for (int i = 0; i < pIntCopies; i++)
+            //    {
+            //        doc.Print();
+            //    }
+            //}
         }
 
         private string Truncate(string pStrValue, int pIntMaxLength)
@@ -1863,7 +1891,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                             }
                             else
                             {
-                                //if ((Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(mIntRow).Specific).Value, CultureInfo.InvariantCulture) != 0)
+                                //if ((Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(mIntRow).Specific).Value, CultureInfo.GetCultureInfo("en-US")) != 0)
                                 //    || (mStrTipoDoc == "CFL_Traslado"))
                                 //{
                                 if (cbWTType.Value == "Doble")//((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(mIntRow).Specific).Value == "0.0")
@@ -1892,7 +1920,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
                             //if (lBoolPrice)
                             //{
-                            if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value, CultureInfo.InvariantCulture) == 0)
+                            if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value, CultureInfo.GetCultureInfo("en-US")) == 0)
                             {
                                 txtInWT.Value = lStrWeight;
                             }
@@ -2063,7 +2091,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 txtDriver.Value = pObjTicket.Driver;
                 txtCarTag.Value = pObjTicket.CarTag;
                 txtComents.Value = pObjTicket.Coments;
-                DateTime dt = DateTime.ParseExact(pObjTicket.EntryDate.ToString("yyyyMMdd"), "yyyyMMdd", CultureInfo.InvariantCulture);
+                DateTime dt = DateTime.ParseExact(pObjTicket.EntryDate.ToString("yyyyMMdd"), "yyyyMMdd", CultureInfo.GetCultureInfo("en-US"));
                 txtDate.Value = dt.ToString("dd/MM/yyyy");
                 cboTypTic.Item.Enabled = false;
                 //cbWTType.Value == "Doble";
@@ -2086,12 +2114,12 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     pObjTicket.Status = 1;
                 }
 
-                txtPesoN.Value = (pObjTicket.InputWT - pObjTicket.OutputWT).ToString(CultureInfo.InvariantCulture);
-                txtAmount.Value = pObjTicket.Amount.ToString(CultureInfo.InvariantCulture);
+                txtPesoN.Value = (pObjTicket.InputWT - pObjTicket.OutputWT).ToString(CultureInfo.GetCultureInfo("en-US"));
+                txtAmount.Value = pObjTicket.Amount.ToString(CultureInfo.GetCultureInfo("en-US"));
                 this.UIAPIRawForm.DataSources.UserDataSources.Item("UDS_Pro").ValueEx = pObjTicket.Project;
                 txtTara.Value = string.Empty;
-                txtInWT.Value = pObjTicket.InputWT.ToString(CultureInfo.InvariantCulture);
-                txtOutputWT.Value = pObjTicket.OutputWT.ToString(CultureInfo.InvariantCulture);
+                txtInWT.Value = pObjTicket.InputWT.ToString(CultureInfo.GetCultureInfo("en-US"));
+                txtOutputWT.Value = pObjTicket.OutputWT.ToString(CultureInfo.GetCultureInfo("en-US"));
                 txtFolio.Value = pObjTicket.Folio;
                 mStrFolio = pObjTicket.Folio;
 
@@ -2274,7 +2302,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             {
                 LogService.WriteInfo("Guardando un Ticket " + pStrFolio);
                 LogService.WriteInfo("txtOutput " + txtOutputWT.Value);
-                if (mObjValidations.IsLastWeight(mObjMatrix) && txtOutputWT.Value != "" && Convert.ToDouble(txtOutputWT.Value, CultureInfo.InvariantCulture) != 0)
+                if (mObjValidations.IsLastWeight(mObjMatrix) && txtOutputWT.Value != "" && Convert.ToDouble(txtOutputWT.Value, CultureInfo.GetCultureInfo("en-US")) != 0)
                 {
                     //string lStrBaseDoc = txtDoc.Value;//Cambio DocEntry por DocNum 17/01/19
                     string lStrBaseDoc = mStrDocEntry;
@@ -2335,13 +2363,13 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 lObjTicket.WTType = GetDocWT(cbWTType.Value);
                 LogService.WriteInfo("EntryDate " + lObjTicket.EntryDate.ToString());
 
-                lObjTicket.InputWT = Convert.ToDouble(txtInWT.Value, CultureInfo.InvariantCulture);
-                lObjTicket.OutputWT = Convert.ToDouble(txtOutputWT.Value, CultureInfo.InvariantCulture);
+                lObjTicket.InputWT = Convert.ToDouble(txtInWT.Value, CultureInfo.GetCultureInfo("en-US"));
+                lObjTicket.OutputWT = Convert.ToDouble(txtOutputWT.Value, CultureInfo.GetCultureInfo("en-US"));
                 string lStrAmount = txtAmount.Value;
                 LogService.WriteInfo("Amount " + lStrAmount);
                 //lStrAmount = lStrAmount.Substring(1, lStrAmount.Length - 1);
-                lObjTicket.Amount = Convert.ToDouble(lStrAmount, CultureInfo.InvariantCulture);
-                //lObjTicket.Amount = Convert.ToDouble(txtAmount.Value, NumberStyles.Currency, CultureInfo.InvariantCulture);
+                lObjTicket.Amount = Convert.ToDouble(lStrAmount, CultureInfo.GetCultureInfo("en-US"));
+                //lObjTicket.Amount = Convert.ToDouble(txtAmount.Value, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"));
                 LogService.WriteInfo("Amount " + lObjTicket.Amount);
                 lObjTicket.Coments = txtComents.Value;
 
@@ -2650,7 +2678,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         {
             //txtDate.DataBind.SetBound(true, "", "UDDate");
             //txtDate.Value = DateTime.Now.ToString("yyyyMMdd"); // Format(Date.Today, "yyyyMMdd")
-            DateTime dt = DateTime.ParseExact(DateTime.Now.ToString("yyyyMMdd"), "yyyyMMdd", CultureInfo.InvariantCulture);
+            DateTime dt = DateTime.ParseExact(DateTime.Now.ToString("yyyyMMdd"), "yyyyMMdd", CultureInfo.GetCultureInfo("en-US"));
             txtDate.Value = dt.ToString("dd/MM/yyyy");
             txtDateOut.DataBind.SetBound(true, "", "UDDate2");
             mObjItem = this.UIAPIRawForm.Items.Add("mtxArtLst2", SAPbouiCOM.BoFormItemTypes.it_MATRIX);
@@ -2911,11 +2939,11 @@ namespace UGRS.AddOn.FoodProduction.Forms
                 {
                     if (!string.IsNullOrEmpty(txtInWT.Value))
                     {
-                        lDblInput = Convert.ToDouble(txtInWT.Value, CultureInfo.InvariantCulture);
+                        lDblInput = Convert.ToDouble(txtInWT.Value, CultureInfo.GetCultureInfo("en-US"));
                     }
                     if (!string.IsNullOrEmpty(txtOutputWT.Value))
                     {
-                        lDblOutput = Convert.ToDouble(txtOutputWT.Value, CultureInfo.InvariantCulture);
+                        lDblOutput = Convert.ToDouble(txtOutputWT.Value, CultureInfo.GetCultureInfo("en-US"));
                     }
                 }
                 else
@@ -2924,12 +2952,12 @@ namespace UGRS.AddOn.FoodProduction.Forms
                     lDblOutput = mObjCalculation.getLargeNumber(mObjMatrix);
                 }
                 TotalsDTO lObjTotals = mObjCalculation.CalcTotals(mObjMatrix, lDblInput, lDblOutput);
-                txtTara.Value = lObjTotals.Tara.ToString(CultureInfo.InvariantCulture);// lDblTara.ToString();
-                txtPesoB.Value = lObjTotals.WeightB.ToString(CultureInfo.InvariantCulture);//  lDblPesoBruto.ToString();
+                txtTara.Value = lObjTotals.Tara.ToString(CultureInfo.GetCultureInfo("en-US"));// lDblTara.ToString();
+                txtPesoB.Value = lObjTotals.WeightB.ToString(CultureInfo.GetCultureInfo("en-US"));//  lDblPesoBruto.ToString();
                 //LE 62 
-                txtVari.Value = (lObjTotals.Variation).ToString(CultureInfo.InvariantCulture); //(lDblPeso - lDblVariacion).ToString();
-                txtPesoN.Value = lObjTotals.WeightNet.ToString(CultureInfo.InvariantCulture);// (lDblPesoBruto + lDblTara).ToString();
-                txtAmount.Value = lObjTotals.Amount.ToString(CultureInfo.InvariantCulture);// Convert.ToDouble(lObjTotals.Amount, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
+                txtVari.Value = (lObjTotals.Variation).ToString(CultureInfo.GetCultureInfo("en-US")); //(lDblPeso - lDblVariacion).ToString();
+                txtPesoN.Value = lObjTotals.WeightNet.ToString(CultureInfo.GetCultureInfo("en-US"));// (lDblPesoBruto + lDblTara).ToString();
+                txtAmount.Value = lObjTotals.Amount.ToString(CultureInfo.GetCultureInfo("en-US"));// Convert.ToDouble(lObjTotals.Amount, CultureInfo.GetCultureInfo("en-US")).ToString(CultureInfo.GetCultureInfo("en-US"));
             }
             catch (Exception ex)
             {
@@ -3682,7 +3710,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
         private bool ValidateControls()
         {
             IList<string> lLstmissingFields = new List<string>();
-            if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value, CultureInfo.InvariantCulture) == 0)
+            if (string.IsNullOrEmpty(txtInWT.Value) || Convert.ToDouble(txtInWT.Value, CultureInfo.GetCultureInfo("en-US")) == 0)
             {
                 lLstmissingFields.Add("Peso inicial");
             }
@@ -3751,7 +3779,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             //if (cboTypTic.Value == "Venta")
             //{
-            //    double ldubAmount = Convert.ToDouble(txtAmount.Value, CultureInfo.InvariantCulture);
+            //    double ldubAmount = Convert.ToDouble(txtAmount.Value, CultureInfo.GetCultureInfo("en-US"));
             //    if (ldubAmount < 0)
             //    {
             //        lLstmissingFields.Add("Verificar datos de báscula");
@@ -3760,7 +3788,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             //if (cboTypTic.Value == "Compra")
             //{
-            //    double ldubAmount = Convert.ToDouble(txtAmount.Value, CultureInfo.InvariantCulture);
+            //    double ldubAmount = Convert.ToDouble(txtAmount.Value, CultureInfo.GetCultureInfo("en-US"));
             //    if (ldubAmount > 0)
             //    {
             //        lLstmissingFields.Add("Verificar datos de báscula");
@@ -4095,7 +4123,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
 
             try
             {
-                if (!string.IsNullOrEmpty(pStrValue.Trim()) && Convert.ToDouble(pStrValue, CultureInfo.InvariantCulture) >= 0)
+                if (!string.IsNullOrEmpty(pStrValue.Trim()) && Convert.ToDouble(pStrValue, CultureInfo.GetCultureInfo("en-US")) >= 0)
                 {
                     lStrData += pStrValue;
                 }

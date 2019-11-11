@@ -686,7 +686,7 @@ select DocEntry from {0} where UPdinvnt = '{1}' and CardCode = '{2}' and DocStat
                 {
                     pStrEntryTime = "0" + pStrEntryTime;
                 }
-                DateTime dateTime = DateTime.ParseExact(pStrEntryTime, "HHmm", CultureInfo.InvariantCulture);
+                DateTime dateTime = DateTime.ParseExact(pStrEntryTime, "HHmm", CultureInfo.GetCultureInfo("en-US"));
                 lDtmFist = new DateTime(lDtmFist.Year, lDtmFist.Month, lDtmFist.Day, dateTime.Hour, dateTime.Minute, 00);
             }
             return lDtmFist;

@@ -1,6 +1,8 @@
 ﻿using SAPbouiCOM.Framework;
 using System;
+using System.Globalization;
 using System.Runtime.Remoting;
+using System.Threading;
 using UGRS.AddOn.FoodProduction.UI;
 using UGRS.AddOn.FoodProduction.UI.Event;
 using UGRS.AddOn.FoodProduction.UI.Menu;
@@ -24,7 +26,19 @@ namespace UGRS_AddOn.FoodProduction
                try
                {
                    LogService.Filename("FoodProduction");
-                   LogService.WriteInfo("Inicio del addon 1.3.17");
+                   LogService.WriteInfo("Inicio del addon 1.3.28");
+
+                     CultureInfo culture = CultureInfo.CurrentCulture;
+                     LogService.WriteInfo(string.Format("The current culture is {0} [{1}]",
+                          culture.NativeName, culture.Name));
+
+                     CultureInfo ci = new CultureInfo("es-MX");
+                     Thread.CurrentThread.CurrentCulture = ci;
+                     Thread.CurrentThread.CurrentUICulture = ci;
+                   
+                      culture = CultureInfo.CurrentCulture;
+                     LogService.WriteInfo(string.Format("The current culture is {0} [{1}]",
+                          culture.NativeName, culture.Name));
 
                    Application lObjApplication = null;
 
@@ -69,7 +83,7 @@ namespace UGRS_AddOn.FoodProduction
 
 
                    UIApplication.ShowSuccess(string.Format("Addon Iniciado correctamente"));
-                   LogService.WriteSuccess("[AddOn FoodProduction 1.3.17 STARTED]");
+                   LogService.WriteSuccess("[AddOn FoodProduction 1.3.28 STARTED]");
                    //Ticket instance = (Ticket)Activator.CreateInstance(typeof(Ticket));
 
                    //Init application

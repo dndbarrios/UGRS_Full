@@ -90,11 +90,11 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                 pDBDataSourceD.InsertRecord(i);
                 pDBDataSourceD.SetValue("ItemCode", i, lObjTicketDetail.Item);
                 pDBDataSourceD.SetValue("Dscription", i, mObjTicketServices.SearchItemName(lObjTicketDetail.Item));
-                pDBDataSourceD.SetValue("Price", i, lObjTicketDetail.Price.ToString(CultureInfo.InvariantCulture));
-                pDBDataSourceD.SetValue("Weight1", i, lObjTicketDetail.FirstWT.ToString(CultureInfo.InvariantCulture));
-                pDBDataSourceD.SetValue("Weight2", i, lObjTicketDetail.SecondWT.ToString(CultureInfo.InvariantCulture));
-                pDBDataSourceD.SetValue("Quantity", i, lFloQuantity.ToString(CultureInfo.InvariantCulture));
-                pDBDataSourceD.SetValue("LineTotal", i, (lFloQuantity * lObjTicketDetail.Price).ToString(CultureInfo.InvariantCulture));
+                pDBDataSourceD.SetValue("Price", i, lObjTicketDetail.Price.ToString(CultureInfo.GetCultureInfo("en-US")));
+                pDBDataSourceD.SetValue("Weight1", i, lObjTicketDetail.FirstWT.ToString(CultureInfo.GetCultureInfo("en-US")));
+                pDBDataSourceD.SetValue("Weight2", i, lObjTicketDetail.SecondWT.ToString(CultureInfo.GetCultureInfo("en-US")));
+                pDBDataSourceD.SetValue("Quantity", i, lFloQuantity.ToString(CultureInfo.GetCultureInfo("en-US")));
+                pDBDataSourceD.SetValue("LineTotal", i, (lFloQuantity * lObjTicketDetail.Price).ToString(CultureInfo.GetCultureInfo("en-US")));
                 pDBDataSourceD.SetValue("U_GLO_BagsBales", i, lObjTicketDetail.BagsBales.ToString());
                 pDBDataSourceD.SetValue("WhsCode", i, lObjTicketDetail.WhsCode.ToString());
                 pDBDataSourceD.SetValue("FromWhsCod", i, lObjTicketDetail.WhsCode.ToString());
@@ -172,7 +172,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
             for (int i = 1; i <= pObjMatrix.RowCount; i++)
             {
                 string l = ((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("ItemCode").Cells.Item(i).Specific).Value;
-                double xe = Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                double xe = Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
                 foreach (var item in pLstTicketDetail.Where(x=> x.Item == l && x.netWeight == xe))
                 {
                     if(item.WeighingM == 1)

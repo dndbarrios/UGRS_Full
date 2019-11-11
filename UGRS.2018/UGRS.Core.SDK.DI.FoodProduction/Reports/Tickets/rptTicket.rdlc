@@ -12,6 +12,7 @@
                 <Value>=Replace(Parameters!Value.Value, "|", System.Environment.NewLine)</Value>
                 <Style>
                   <FontSize>8pt</FontSize>
+                  <Language>es-MX</Language>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -38,7 +39,7 @@
     <Height>0.62248in</Height>
     <Style />
   </Body>
-  <Width>2.769in</Width>
+  <Width>3.39458in</Width>
   <Page>
     <PageHeader>
       <Height>1.07239in</Height>
@@ -69,6 +70,7 @@
                   <Style>
                     <FontSize>8pt</FontSize>
                     <FontWeight>Bold</FontWeight>
+                    <Language>es-MX</Language>
                   </Style>
                 </TextRun>
               </TextRuns>

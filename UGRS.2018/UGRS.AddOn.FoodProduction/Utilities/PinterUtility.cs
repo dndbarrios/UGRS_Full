@@ -23,99 +23,99 @@ namespace UGRS.AddOn.FoodProduction.Utilities
         private static int gIntCurrentPageIndex;
         private static IList<Stream> gLstStreams;
 
-        [DllImport("winspool.drv", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool SetDefaultPrinter(string pStrPrinterName);
+       // [DllImport("winspool.drv", CharSet = CharSet.Auto, SetLastError = true)]
+        //public static extern bool SetDefaultPrinter(string pStrPrinterName);
 
-        /// <summary>
-        /// Verifica el estatus de la impresora.
-        /// </summary>
-        /// <param name="pStrPrinterName">Nombre de la impresora</param>
-        private static void PrinterStatus(string pStrPrinterName)
-        {
-            PrintQueue lObjDefaultPrintQueue = null;
-            try
-            {
-                lObjDefaultPrintQueue = LocalPrintServer.GetDefaultPrintQueue();
+        ///// <summary>
+        ///// Verifica el estatus de la impresora.
+        ///// </summary>
+        ///// <param name="pStrPrinterName">Nombre de la impresora</param>
+        //private static void PrinterStatus(string pStrPrinterName)
+        //{
+        //    PrintQueue lObjDefaultPrintQueue = null;
+        //    try
+        //    {
+        //        lObjDefaultPrintQueue = LocalPrintServer.GetDefaultPrintQueue();
 
-                if (lObjDefaultPrintQueue != null)
-                {
-                    lObjDefaultPrintQueue.Refresh();
+        //        if (lObjDefaultPrintQueue != null)
+        //        {
+        //            lObjDefaultPrintQueue.Refresh();
 
-                    PrintQueueStatus lEnmStatus = lObjDefaultPrintQueue.QueueStatus;
+        //            PrintQueueStatus lEnmStatus = lObjDefaultPrintQueue.QueueStatus;
 
-                    if ((lEnmStatus & PrintQueueStatus.PaperProblem) == PrintQueueStatus.PaperProblem)
-                    {
-                        throw new Exception("La impresora tiene un problema con el papel");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.NoToner) == PrintQueueStatus.NoToner)
-                    {
-                        throw new Exception("La impresora no tiene toner");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.DoorOpen) == PrintQueueStatus.DoorOpen)
-                    {
-                        throw new Exception("La impresora tiene la puerta abierta");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.Error) == PrintQueueStatus.Error)
-                    {
-                        throw new Exception("La impresora tiene un estado de error");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.NotAvailable) == PrintQueueStatus.NotAvailable)
-                    {
-                        throw new Exception("La impresora no esta disponible");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.Offline) == PrintQueueStatus.Offline)
-                    {
-                        throw new Exception("La impresora está fuera de línea");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.OutOfMemory) == PrintQueueStatus.OutOfMemory)
-                    {
-                        throw new Exception("La impresora no tiene memoria suficiente");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.PaperOut) == PrintQueueStatus.PaperOut)
-                    {
-                        throw new Exception("La impresora no tiene papel");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.OutputBinFull) == PrintQueueStatus.OutputBinFull)
-                    {
-                        throw new Exception("Has a full output bin");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.PaperJam) == PrintQueueStatus.PaperJam)
-                    {
-                        throw new Exception("La impresora tiene atasco de papel");
-                    }
-                    if ((lEnmStatus & PrintQueueStatus.Paused) == PrintQueueStatus.Paused)
-                    {
-                        throw new Exception("La impresora está pausada");
-                    }
-                    /*if ((lEnmStatus & PrintQueueStatus.TonerLow) == PrintQueueStatus.TonerLow)
-                    {
-                        throw new Exception("Is low on toner");
-                    }*/
-                    if ((lEnmStatus & PrintQueueStatus.UserIntervention) == PrintQueueStatus.UserIntervention)
-                    {
-                        throw new Exception("Error en la impresora, contacte administrador");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                lObjDefaultPrintQueue.Dispose();
-            }
-        }
+        //            if ((lEnmStatus & PrintQueueStatus.PaperProblem) == PrintQueueStatus.PaperProblem)
+        //            {
+        //                throw new Exception("La impresora tiene un problema con el papel");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.NoToner) == PrintQueueStatus.NoToner)
+        //            {
+        //                throw new Exception("La impresora no tiene toner");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.DoorOpen) == PrintQueueStatus.DoorOpen)
+        //            {
+        //                throw new Exception("La impresora tiene la puerta abierta");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.Error) == PrintQueueStatus.Error)
+        //            {
+        //                throw new Exception("La impresora tiene un estado de error");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.NotAvailable) == PrintQueueStatus.NotAvailable)
+        //            {
+        //                throw new Exception("La impresora no esta disponible");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.Offline) == PrintQueueStatus.Offline)
+        //            {
+        //                throw new Exception("La impresora está fuera de línea");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.OutOfMemory) == PrintQueueStatus.OutOfMemory)
+        //            {
+        //                throw new Exception("La impresora no tiene memoria suficiente");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.PaperOut) == PrintQueueStatus.PaperOut)
+        //            {
+        //                throw new Exception("La impresora no tiene papel");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.OutputBinFull) == PrintQueueStatus.OutputBinFull)
+        //            {
+        //                throw new Exception("Has a full output bin");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.PaperJam) == PrintQueueStatus.PaperJam)
+        //            {
+        //                throw new Exception("La impresora tiene atasco de papel");
+        //            }
+        //            if ((lEnmStatus & PrintQueueStatus.Paused) == PrintQueueStatus.Paused)
+        //            {
+        //                throw new Exception("La impresora está pausada");
+        //            }
+        //            /*if ((lEnmStatus & PrintQueueStatus.TonerLow) == PrintQueueStatus.TonerLow)
+        //            {
+        //                throw new Exception("Is low on toner");
+        //            }*/
+        //            if ((lEnmStatus & PrintQueueStatus.UserIntervention) == PrintQueueStatus.UserIntervention)
+        //            {
+        //                throw new Exception("Error en la impresora, contacte administrador");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        lObjDefaultPrintQueue.Dispose();
+        //    }
+        //}
 
-        /// <summary>
-        /// Rutina del render del reporte para guardar cada página del reporte
-        /// </summary>
-        /// <param name="pStrName"></param>
-        /// <param name="pStrFileNameExt"></param>
-        /// <param name="pObjEncoding"></param>
-        /// <param name="pStrMimeType"></param>
-        /// <param name="pBolWillSeek"></param>
-        /// <returns>Stream del reporte</returns>
+        ///// <summary>
+        ///// Rutina del render del reporte para guardar cada página del reporte
+        ///// </summary>
+        ///// <param name="pStrName"></param>
+        ///// <param name="pStrFileNameExt"></param>
+        ///// <param name="pObjEncoding"></param>
+        ///// <param name="pStrMimeType"></param>
+        ///// <param name="pBolWillSeek"></param>
+        ///// <returns>Stream del reporte</returns>
         private static Stream CreateStream(string pStrName, string pStrFileNameExt, Encoding pObjEncoding, string pStrMimeType, bool pBolWillSeek)
         {
             Stream lObjStream = new MemoryStream();
@@ -202,49 +202,49 @@ namespace UGRS.AddOn.FoodProduction.Utilities
         /// <summary>
         /// Construye el objeto PrintDocument
         /// </summary>
-        //private static void Print()
-        //{
-        //    PrintDocument lObjPrintDoc = null;
-        //    try
-        //    {
-        //        //Logs.Write(Logs.Types.Debug, typeof(PrinterHelper).ToString(), "[Imprimir] Comenzó impresión de documento en: " + Properties.Settings.Default.PrinterName);
+        private static void Print()
+        {
+            PrintDocument lObjPrintDoc = null;
+            try
+            {
+                //Logs.Write(Logs.Types.Debug, typeof(PrinterHelper).ToString(), "[Imprimir] Comenzó impresión de documento en: " + Properties.Settings.Default.PrinterName);
 
-        //        if (gLstStreams == null || gLstStreams.Count == 0)
-        //        {
-        //            //Logs.Write(Logs.Types.Error, typeof(PrinterHelper).ToString(), "[Imprimir] No se encontró el archivo para imprimir");
-        //            throw new Exception("No se encontró el archivo para imprimir");
-        //        }
+                if (gLstStreams == null || gLstStreams.Count == 0)
+                {
+                    //Logs.Write(Logs.Types.Error, typeof(PrinterHelper).ToString(), "[Imprimir] No se encontró el archivo para imprimir");
+                    throw new Exception("No se encontró el archivo para imprimir");
+                }
 
-        //        lObjPrintDoc = new PrintDocument();
-        //        if (!lObjPrintDoc.PrinterSettings.IsValid)
-        //        {
-        //            //Logs.Write(Logs.Types.Error, typeof(PrinterHelper).ToString(), "[Imprimir] No se encontró la impresora principal");
-        //            throw new Exception("No se encontró la impresora principal");
-        //        }
-        //        else
-        //        {
-        //            string lStrPrinterName = string.Empty;
-        //            if (string.IsNullOrEmpty(Properties.Settings.Default.PrinterName))
-        //                lStrPrinterName = lObjPrintDoc.PrinterSettings.PrinterName;
-        //            else
-        //                lStrPrinterName = Properties.Settings.Default.PrinterName;
+                lObjPrintDoc = new PrintDocument();
+                if (!lObjPrintDoc.PrinterSettings.IsValid)
+                {
+                    //Logs.Write(Logs.Types.Error, typeof(PrinterHelper).ToString(), "[Imprimir] No se encontró la impresora principal");
+                    throw new Exception("No se encontró la impresora principal");
+                }
+                else
+                {
+                    //string lStrPrinterName = string.Empty;
+                    //if (string.IsNullOrEmpty(Properties.Settings.Default.PrinterName))
+                    //    lStrPrinterName = lObjPrintDoc.PrinterSettings.PrinterName;
+                    //else
+                    //    lStrPrinterName = Properties.Settings.Default.PrinterName;
 
-        //            PrinterStatus(lStrPrinterName);
+                    //PrinterStatus(lStrPrinterName);
 
-        //            lObjPrintDoc.PrintPage += new PrintPageEventHandler(PrintPage);
-        //            gIntCurrentPageIndex = 0;
-        //            lObjPrintDoc.Print();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-        //        lObjPrintDoc.Dispose();
-        //    }
-        //}
+                    lObjPrintDoc.PrintPage += new PrintPageEventHandler(PrintPage);
+                    gIntCurrentPageIndex = 0;
+                    lObjPrintDoc.Print();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                lObjPrintDoc.Dispose();
+            }
+        }
 
         /// <summary>
         /// Exporta el reporte local .rdlc a un archivo .emf para su impresión.
@@ -255,7 +255,7 @@ namespace UGRS.AddOn.FoodProduction.Utilities
             try
             {
                 Export(pObjReport);
-                //Print();
+                Print();
             }
             catch (Exception ex)
             {
@@ -287,184 +287,184 @@ namespace UGRS.AddOn.FoodProduction.Utilities
     /////// The pages are rendered when the print document is constructed.  Once constructed,
     /////// call Print() on this class to begin printing.
     /////// </summary>
-    class ReportPrintDocument : PrintDocument
-    {
-        private PageSettings pageSettings;
-        private int currentPage;
-        private List<Stream> pages = new List<Stream>();
+    //class ReportPrintDocument : PrintDocument
+    //{
+    //    private PageSettings pageSettings;
+    //    private int currentPage;
+    //    private List<Stream> pages = new List<Stream>();
 
-        public ReportPrintDocument(ServerReport serverReport)
-            : this((Report)serverReport)
-        {
-            RenderAllServerReportPages(serverReport);
-        }
+    //    public ReportPrintDocument(ServerReport serverReport)
+    //        : this((Report)serverReport)
+    //    {
+    //        RenderAllServerReportPages(serverReport);
+    //    }
 
-        public ReportPrintDocument(LocalReport localReport)
-            : this((Report)localReport)
-        {
-            RenderAllLocalReportPages(localReport);
-        }
+    //    public ReportPrintDocument(LocalReport localReport)
+    //        : this((Report)localReport)
+    //    {
+    //        RenderAllLocalReportPages(localReport);
+    //    }
 
-        private ReportPrintDocument(Report report)
-        {
-            // Set the page settings to the default defined in the report
-            ReportPageSettings reportPageSettings = report.GetDefaultPageSettings();
+    //    private ReportPrintDocument(Report report)
+    //    {
+    //        // Set the page settings to the default defined in the report
+    //        ReportPageSettings reportPageSettings = report.GetDefaultPageSettings();
 
-            // The page settings object will use the default printer unless
-            // PageSettings.PrinterSettings is changed.  This assumes there
-            // is a default printer.
-            pageSettings = new PageSettings();
-            pageSettings.Landscape = reportPageSettings.IsLandscape;
-            pageSettings.PaperSize = reportPageSettings.PaperSize;
-            pageSettings.Margins = reportPageSettings.Margins;
+    //        // The page settings object will use the default printer unless
+    //        // PageSettings.PrinterSettings is changed.  This assumes there
+    //        // is a default printer.
+    //        pageSettings = new PageSettings();
+    //        pageSettings.Landscape = reportPageSettings.IsLandscape;
+    //        pageSettings.PaperSize = reportPageSettings.PaperSize;
+    //        pageSettings.Margins = reportPageSettings.Margins;
 
 
-            ////int num = pageSettings.Landscape ? pageSettings.PaperSize.Height : pageSettings.PaperSize.Width;
-            ////int num2 = pageSettings.Landscape ? pageSettings.PaperSize.Width : pageSettings.PaperSize.Height;
-            ////foreach (PaperSize paperSize in this.PrinterSettings.PaperSizes) {
-            ////    if (num == paperSize.Width && num2 == paperSize.Height) {
-            ////        pageSettings.Landscape = false;
-            ////        pageSettings.PaperSize = paperSize;
-            ////        break;
-            ////    }
-            ////    if (num == paperSize.Height && num2 == paperSize.Width) {
-            ////        pageSettings.Landscape = true;
-            ////        pageSettings.PaperSize = paperSize;
-            ////        break;
-            ////    }
-            ////}
+    //        ////int num = pageSettings.Landscape ? pageSettings.PaperSize.Height : pageSettings.PaperSize.Width;
+    //        ////int num2 = pageSettings.Landscape ? pageSettings.PaperSize.Width : pageSettings.PaperSize.Height;
+    //        ////foreach (PaperSize paperSize in this.PrinterSettings.PaperSizes) {
+    //        ////    if (num == paperSize.Width && num2 == paperSize.Height) {
+    //        ////        pageSettings.Landscape = false;
+    //        ////        pageSettings.PaperSize = paperSize;
+    //        ////        break;
+    //        ////    }
+    //        ////    if (num == paperSize.Height && num2 == paperSize.Width) {
+    //        ////        pageSettings.Landscape = true;
+    //        ////        pageSettings.PaperSize = paperSize;
+    //        ////        break;
+    //        ////    }
+    //        ////}
 
-        }
+    //    }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
+    //    protected override void Dispose(bool disposing)
+    //    {
+    //        base.Dispose(disposing);
 
-            if (disposing)
-            {
-                foreach (Stream s in pages)
-                {
-                    s.Dispose();
-                }
+    //        if (disposing)
+    //        {
+    //            foreach (Stream s in pages)
+    //            {
+    //                s.Dispose();
+    //            }
 
-                pages.Clear();
-            }
-        }
+    //            pages.Clear();
+    //        }
+    //    }
 
-        protected override void OnBeginPrint(PrintEventArgs e)
-        {
-            base.OnBeginPrint(e);
-            currentPage = 0;
-        }
+    //    protected override void OnBeginPrint(PrintEventArgs e)
+    //    {
+    //        base.OnBeginPrint(e);
+    //        currentPage = 0;
+    //    }
 
-        protected override void OnPrintPage(PrintPageEventArgs e)
-        {
-            base.OnPrintPage(e);
+    //    protected override void OnPrintPage(PrintPageEventArgs e)
+    //    {
+    //        base.OnPrintPage(e);
 
-            Stream pageToPrint = pages[currentPage];
-            pageToPrint.Position = 0;
+    //        Stream pageToPrint = pages[currentPage];
+    //        pageToPrint.Position = 0;
 
-            // Load each page into a Metafile to draw it.
-            using (Metafile pageMetaFile = new Metafile(pageToPrint))
-            {
-                Rectangle adjustedRect = new Rectangle(
-                        e.PageBounds.Left - (int)e.PageSettings.HardMarginX,
-                        e.PageBounds.Top - (int)e.PageSettings.HardMarginY,
-                        e.PageBounds.Width,
-                        e.PageBounds.Height);
+    //        // Load each page into a Metafile to draw it.
+    //        using (Metafile pageMetaFile = new Metafile(pageToPrint))
+    //        {
+    //            Rectangle adjustedRect = new Rectangle(
+    //                    e.PageBounds.Left - (int)e.PageSettings.HardMarginX,
+    //                    e.PageBounds.Top - (int)e.PageSettings.HardMarginY,
+    //                    e.PageBounds.Width,
+    //                    e.PageBounds.Height);
 
-                // Draw a white background for the report
-                e.Graphics.FillRectangle(System.Drawing.Brushes.White, adjustedRect);
+    //            // Draw a white background for the report
+    //            e.Graphics.FillRectangle(System.Drawing.Brushes.White, adjustedRect);
 
-                // Draw the report content
-                e.Graphics.DrawImage(pageMetaFile, adjustedRect);
+    //            // Draw the report content
+    //            e.Graphics.DrawImage(pageMetaFile, adjustedRect);
 
-                // Prepare for next page.  Make sure we haven't hit the end.
-                currentPage++;
-                e.HasMorePages = currentPage < pages.Count;
-            }
-        }
+    //            // Prepare for next page.  Make sure we haven't hit the end.
+    //            currentPage++;
+    //            e.HasMorePages = currentPage < pages.Count;
+    //        }
+    //    }
 
-        protected override void OnQueryPageSettings(QueryPageSettingsEventArgs e)
-        {
-            e.PageSettings = (PageSettings)pageSettings.Clone();
-        }
+    //    protected override void OnQueryPageSettings(QueryPageSettingsEventArgs e)
+    //    {
+    //        e.PageSettings = (PageSettings)pageSettings.Clone();
+    //    }
 
-        private void RenderAllServerReportPages(ServerReport serverReport)
-        {
-            string deviceInfo = CreateEMFDeviceInfo();
+    //    private void RenderAllServerReportPages(ServerReport serverReport)
+    //    {
+    //        string deviceInfo = CreateEMFDeviceInfo();
 
-            // Generating Image renderer pages one at a time can be expensive.  In order
-            // to generate page 2, the server would need to recalculate page 1 and throw it
-            // away.  Using PersistStreams causes the server to generate all the pages in
-            // the background but return as soon as page 1 is complete.
-            var firstPageParameters = new NameValueCollection();
-            firstPageParameters.Add("rs:PersistStreams", "True");
+    //        // Generating Image renderer pages one at a time can be expensive.  In order
+    //        // to generate page 2, the server would need to recalculate page 1 and throw it
+    //        // away.  Using PersistStreams causes the server to generate all the pages in
+    //        // the background but return as soon as page 1 is complete.
+    //        var firstPageParameters = new NameValueCollection();
+    //        firstPageParameters.Add("rs:PersistStreams", "True");
 
-            // GetNextStream returns the next page in the sequence from the background process
-            // started by PersistStreams.
-            var nonFirstPageParameters = new NameValueCollection();
-            nonFirstPageParameters.Add("rs:GetNextStream", "True");
+    //        // GetNextStream returns the next page in the sequence from the background process
+    //        // started by PersistStreams.
+    //        var nonFirstPageParameters = new NameValueCollection();
+    //        nonFirstPageParameters.Add("rs:GetNextStream", "True");
 
-            string mimeType;
-            string fileExtension;
-            Stream pageStream = serverReport.Render("IMAGE", deviceInfo, firstPageParameters, out mimeType, out fileExtension);
+    //        string mimeType;
+    //        string fileExtension;
+    //        Stream pageStream = serverReport.Render("IMAGE", deviceInfo, firstPageParameters, out mimeType, out fileExtension);
 
-            // The server returns an empty stream when moving beyond the last page.
-            while (pageStream.Length > 0)
-            {
-                pages.Add(pageStream);
+    //        // The server returns an empty stream when moving beyond the last page.
+    //        while (pageStream.Length > 0)
+    //        {
+    //            pages.Add(pageStream);
 
-                pageStream = serverReport.Render("IMAGE", deviceInfo, nonFirstPageParameters, out mimeType, out fileExtension);
-            }
-        }
+    //            pageStream = serverReport.Render("IMAGE", deviceInfo, nonFirstPageParameters, out mimeType, out fileExtension);
+    //        }
+    //    }
 
-        private void RenderAllLocalReportPages(LocalReport localReport)
-        {
-            string deviceInfo = CreateEMFDeviceInfo();
+    //    private void RenderAllLocalReportPages(LocalReport localReport)
+    //    {
+    //        string deviceInfo = CreateEMFDeviceInfo();
 
-            Warning[] warnings;
-            localReport.Render("IMAGE", deviceInfo, LocalReportCreateStreamCallback, out warnings);
-        }
+    //        Warning[] warnings;
+    //        localReport.Render("IMAGE", deviceInfo, LocalReportCreateStreamCallback, out warnings);
+    //    }
 
-        private Stream LocalReportCreateStreamCallback(
-            string name,
-            string extension,
-            Encoding encoding,
-            string mimeType,
-            bool willSeek)
-        {
-            var stream = new MemoryStream();
-            pages.Add(stream);
-            return stream;
-        }
+    //    private Stream LocalReportCreateStreamCallback(
+    //        string name,
+    //        string extension,
+    //        Encoding encoding,
+    //        string mimeType,
+    //        bool willSeek)
+    //    {
+    //        var stream = new MemoryStream();
+    //        pages.Add(stream);
+    //        return stream;
+    //    }
 
-        private string CreateEMFDeviceInfo()
-        {
-            int width = pageSettings.Landscape ? pageSettings.PaperSize.Height : pageSettings.PaperSize.Width;
-            int height = pageSettings.Landscape ? pageSettings.PaperSize.Width : pageSettings.PaperSize.Height;
-            return string.Format(CultureInfo.InvariantCulture,
-                "<DeviceInfo>" +
-                "<OutputFormat>emf</OutputFormat>" +
-                "<StartPage>0</StartPage><EndPage>0</EndPage>" +
-                "<MarginTop>{0}</MarginTop><MarginLeft>{1}</MarginLeft>" +
-                "<MarginRight>{2}</MarginRight><MarginBottom>{3}</MarginBottom>" +
-                "<PageHeight>{4}</PageHeight><PageWidth>{5}</PageWidth>" +
-                "</DeviceInfo>",
-                ToInches(pageSettings.Margins.Top),
-                ToInches(pageSettings.Margins.Left),
-                ToInches(pageSettings.Margins.Right),
-                ToInches(pageSettings.Margins.Bottom),
-                ToInches(height),
-                ToInches(width));
-        }
+    //    private string CreateEMFDeviceInfo()
+    //    {
+    //        int width = pageSettings.Landscape ? pageSettings.PaperSize.Height : pageSettings.PaperSize.Width;
+    //        int height = pageSettings.Landscape ? pageSettings.PaperSize.Width : pageSettings.PaperSize.Height;
+    //        return string.Format(CultureInfo.GetCultureInfo("en-US"),
+    //            "<DeviceInfo>" +
+    //            "<OutputFormat>emf</OutputFormat>" +
+    //            "<StartPage>0</StartPage><EndPage>0</EndPage>" +
+    //            "<MarginTop>{0}</MarginTop><MarginLeft>{1}</MarginLeft>" +
+    //            "<MarginRight>{2}</MarginRight><MarginBottom>{3}</MarginBottom>" +
+    //            "<PageHeight>{4}</PageHeight><PageWidth>{5}</PageWidth>" +
+    //            "</DeviceInfo>",
+    //            ToInches(pageSettings.Margins.Top),
+    //            ToInches(pageSettings.Margins.Left),
+    //            ToInches(pageSettings.Margins.Right),
+    //            ToInches(pageSettings.Margins.Bottom),
+    //            ToInches(height),
+    //            ToInches(width));
+    //    }
 
-        private static string ToInches(int hundrethsOfInch)
-        {
-            double inches = hundrethsOfInch / 100.0;
-            return inches.ToString(CultureInfo.InvariantCulture) + "in";
-        }
-    }
+    //    private static string ToInches(int hundrethsOfInch)
+    //    {
+    //        double inches = hundrethsOfInch / 100.0;
+    //        return inches.ToString(CultureInfo.GetCultureInfo("en-US")) + "in";
+    //    }
+    //}
 
     /*
     internal sealed class ReportPrintDocument : PrintDocument
@@ -602,26 +602,26 @@ namespace UGRS.AddOn.FoodProduction.Utilities
         }
     }
     */
-    internal static class Global
-    {
-        public static int ToPixels(double inMM, double dpi)
-        {
-            return (int)(inMM * dpi / 25.4);
-        }
+    //internal static class Global
+    //{
+    //    public static int ToPixels(double inMM, double dpi)
+    //    {
+    //        return (int)(inMM * dpi / 25.4);
+    //    }
 
-        public static float ToMillimeters(int pixels, double dpi)
-        {
-            return (float)((double)pixels * 25.4 / dpi);
-        }
+    //    public static float ToMillimeters(int pixels, double dpi)
+    //    {
+    //        return (float)((double)pixels * 25.4 / dpi);
+    //    }
 
-        public static float ToMillimeters(float pixels, double dpi)
-        {
-            return (float)((double)pixels * 25.4 / dpi);
-        }
+    //    public static float ToMillimeters(float pixels, double dpi)
+    //    {
+    //        return (float)((double)pixels * 25.4 / dpi);
+    //    }
 
-        public static int InchToPixels(float value, float dpi)
-        {
-            return (int)(value * dpi);
-        }
-    }
+    //    public static int InchToPixels(float value, float dpi)
+    //    {
+    //        return (int)(value * dpi);
+    //    }
+    //}
 }

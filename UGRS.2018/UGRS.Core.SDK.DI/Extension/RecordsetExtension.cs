@@ -122,7 +122,7 @@ namespace UGRS.Core.SDK.DI.Extension
             {
                 return default(T);
             }
-            return (T)Convert.ChangeType(lObjValue, typeof(T), CultureInfo.InvariantCulture);
+            return (T)Convert.ChangeType(lObjValue, typeof(T), CultureInfo.GetCultureInfo("en-US"));
         }
     }
 }
