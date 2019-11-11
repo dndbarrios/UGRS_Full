@@ -1,0 +1,1 @@
+﻿SELECT Field FROM [dbo]."Table" WHERE "Condition" = '{Value}' 

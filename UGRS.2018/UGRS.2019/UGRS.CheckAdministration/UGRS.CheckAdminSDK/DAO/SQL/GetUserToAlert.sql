@@ -1,0 +1,10 @@
+﻿SELECT 
+	MAX(T1.USER_CODE) [User]
+FROM 
+	[dbo].OUSR T1
+	INNER JOIN OHEM T2 ON T1.U_GLO_CostCenter = T2.CostCenter
+	INNER JOIN HEM6 T3 ON T2.empID = T3.empID
+	INNER JOIN OHTY T4 ON T3.roleID = T4.typeID
+	INNER JOIN "@UG_GLO_COSTCENT" T5 ON T5.Code = T1.U_GLO_CostCenter
+WHERE 
+	T4.descriptio LIKE 'CTCHE' AND T5."Name" = '{Area}'

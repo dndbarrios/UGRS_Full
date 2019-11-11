@@ -144,8 +144,6 @@ namespace UGRS.AddOnFoodTransfer {
                             break;
 
                             case SAPbouiCOM.BoEventTypes.et_MATRIX_LINK_PRESSED:
-
-
                             SAPbouiCOM.Form frm = Application.SBO_Application.Forms.ActiveForm;
                            
                             if(frm.Title.Equals("Solicitud de traslado") || frm.Type.Equals(1250000940)) {

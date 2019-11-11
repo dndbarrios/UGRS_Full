@@ -66,6 +66,21 @@ namespace UGRS.AddOnFoodTransfer.Utils {
             return Convert.ToString(dataTable.GetValue(position, 0));
         }
 
+        public static string GetValue(ItemEvent oValEvent, string column) {
+
+            DataTable dataTable = null;
+
+            if(oValEvent.Action_Success) {
+
+                IChooseFromListEvent oCFLEvento = (IChooseFromListEvent)oValEvent;
+                dataTable = oCFLEvento.SelectedObjects;
+
+                if(oCFLEvento.SelectedObjects == null)
+                    return String.Empty;
+            }
+            return Convert.ToString(dataTable.GetValue(column, 0));
+        }
+
         /// <summary>
         /// Add conditions to the choose from list
         /// </summary>
@@ -108,17 +123,19 @@ namespace UGRS.AddOnFoodTransfer.Utils {
             }
 
             oCondition.Relationship = BoConditionRelationship.cr_OR;
-            oCondition = oConditions.Add();
-            oCondition.Alias = "Series";
-            oCondition.Operation = BoConditionOperation.co_EQUAL;
-            oCondition.CondVal = new FoodTransferDAO().GetSeries("CUAP", "59", "Series").ToString();
 
-            oCondition.Relationship = BoConditionRelationship.cr_AND;
+            var conditions2 = new Dictionary<string, string>() { { "Series", new FoodTransferDAO().GetSeries("CUAP", "59", "Series").ToString() }, { "U_GLO_InMo", "E-PROD" }, { "U_GLO_Status", "O" } };
 
-            oCondition = oConditions.Add();
-            oCondition.Alias = "U_GLO_Status";
-            oCondition.Operation = BoConditionOperation.co_EQUAL;
-            oCondition.CondVal = "O";
+            for(int i = 0; i < conditions2.Count; i++) {
+                oCondition = oConditions.Add();
+                oCondition.Alias = conditions2.ElementAt(i).Key;
+                oCondition.Operation = BoConditionOperation.co_EQUAL;
+                oCondition.CondVal = conditions2.ElementAt(i).Value;
+
+                if(i < conditions2.Count - 1) {
+                    oCondition.Relationship = BoConditionRelationship.cr_AND;
+                }
+            }
 
             oChooseFromList.SetConditions(oConditions);
         }

@@ -97,6 +97,10 @@
     <Reference Include="UGRS.Core.SDK.DI">
       <HintPath>..\UGRS.Core.SDK.DI\bin\Debug\UGRS.Core.SDK.DI.dll</HintPath>
     </Reference>
+    <Reference Include="UGRS.Core.SDK.DI.FoodTransfer, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UGRS.Core.SDK.DI.FoodTransfer\bin\x64\Release\UGRS.Core.SDK.DI.FoodTransfer.dll</HintPath>
+    </Reference>
     <Reference Include="UGRS.Core.SDK.UI">
       <HintPath>..\UGRS.Core.SDK.UI\bin\Debug\UGRS.Core.SDK.UI.dll</HintPath>
     </Reference>
@@ -134,12 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extentions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UGRS.Core.SDK.DI.FoodTransfer\UGRS.Core.SDK.DI.FoodTransfer.csproj">
-      <Project>{668bf318-dcc6-47d3-9cf0-f4593b543e20}</Project>
-      <Name>UGRS.Core.SDK.DI.FoodTransfer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

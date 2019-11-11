@@ -1,0 +1,1 @@
+﻿SELECT SUM(Credit) DocTotal FROM JDT1 WHERE TransId = '{TransId}'

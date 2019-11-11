@@ -41,6 +41,8 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
                 oMaterialRevaluation.Lines.DebitCredit = transferDAO.GetRevalorizationCost(exitID.ToString(), orderID.ToString());
                 oMaterialRevaluation.Lines.DistributionRule = user.Area;
 
+                LogService.WriteInfo("Revaluation " + oMaterialRevaluation.Lines.DebitCredit.ToString());
+
                 if(oMaterialRevaluation.Lines.DebitCredit == 0) {
                     result.Success = false;
                     return result;

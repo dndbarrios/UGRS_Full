@@ -21,7 +21,8 @@ namespace UGRS.AddOnFoodTransfer.Utils {
         public static void Fill<T>(string tableID, DataTable dataTable, Matrix mtx, List<string> columns, T[] data) {
 
             try {
-                if(!Object.ReferenceEquals(data, null)) {
+
+                if(!Object.ReferenceEquals(data, null) && data.Length > 0) {
 
                     dataTable.Rows.Clear();
 
@@ -106,6 +107,7 @@ namespace UGRS.AddOnFoodTransfer.Utils {
             object padLock = new object();
 
             Parallel.ForEach(Partitioner.Create(1, mtx.RowCount + 1), () => 0.0, (range, state, local) => {
+
                 for(int i = range.Item1; i < range.Item2; i++) {
                     var item = ((SAPbouiCOM.EditText)mtx.Columns.Item("C_Item").Cells.Item(i).Specific).Value;
                     if(data.Where(c => c.Item == item).FirstOrDefault().Prod == 0) {

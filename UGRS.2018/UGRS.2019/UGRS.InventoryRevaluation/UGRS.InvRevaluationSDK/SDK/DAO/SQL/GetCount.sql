@@ -1,0 +1,1 @@
+﻿SELECT TOP 1 Count(*) FROM "Table" WHERE "Condition" = '{Value}' 

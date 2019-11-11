@@ -160,6 +160,7 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
 
                     result.Success = true;
                     result.Message = "El translado del almacenes se realizó con éxito";
+                    LogService.WriteInfo(result.Message);
                 }
             }
             catch(AggregateException ae) {
@@ -187,6 +188,8 @@ namespace UGRS.Core.SDK.DI.FoodTransfer.Services {
                 LogService.WriteError("TransferDI (Update TransferRequest) " + DIApplication.Company.GetLastErrorDescription());
                 return false;
             }
+
+            LogService.WriteInfo("TransferDI (Update TransferRequest): Se actualizo a cerrado el U_GLO_Status de la transferecia: " + docEntry);
             return true;
         }
         #endregion

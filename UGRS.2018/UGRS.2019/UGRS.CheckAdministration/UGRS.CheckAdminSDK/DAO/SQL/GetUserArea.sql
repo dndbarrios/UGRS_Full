@@ -1,0 +1,7 @@
+﻿ SELECT TOP 1
+	T2.Name [Area]
+FROM 
+	[dbo].OUSR T1
+	INNER JOIN "@UG_GLO_COSTCENT" T2 ON T1.U_GLO_CostCenter = T2.Code
+WHERE
+	T1.USER_CODE ='{UserCode}'

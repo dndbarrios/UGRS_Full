@@ -16,7 +16,6 @@ using UGRS.Core.SDK.DI.FoodTransfer.DAO;
 using UGRS.Core.SDK.DI.FoodTransfer.DTO;
 using UGRS.Core.SDK.DI.FoodTransfer.Services;
 using UGRS.Core.SDK.UI;
-using UGRS.Core.Services;
 
 namespace UGRS.AddOnFoodTransfer.Forms {
     [FormAttribute("UGRS.AddOnFoodTransfer.Forms.frmItems", "Forms/frmItems.b1f")]
@@ -62,7 +61,6 @@ namespace UGRS.AddOnFoodTransfer.Forms {
 
                 if(!Object.ReferenceEquals(requestTransfers, null)) {
 
-                    LogService.WriteInfo("Begin Transfer for Document: " + requestTransfers[0].DocNum);
                     SAPMatrix.SetColumnQuantities(mtx0, "Quantity", requestTransfers, "Quantity");
                     requestTransfers[0].Observations = txtObserv.Value;
                     var result = StockTransferDI.CreateDraft(requestTransfers, user);
@@ -77,7 +75,6 @@ namespace UGRS.AddOnFoodTransfer.Forms {
                                 Message = "Se ha realizado la transferencia de mercancia solicitada en el documento #" + requestTransfers[0].DocNum
                             });
                         });
-                        LogService.WriteInfo("End Transfer for Document: " + requestTransfers[0].DocNum);
                     }
                     else {
                         UIApplication.ShowMessageBox(result.Message);
