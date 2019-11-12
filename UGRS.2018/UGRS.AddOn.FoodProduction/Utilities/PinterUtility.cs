@@ -202,7 +202,7 @@ namespace UGRS.AddOn.FoodProduction.Utilities
         /// <summary>
         /// Construye el objeto PrintDocument
         /// </summary>
-        private static void Print()
+        private static void Print(string pStrPrinterName)
         {
             PrintDocument lObjPrintDoc = null;
             try
@@ -230,6 +230,10 @@ namespace UGRS.AddOn.FoodProduction.Utilities
                     //    lStrPrinterName = Properties.Settings.Default.PrinterName;
 
                     //PrinterStatus(lStrPrinterName);
+                    if (!string.IsNullOrEmpty(pStrPrinterName))
+                    {
+                        lObjPrintDoc.PrinterSettings.PrinterName = pStrPrinterName;
+                    }
 
                     lObjPrintDoc.PrintPage += new PrintPageEventHandler(PrintPage);
                     gIntCurrentPageIndex = 0;
@@ -250,12 +254,12 @@ namespace UGRS.AddOn.FoodProduction.Utilities
         /// Exporta el reporte local .rdlc a un archivo .emf para su impresión.
         /// </summary>
         /// <param name="pObjReport">Reporte local a imprimir</param>
-        public static void PrintReport(LocalReport pObjReport)
+        public static void PrintReport(LocalReport pObjReport, string pStrPrinterName)
         {
             try
             {
                 Export(pObjReport);
-                Print();
+                Print(pStrPrinterName);
             }
             catch (Exception ex)
             {

@@ -1709,7 +1709,8 @@ namespace UGRS.AddOn.FoodProduction.Forms
             LogService.WriteInfo(string.Format("The current culture before print is {0} [{1}]",
                         culture.NativeName, culture.Name));
 
-            PinterUtility.PrintReport(lObjLocalReport);
+            
+            PinterUtility.PrintReport(lObjLocalReport, lStrPrinterName);
 
              culture = CultureInfo.CurrentCulture;
             LogService.WriteInfo(string.Format("The current culture after print is {0} [{1}]",

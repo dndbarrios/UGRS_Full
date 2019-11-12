@@ -26,7 +26,7 @@ namespace UGRS_AddOn.FoodProduction
                try
                {
                    LogService.Filename("FoodProduction");
-                   LogService.WriteInfo("Inicio del addon 1.3.28");
+                   LogService.WriteInfo("Inicio del addon 1.3.30");
 
                      CultureInfo culture = CultureInfo.CurrentCulture;
                      LogService.WriteInfo(string.Format("The current culture is {0} [{1}]",
@@ -83,7 +83,7 @@ namespace UGRS_AddOn.FoodProduction
 
 
                    UIApplication.ShowSuccess(string.Format("Addon Iniciado correctamente"));
-                   LogService.WriteSuccess("[AddOn FoodProduction 1.3.28 STARTED]");
+                   LogService.WriteSuccess("[AddOn FoodProduction 1.3.30 STARTED]");
                    //Ticket instance = (Ticket)Activator.CreateInstance(typeof(Ticket));
 
                    //Init application
