@@ -1,1 +1,0 @@
-﻿select [@UG_AA_DB].* from [@UG_AA_LOGIN] left join [@UG_AA_DB] on [@UG_AA_LOGIN].Code = [@UG_AA_DB].U_Code_UG_AA_LOGIN where [@UG_AA_LOGIN].U_Activo='Y'

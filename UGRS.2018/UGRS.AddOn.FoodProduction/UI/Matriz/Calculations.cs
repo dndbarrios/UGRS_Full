@@ -24,16 +24,16 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                for (int i = 1; i <= pObjMatrix.RowCount; i++)
                {
                    string ss = ((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Importe").Cells.Item(i).Specific).Value;
-                   lObjTotalsDTO.Amount += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Importe").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                   lObjTotalsDTO.Amount += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Importe").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
                    //lObjTotalsDTO.Bags += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Sacos").Cells.Item(i).Specific).Value);
 
                    if ((pObjMatrix.Columns.Item("Check").Cells.Item(i).Specific as CheckBox).Checked)
                    {
-                       lObjTotalsDTO.Tara += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                       lObjTotalsDTO.Tara += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
                    }
                    else
                    {
-                       lObjTotalsDTO.WeightB += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                       lObjTotalsDTO.WeightB += Convert.ToDouble(((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
                    }
 
                }
@@ -52,7 +52,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                    lObjTotalsDTO.WeightTotal = lObjTotalsDTO.WeightTotal * -1;
                }
 
-               lObjTotalsDTO.Variation = Convert.ToDouble(Convert.ToDecimal(lObjTotalsDTO.WeightTotal, CultureInfo.InvariantCulture) - Convert.ToDecimal(lObjTotalsDTO.WeightNet, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
+               lObjTotalsDTO.Variation = Convert.ToDouble(Convert.ToDecimal(lObjTotalsDTO.WeightTotal, CultureInfo.GetCultureInfo("en-US")) - Convert.ToDecimal(lObjTotalsDTO.WeightNet, CultureInfo.GetCultureInfo("en-US")), CultureInfo.GetCultureInfo("en-US"));
               // lObjTotalsDTO.Variation =lObjTotalsDTO.WeightTotal - lObjTotalsDTO.WeightNet;
            }
 
@@ -69,30 +69,30 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
         {
             try
             {
-                float lDblPesoNeto = 0;
-                float lDblPeso1 = 0;
-                float lDblPeso2 = 0;
-                float lDblImporte = 0;
-                float lDblPrice = 0;
+                double lDblPesoNeto = 0;
+                double lDblPeso1 = 0;
+                double lDblPeso2 = 0;
+                double lDblImporte = 0;
+                double lDblPrice = 0;
                 string lStrSacos = "";
 
                 if (pIntRow <= pObjMatrix.RowCount && !string.IsNullOrEmpty((pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value.Trim()))
                 {
 
-                    float ddd = float.Parse((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
-                    float eee = float.Parse((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                    double ddd = Convert.ToDouble((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                    double eee = Convert.ToDouble((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
                     if (ddd != eee )
                     {
                         LogService.WriteError(string.Format("Conversion incorrecta Valor: {0} Conversion: {1} ", eee, ddd));
-                        float price1 = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
-                        float price2 = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                        double price1 = Convert.ToDouble((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim());
+                        double price2 = Convert.ToDouble((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
                         LogService.WriteError(string.Format("Conversion incorrecta Valor: {0} Conversion: {1} ", price1, price2));
                         
                     }
-                    lDblPeso1 = float.Parse((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);  //itemcode = VALUE OF CELL. COLUMN "1": ITEMCODE COLUMN. CURRENT ROW: pVal.Row
+                    lDblPeso1 = Convert.ToDouble((pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));  //itemcode = VALUE OF CELL. COLUMN "1": ITEMCODE COLUMN. CURRENT ROW: pVal.Row
                     LogService.WriteInfo("Peso1 " + lDblPeso1.ToString());
-                    lDblPeso2 = float.Parse((pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
-                    lDblPrice = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                    lDblPeso2 = Convert.ToDouble((pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
+                    lDblPrice = Convert.ToDouble((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
                     if (pStrTypeTicket != "Venta de pesaje" && pStrTypeTicket != "Pesaje")
                     {
                         lStrSacos = ((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Sacos").Cells.Item(pIntRow).Specific).Value;
@@ -111,11 +111,11 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                     else
                     {
                         pDBDataSourceD.SetValue("TreeType", pIntRow - 1, "Y");
-                        lDblPesoNeto = float.Parse((pObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                        lDblPesoNeto = Convert.ToDouble((pObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
                     }
                     LogService.WriteInfo("Peso2 " + lDblPeso1.ToString());
 
-                    lDblPrice = float.Parse((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.InvariantCulture);
+                    lDblPrice = Convert.ToDouble((pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value.Trim(), CultureInfo.GetCultureInfo("en-US"));
 
                     LogService.WriteInfo("Peso3" + lDblPeso1.ToString());
                     if (mObjValidations.ValidateWeight(pStrTypeTicket, lDblPesoNeto, lDblPeso2, pObjMatrix, pIntRow))
@@ -132,16 +132,16 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                             (pObjMatrix.Columns.Item("PesoN").Cells.Item(pIntRow).Specific as EditText).Value = lDblPesoNeto.ToString();
                         }
                         //(pObjMatrix.Columns.Item("Price").Cells.Item(pIntRow).Specific as EditText).Value = lDblPrice.ToString("C");
-                        pDBDataSourceD.SetValue("Quantity", pIntRow - 1, lDblPesoNeto.ToString(CultureInfo.InvariantCulture));
-                        pDBDataSourceD.SetValue("Price", pIntRow - 1, lDblPrice.ToString(CultureInfo.InvariantCulture));
-                        LogService.WriteInfo("Price  " + lDblPrice.ToString(CultureInfo.InvariantCulture));
-                        string ss = lDblPrice.ToString(CultureInfo.InvariantCulture);
+                        pDBDataSourceD.SetValue("Quantity", pIntRow - 1, lDblPesoNeto.ToString(CultureInfo.GetCultureInfo("en-US")));
+                        pDBDataSourceD.SetValue("Price", pIntRow - 1, lDblPrice.ToString(CultureInfo.GetCultureInfo("en-US")));
+                        LogService.WriteInfo("Price  " + lDblPrice.ToString(CultureInfo.GetCultureInfo("en-US")));
+                        string ss = lDblPrice.ToString(CultureInfo.GetCultureInfo("en-US"));
                         string sssfef = pDBDataSourceD.GetValue("Price", pIntRow - 1);
                       //  (pObjMatrix.Columns.Item("Peso1").Cells.Item(pIntRow).Specific as EditText).Value = lDblPeso1.ToString();
                       //  (pObjMatrix.Columns.Item("Peso2").Cells.Item(pIntRow).Specific as EditText).Value = lDblPeso2.ToString();
                         LogService.WriteInfo("Peso5  " + lDblPeso1.ToString());
-                        pDBDataSourceD.SetValue("Weight1", pIntRow - 1, lDblPeso1.ToString(CultureInfo.InvariantCulture));
-                        pDBDataSourceD.SetValue("Weight2", pIntRow - 1, lDblPeso2.ToString(CultureInfo.InvariantCulture));
+                        pDBDataSourceD.SetValue("Weight1", pIntRow - 1, lDblPeso1.ToString(CultureInfo.GetCultureInfo("en-US")));
+                        pDBDataSourceD.SetValue("Weight2", pIntRow - 1, lDblPeso2.ToString(CultureInfo.GetCultureInfo("en-US")));
 
                         pDBDataSourceD.SetValue("U_GLO_BagsBales", pIntRow - 1, lStrSacos);
 
@@ -165,8 +165,8 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                         //    lDblImporte = lDblImporte * -1;
                         //}
 
-                        (pObjMatrix.Columns.Item("Importe").Cells.Item(pIntRow).Specific as EditText).Value = lDblImporte.ToString(CultureInfo.InvariantCulture);
-                        pDBDataSourceD.SetValue("LineTotal", pIntRow - 1, lDblImporte.ToString(CultureInfo.InvariantCulture));
+                        (pObjMatrix.Columns.Item("Importe").Cells.Item(pIntRow).Specific as EditText).Value = lDblImporte.ToString(CultureInfo.GetCultureInfo("en-US"));
+                        pDBDataSourceD.SetValue("LineTotal", pIntRow - 1, lDblImporte.ToString(CultureInfo.GetCultureInfo("en-US")));
                         
                         //pObjMatrix.Item.Update();
                         pObjMatrix.LoadFromDataSource();
@@ -190,7 +190,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
             {
                 if (!string.IsNullOrEmpty(pStrWeight))
                 {
-                    lFloWeight = Convert.ToDouble(pStrWeight, CultureInfo.InvariantCulture);
+                    lFloWeight = Convert.ToDouble(pStrWeight, CultureInfo.GetCultureInfo("en-US"));
                 }
 
             }
@@ -254,7 +254,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                 lStrPeso2 = ((SAPbouiCOM.EditText)pObjMatrix.Columns.Item("Peso2").Cells.Item(i).Specific).Value;
                 if (!string.IsNullOrEmpty(lStrPeso1))
                 {
-                    lFloPeso1 = double.Parse(lStrPeso1, CultureInfo.InvariantCulture);
+                    lFloPeso1 = double.Parse(lStrPeso1, CultureInfo.GetCultureInfo("en-US"));
                 }
                 if (lFloPeso1 > lFloLargeNum)
                 {
@@ -263,7 +263,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
 
                 if (!string.IsNullOrEmpty(lStrPeso2))
                 {
-                    lFloPeso2 = double.Parse(lStrPeso2, CultureInfo.InvariantCulture);
+                    lFloPeso2 = double.Parse(lStrPeso2, CultureInfo.GetCultureInfo("en-US"));
                 }
 
                 if (lFloPeso2 > lFloLargeNum)
@@ -290,7 +290,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
 
                     if (!string.IsNullOrEmpty(lStrPeso1))
                     {
-                        lFloPeso1 = double.Parse(lStrPeso1, CultureInfo.InvariantCulture);
+                        lFloPeso1 = double.Parse(lStrPeso1, CultureInfo.GetCultureInfo("en-US"));
                     }
                     if (lFloLargeNum == 0)
                     {
@@ -302,7 +302,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                     }
                     if (!string.IsNullOrEmpty(lStrPeso2))
                     {
-                        lFloPeso2 = double.Parse(lStrPeso2, CultureInfo.InvariantCulture);
+                        lFloPeso2 = double.Parse(lStrPeso2, CultureInfo.GetCultureInfo("en-US"));
                     }
 
                     if (lFloPeso2 > 0 && lFloPeso2 < lFloLargeNum)
@@ -334,8 +334,8 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
 
                 for (int i = 1; i <= mObjMatrix.RowCount; i++)
                 {
-                    double lFloFirstWt = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso1").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
-                    double lFloSecondWT = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                    double lFloFirstWt = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso1").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
+                    double lFloSecondWT = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Peso2").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
 
                     //Convert.ToDateTime(lLstDateTime[0])
                     if (((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("ItemCode").Cells.Item(i).Specific).Value != "")
@@ -346,18 +346,18 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                         lObjTicketDetail.Item = ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("ItemCode").Cells.Item(i).Specific).Value;
 
 
-                        LogService.WriteInfo("GUARDAR DETALLE: " +((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(i).Specific).Value.ToString() + "Precio sin conversión");
-                        lObjTicketDetail.Price = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
-                        LogService.WriteInfo("GUARDAR DETALLE: " + lObjTicketDetail.Price + "Precio con conversión");
+                        LogService.WriteInfo("GUARDAR DETALLE V1.3.18: " +((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(i).Specific).Value.ToString() + "Precio sin conversión");
+                        lObjTicketDetail.Price = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Price").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
+                        LogService.WriteInfo("GUARDAR DETALLE V1.3.18: " + lObjTicketDetail.Price + "Precio con conversión");
 
                         lObjTicketDetail.FirstWT = lFloFirstWt;
                         lObjTicketDetail.SecondWT = lFloSecondWT;
                         //Log
-                        LogService.WriteInfo("GUARDAR DETALLE: " + ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value.ToString() + "Cantidad sin conversión");
-                        lObjTicketDetail.netWeight = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
-                        LogService.WriteInfo("GUARDAR DETALLE: " + lObjTicketDetail.netWeight + "Cantidad con conversión");
-                        
-                        lObjTicketDetail.Amount = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Importe").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                        LogService.WriteInfo("GUARDAR DETALLE V1.3.18: " + ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value.ToString() + "Cantidad sin conversión");
+                        lObjTicketDetail.netWeight = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("PesoN").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
+                        LogService.WriteInfo("GUARDAR DETALLE V1.3.18: " + lObjTicketDetail.netWeight + "Cantidad con conversión");
+
+                        lObjTicketDetail.Amount = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Importe").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
            
                         //lObjTicketDetail.WeighingM =
                         //    bool lBolWeighingM = ((SAPbouiCOM.CheckBox)mObjMatrix.Columns.Item("Check").Cells.Item(i).Specific).Checked);
@@ -379,7 +379,7 @@ namespace UGRS.AddOn.FoodProduction.UI.Matriz
                         if (!pBolPesaje)
                         {
                             lObjTicketDetail.WhsCode = ((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("WhsCode").Cells.Item(i).Specific).Value;
-                            lObjTicketDetail.BagsBales = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Sacos").Cells.Item(i).Specific).Value, CultureInfo.InvariantCulture);
+                            lObjTicketDetail.BagsBales = Convert.ToDouble(((SAPbouiCOM.EditText)mObjMatrix.Columns.Item("Sacos").Cells.Item(i).Specific).Value, CultureInfo.GetCultureInfo("en-US"));
                         }
 
 

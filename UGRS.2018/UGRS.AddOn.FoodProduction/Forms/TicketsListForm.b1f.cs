@@ -559,6 +559,11 @@ namespace UGRS.AddOn.FoodProduction
                                 //lBolCorrect = CrearDocumento(lLstTickets, BoObjectTypes.oDrafts, "ORDR", 17, "RDR1");
                                 lBolSuccess = CrearFacturaVenta(lLstTickets);
                                 break;
+
+                            default:
+                                UIApplication.ShowError("[btnAction_ClickBefore]: Favor de seleccionar una acción");
+                                LogService.WriteError("favor de seleccionar una accion");
+                                break;
                         }
                         if (lBolSuccess)
                         {
@@ -584,6 +589,11 @@ namespace UGRS.AddOn.FoodProduction
                     //{
                     //    lObjForm.Select();
                     //}
+                }
+                else
+                {
+                    LogService.WriteError("[btnAction_ClickBefore]: Favor de seleccionar factura");
+                    UIApplication.ShowError("Favor de seleccionar factura");
                 }
             }
             catch (Exception ex)
@@ -1127,9 +1137,9 @@ namespace UGRS.AddOn.FoodProduction
                         lStrOpenQty = mObjTicketServices.GetOpenLine("OPCH", "PCH1", "OpenCreQty", lObjTicket.Number.ToString(), lObjTicketDetail.BaseLine.ToString());
                     }
 
-                    if (pBolIsInventory && lStrOpenQty != "" && lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture))
+                    if (pBolIsInventory && lStrOpenQty != "" && lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty, CultureInfo.GetCultureInfo("en-US")))
                     {
-                        lFloNetWeight = lObjTicketDetail.netWeight - Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture);
+                        lFloNetWeight = lObjTicketDetail.netWeight - Convert.ToDouble(lStrOpenQty, CultureInfo.GetCultureInfo("en-US"));
                     }
 
                     if (pBolIsInventory)
@@ -1138,9 +1148,9 @@ namespace UGRS.AddOn.FoodProduction
                     }
                     else
                     {
-                        if (lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture))
+                        if (lObjTicketDetail.netWeight > Convert.ToDouble(lStrOpenQty, CultureInfo.GetCultureInfo("en-US")))
                         {
-                            lObjTicketDetail.netWeight = Convert.ToDouble(lStrOpenQty, CultureInfo.InvariantCulture);
+                            lObjTicketDetail.netWeight = Convert.ToDouble(lStrOpenQty, CultureInfo.GetCultureInfo("en-US"));
                         }
                     }
                     if (lObjTicketDetail.netWeight > 0)
@@ -1709,8 +1719,8 @@ namespace UGRS.AddOn.FoodProduction
                 {
 
                     ((SAPbouiCOM.EditText)mtxItems.Columns.Item(3).Cells.Item(i).Specific).Value = lObjTicketDetail.Item;
-                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(20).Cells.Item(i).Specific).Value = lObjTicketDetail.Price.ToString(CultureInfo.InvariantCulture);
-                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(13).Cells.Item(i).Specific).Value = lObjTicketDetail.netWeight.ToString(CultureInfo.InvariantCulture);
+                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(20).Cells.Item(i).Specific).Value = lObjTicketDetail.Price.ToString(CultureInfo.GetCultureInfo("en-US"));
+                    ((SAPbouiCOM.EditText)mtxItems.Columns.Item(13).Cells.Item(i).Specific).Value = lObjTicketDetail.netWeight.ToString(CultureInfo.GetCultureInfo("en-US"));
                     ((SAPbouiCOM.EditText)mtxItems.Columns.Item(404).Cells.Item(i).Specific).Value = lObjTicketDetail.Folio.ToString();
 
                     ((SAPbouiCOM.EditText)mtxItems.Columns.Item(54).Cells.Item(i).Specific).Active = true;

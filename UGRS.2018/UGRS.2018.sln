@@ -65,8 +65,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UGRS.WebService.Permissions
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UGRS.Core.SDK.DI.WebServicePermissions", "UGRS.Core.SDK.DI.WebService.Permissions\UGRS.Core.SDK.DI.WebServicePermissions.csproj", "{C3E06DD5-208D-4136-8E7B-F3FBD4E58082}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UGRS.AddOn.AccountingAccounts", "UGRS.AddOn.AccountingAccounts\UGRS.AddOn.AccountingAccounts.csproj", "{7C82EC1E-1B52-4F0B-B402-DD2554D85071}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UGRS.Core.SDK.DI.Expogan", "UGRS.Core.SDK.DI.Expogan\UGRS.Core.SDK.DI.Expogan.csproj", "{800D8931-8250-44BD-A813-1E3E84B8C28D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UGRS.AddOnn.Expogan", "UGRS.AddOnn.Expogan\UGRS.AddOnn.Expogan.csproj", "{E167DCB1-4846-4530-B2E0-24F14DE57C5F}"
@@ -537,22 +535,6 @@ Global
 		{C3E06DD5-208D-4136-8E7B-F3FBD4E58082}.Release|x64.Build.0 = Release|x64
 		{C3E06DD5-208D-4136-8E7B-F3FBD4E58082}.Release|x86.ActiveCfg = Release|x86
 		{C3E06DD5-208D-4136-8E7B-F3FBD4E58082}.Release|x86.Build.0 = Release|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|x64.ActiveCfg = Debug|x64
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|x64.Build.0 = Debug|x64
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|x86.ActiveCfg = Debug|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Debug|x86.Build.0 = Debug|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|Mixed Platforms.Build.0 = Release|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|x64.ActiveCfg = Release|x64
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|x64.Build.0 = Release|x64
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|x86.ActiveCfg = Release|x86
-		{7C82EC1E-1B52-4F0B-B402-DD2554D85071}.Release|x86.Build.0 = Release|x86
 		{800D8931-8250-44BD-A813-1E3E84B8C28D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{800D8931-8250-44BD-A813-1E3E84B8C28D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{800D8931-8250-44BD-A813-1E3E84B8C28D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
