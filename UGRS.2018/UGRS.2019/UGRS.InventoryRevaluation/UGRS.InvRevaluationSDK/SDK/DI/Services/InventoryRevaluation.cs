@@ -2,31 +2,36 @@
 using System;
 using UGRS.Core.Utility;
 
+using UGRS.InvRevaluationSDK.Models;
+
 namespace UGRS.InvRevaluationSDK.SDK.DI.Services {
     public class InventoryRevaluation {
 
         static Object padLock = new Object();
-        public bool Insert(string itemCode, string warehouse, double debitCredit, DateTime docDate, string docNum) {
+        public bool Insert(string docNum, RevaluationItem[] items, int type) {
             try {
-                if (debitCredit == 0) {
-                    return true;
-                }
-
+                //if (debitCredit == 0) {
+                //    return true;
+                //}
                 var oMaterialRevaluation = (MaterialRevaluation)DIApplication.Company.GetBusinessObject(BoObjectTypes.oMaterialRevaluation); //162
-                oMaterialRevaluation.DocDate = docDate;
-                oMaterialRevaluation.RevalType = "M";
-                oMaterialRevaluation.UserFields.Fields.Item("U_DocNumSalida").Value = docNum;
-                oMaterialRevaluation.Lines.ItemCode = itemCode;
-                oMaterialRevaluation.Lines.WarehouseCode = warehouse;
-                oMaterialRevaluation.Lines.Quantity = 1;
-                oMaterialRevaluation.Lines.DebitCredit = debitCredit;
-       
-                oMaterialRevaluation.Lines.Add();
+
+                foreach (var item in items) {
+
+                    oMaterialRevaluation.DocDate = type.Equals(1) ? item.DocDateRev1 : item.DocDateRev2;
+                    oMaterialRevaluation.RevalType = "M";
+                    oMaterialRevaluation.UserFields.Fields.Item("U_DocNumSalida").Value = docNum;
+                    oMaterialRevaluation.Lines.ItemCode = item.ItemCode;
+                    oMaterialRevaluation.Lines.WarehouseCode = item.whCode;
+                    oMaterialRevaluation.Lines.Quantity = 1;
+                    oMaterialRevaluation.Lines.DebitCredit = type.Equals(1)? item.Rev1 : item.Rev2;
+
+                    oMaterialRevaluation.Lines.Add();
+                }
 
                 lock (padLock) {
                     if (oMaterialRevaluation.Add().Equals(0)) {
                         var key = DIApplication.Company.GetNewObjectKey();
-                        LogEntry.WriteInfo($"Inventory Revaluation Created Successfully: {key} ,For GE {docNum} ,Item {itemCode} and DebitCredit {debitCredit}");
+                        LogEntry.WriteInfo($"Inventory Revaluation Created Successfully: {key} ,For GE {docNum}");
                         return true;
                     }
                     else {

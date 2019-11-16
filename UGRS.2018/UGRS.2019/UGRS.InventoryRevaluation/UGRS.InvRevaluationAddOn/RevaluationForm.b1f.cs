@@ -67,14 +67,16 @@ namespace UGRS.InvRevaluationAddOn {
         public override void OnInitializeFormEvents() { }
         private void OnCustomInitialize() { }
         private Dictionary<string, BoFieldsType> GetGridColumns() => new Dictionary<string, BoFieldsType>() {
-                                                                       { "Row", BoFieldsType.ft_ShortNumber },
                                                                        { "ItemCode", BoFieldsType.ft_AlphaNumeric },
-                                                                       { "Description", BoFieldsType.ft_AlphaNumeric},
-                                                                       { "Whs", BoFieldsType.ft_AlphaNumeric },
-                                                                       { "DocDate", BoFieldsType.ft_Date},
+                                                                       { "whCode", BoFieldsType.ft_AlphaNumeric },
+                                                                       { "DocDateRev1", BoFieldsType.ft_Date},
                                                                        { "Rev1", BoFieldsType.ft_AlphaNumeric},
+                                                                       { "CostoRev1", BoFieldsType.ft_AlphaNumeric},
+                                                                       { "DocDateRev2", BoFieldsType.ft_Date},
+                                                                       { "Rev2", BoFieldsType.ft_AlphaNumeric},
+                                                                       { "CostoRev2", BoFieldsType.ft_AlphaNumeric},
                                                                      };
-        private string[] GetGridHeaders() => new string[] { "#", "Código Artículo", "Descripcíon", "Almacen", "Fecha Documento", "Revalorización" };
+        private string[] GetGridHeaders() => new string[] { "Código Artículo", "Código Almacen", "Fecha Reval1", "Importe Reval1", "Costo Rev1", "Fecha Reval2", "Importe Reval2", "Costo Rev2" };
 
         private void btnCancel_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
             BubbleEvent = true;
@@ -92,26 +94,15 @@ namespace UGRS.InvRevaluationAddOn {
             try {
 
                 var count = sapB1.DAO.RevaluationsCount(docNum);
-                if (count.Equals(1))
-                    type = "2";
+                items = sapB1.DAO.GetInvRevaluationItems(docNum);
+                grid0.DataTable.Rows.Clear();
 
-                items = sapB1.DAO.GetInvRevaluationItems(docNum, type);
-                this.UIAPIRawForm.Freeze(true);
-                UIGrid.Fill(grid0, items, gridColumns.Keys.ToArray());
-
-                if (grid0.Rows.Count > 0) {
-                    if (type.Equals("1") || count.Equals(1)) {
-                        if (count.Equals(1)) {
-                            btnAcept.Item.Enabled = false;
-                            btnAcept2.Item.Enabled = true;
-                        }
-                        else if (count.Equals(0)){
-                            btnAcept.Item.Enabled = true;
-                        }
-
-                    }
+                if (items.Length > 0) {
+                    this.UIAPIRawForm.Freeze(true);
+                    UIGrid.Fill(grid0, items, gridColumns.Keys.ToArray());
+                    grid0.AutoResizeColumns();
+                    btnAcept.Item.Enabled = true;
                 }
-
             }
             catch (Exception ex) {
                 LogEntry.WriteException(ex);
@@ -124,51 +115,59 @@ namespace UGRS.InvRevaluationAddOn {
         private void btnAcept_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
             BubbleEvent = true;
             if (btnAcept.Item.Enabled) {
-
-                if (sapB1.DAO.ExistRevaluation(txtExit.Value)) {
-                    UIApplication.ShowMessageBox($"Ya existe una Revaluación de Inventario para la Salida: {txtExit.Value}");
-                    btnAcept.Item.Enabled = false;
-                }
-                else {
-                    var result = false;
-                    foreach (var item in items) {
-                        if (item.Rev1.Equals(0)) {
-                            UIApplication.ShowMessageBox($"No se puede crear la revalorización con valor 0");
-                        }
-                        else {
-                            result = sapB1.InventoryRevaluation.Insert(item.ItemCode, item.Whs, item.Rev1, item.DocDate, txtExit.Value);
-                        }
-                    }
-
-                    if (result) {
-                        UIApplication.ShowMessageBox($"Se ha creado la primera revalorización de inventario para la salida {txtExit.Value}");
-                        btnAcept.Item.Enabled = false;
-                        btnAcept2.Item.Enabled = true;
-                        Search(txtExit.Value, "2");
-                    }
-                    else
-                        UIApplication.ShowMessageBox($"Fallo en insertarse la revalorización para la salida {txtExit.Value}");
-                }
+                InsertRevaluation(1);
             }
         }
 
         private void btnAcept2_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
             BubbleEvent = true;
             if (btnAcept2.Item.Enabled) {
-                var result2 = false;
+                InsertRevaluation(2);
+            }
+        }
 
-                foreach (var item2 in items) {
-                    if (item2.Rev1.Equals(0)) {
-                        UIApplication.ShowMessageBox($"No se puede crear la revalorización con valor 0");
+        private void InsertRevaluation(int type) {
+
+            var revValue = type.Equals(1) ? items.FirstOrDefault().Rev1.Equals(0) : items.FirstOrDefault().Rev2.Equals(0);
+            if (revValue) {
+                UIApplication.ShowMessageBox($"No se puede crear revalorización con valor 0");
+                if (type.Equals(1))
+                    btnAcept2.Item.Enabled = true;
+            }
+            else {
+
+                var revItems = items.Select(item => {
+
+                    var revVal = type.Equals(1) ? item.Rev1 : item.Rev2;
+
+                    if (revVal > 0 && revVal < 0.1) {
+                        UIApplication.ShowMessageBox($"El el valor para el artículo {item.ItemCode} no se concidera para revalorizacion por ser menor a 0.1");
+                        return null;
                     }
                     else {
-                        result2 = sapB1.InventoryRevaluation.Insert(item2.ItemCode, item2.Whs, item2.Rev1, DateTime.Now, txtExit.Value);
+                        return item;
                     }
-                }
+                }).Where(r => r != null).ToArray();
 
-                if (result2) {
-                    UIApplication.ShowMessageBox($"Se ha creado con exito la segunda revalorización de inventario para la salida {txtExit.Value}");
-                    btnAcept2.Item.Enabled = false;
+                if (revItems != null && revItems.Length > 0) {
+
+                    var result = sapB1.InventoryRevaluation.Insert(txtExit.Value, items, type);
+                    if (result) {
+                        UIApplication.ShowMessageBox($"Se ha creado la revalorización {type} para la salida {txtExit.Value}");
+                        if (type.Equals(1)) {
+                            btnAcept.Item.Enabled = false;
+                            btnAcept2.Item.Enabled = true;
+                        }
+                        else {
+                            btnAcept.Item.Enabled = false;
+                            btnAcept2.Item.Enabled = false;
+                        }
+                    }
+                    else
+                        UIApplication.ShowMessageBox($"Fallo en insertarse la revalorización para la salida {txtExit.Value}");
+                }
+                else {
+                    UIApplication.ShowMessageBox($"No hay artículos para revalorizar");
                 }
             }
 

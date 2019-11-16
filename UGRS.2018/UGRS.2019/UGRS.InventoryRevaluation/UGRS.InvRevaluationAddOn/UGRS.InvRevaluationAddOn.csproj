@@ -84,9 +84,9 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="SAPBusinessOneSDK" />
-    <Reference Include="UGRS.InvRevaluationSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="UGRS.InvRevaluationSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.InvRevaluationSDK\bin\x86\Release\UGRS.InvRevaluationSDK.dll</HintPath>
+      <HintPath>..\UGRS.InvRevaluationSDK\bin\x64\Release\UGRS.InvRevaluationSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

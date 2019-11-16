@@ -39,7 +39,7 @@ namespace UGRS.InvRevaluationSDK.SDK.UI {
                 AddEmptyRows(grid, data.Length);
                 Parallel.Invoke(
                     () => SetColumnValues(grid, data, columns, 0, 5),
-                    () => SetColumnValues(grid, data, columns, 5, 10)
+                    () => SetColumnValues(grid, data, columns, 5, 8)
                  );
             }
             else {
