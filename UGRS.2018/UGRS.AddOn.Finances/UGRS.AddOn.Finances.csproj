@@ -149,7 +149,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="XmlForms\fmBonus.xml" />
+    <EmbeddedResource Include="XmlForms\fmBonus.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Forms\CheckGeneration.b1f">

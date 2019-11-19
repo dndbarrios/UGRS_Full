@@ -84,9 +84,9 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="SAPBusinessOneSDK" />
-    <Reference Include="UGRS.InvRevaluationSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="UGRS.InvRevaluationSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.InvRevaluationSDK\bin\x64\Release\UGRS.InvRevaluationSDK.dll</HintPath>
+      <HintPath>..\UGRS.InvRevaluationSDK\bin\x86\Release\UGRS.InvRevaluationSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +103,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UGRS.InvRevaluationSDK\UGRS.InvRevaluationSDK.csproj">
+      <Project>{6c10b0c9-8c87-422b-989d-e14deaf1302c}</Project>
+      <Name>UGRS.InvRevaluationSDK</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

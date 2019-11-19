@@ -84,10 +84,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="SAPBusinessOneSDK" />
-    <Reference Include="UGRS.CheckAdminSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\UGRS.CheckAdminSDK\bin\x64\Release\UGRS.CheckAdminSDK.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -101,6 +97,12 @@
     <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UGRS.CheckAdminSDK\UGRS.CheckAdminSDK.csproj">
+      <Project>{0e40d725-0d10-4911-a3f3-60f76acca2a9}</Project>
+      <Name>UGRS.CheckAdminSDK</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
