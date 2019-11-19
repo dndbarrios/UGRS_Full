@@ -1709,8 +1709,16 @@ namespace UGRS.AddOn.FoodProduction.Forms
             LogService.WriteInfo(string.Format("The current culture before print is {0} [{1}]",
                         culture.NativeName, culture.Name));
 
-            
-            PinterUtility.PrintReport(lObjLocalReport, lStrPrinterName);
+            using (var doc = new ReportPrintDocument(lObjLocalReport))
+            {
+
+                doc.PrinterSettings.PrinterName = lStrPrinterName;
+                for (int i = 0; i < pIntCopies; i++)
+                {
+                    doc.Print();
+                }
+            }
+           // PinterUtility.PrintReport(lObjLocalReport, lStrPrinterName);
 
              culture = CultureInfo.CurrentCulture;
             LogService.WriteInfo(string.Format("The current culture after print is {0} [{1}]",
@@ -1725,15 +1733,7 @@ namespace UGRS.AddOn.FoodProduction.Forms
             LogService.WriteInfo(string.Format("Change th current culture to {0} [{1}]",
                  culture.NativeName, culture.Name));
 
-            //using (var doc = new ReportPrintDocument(lObjLocalReport))
-            //{
-
-            //    doc.PrinterSettings.PrinterName = lStrPrinterName;
-            //    for (int i = 0; i < pIntCopies; i++)
-            //    {
-            //        doc.Print();
-            //    }
-            //}
+           
         }
 
         private string Truncate(string pStrValue, int pIntMaxLength)
