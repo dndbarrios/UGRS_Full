@@ -1086,13 +1086,13 @@ namespace UGRS.AddOn.Transports.Forms
         {
             try
             {
-                Form lFrmInv = SAPbouiCOM.Framework.Application.SBO_Application.Forms.GetFormByTypeAndCount(mIntFormType, -1);
+                Form lFrmInv = SAPbouiCOM.Framework.Application.SBO_Application.Forms.GetFormByTypeAndCount(mIntFormType, 1);
                 var ss = lFrmInv.GetAsXML();
                 lFrmInv.Menu.Item("5897").Activate();
                 Form lFrmIR = UIApplication.GetApplication().Forms.ActiveForm;
 
                 lFrmIR.Visible = false;
-                lFrmIR.Freeze(true);
+                //lFrmIR.Freeze(true);
                 //lFrmIR.Freeze(true);
                 var lFrmIsR = UIApplication.GetApplication().Forms.ActiveForm.GetAsXML();
                 Matrix lMtxTable = (Matrix)lFrmIR.Items.Item("6").Specific;
@@ -1102,9 +1102,9 @@ namespace UGRS.AddOn.Transports.Forms
 
                 lTxtTax.Value = "FV";
                 Button lBtnOk = (Button)lFrmIR.Items.Item(0).Specific;
-                lFrmIR.Freeze(false);
+              //  lFrmIR.Freeze(false);
                 lBtnOk.Item.Click();
-                lBtnOk.Item.Click();
+               // lBtnOk.Item.Click();
             }
             catch (Exception ex)
             {
