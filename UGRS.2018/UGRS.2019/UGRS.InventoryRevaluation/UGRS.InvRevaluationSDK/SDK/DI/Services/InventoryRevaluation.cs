@@ -8,7 +8,7 @@ namespace UGRS.InvRevaluationSDK.SDK.DI.Services {
     public class InventoryRevaluation {
 
         static Object padLock = new Object();
-        public bool Insert(string docNum, RevaluationItem[] items, int type) {
+        public bool Insert(string docNum, RevaluationItem[] items, int type, string docTypeES) {
             try {
                 //if (debitCredit == 0) {
                 //    return true;
@@ -19,7 +19,7 @@ namespace UGRS.InvRevaluationSDK.SDK.DI.Services {
 
                     oMaterialRevaluation.DocDate = type.Equals(1) ? item.DocDateRev1 : item.DocDateRev2;
                     oMaterialRevaluation.RevalType = "M";
-                    oMaterialRevaluation.UserFields.Fields.Item("U_DocNumSalida").Value = docNum;
+                    oMaterialRevaluation.UserFields.Fields.Item("U_DocNumSalida").Value = $"{docTypeES}{docNum}";
                     oMaterialRevaluation.Lines.ItemCode = item.ItemCode;
                     oMaterialRevaluation.Lines.WarehouseCode = item.whCode;
                     oMaterialRevaluation.Lines.Quantity = 1;

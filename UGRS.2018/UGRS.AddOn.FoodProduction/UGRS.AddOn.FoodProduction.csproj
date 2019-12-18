@@ -148,7 +148,9 @@
     <Compile Include="UI\Menu\Module.cs" />
     <Compile Include="UI\Menu\Section.cs" />
     <Compile Include="UI\UIApplication.cs" />
-    <Compile Include="Utilities\PinterUtility.cs" />
+    <Compile Include="Utilities\PinterUtility.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

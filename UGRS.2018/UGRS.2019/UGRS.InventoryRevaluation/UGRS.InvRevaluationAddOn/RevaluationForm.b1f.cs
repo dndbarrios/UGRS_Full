@@ -28,6 +28,8 @@ namespace UGRS.InvRevaluationAddOn {
         private StaticText lblExit;
         private EditText txtExit;
         private Grid grid0;
+        private ComboBox cboType;
+        private StaticText lblType;
         SapB1 sapB1;
         RevaluationItem[] items;
 
@@ -60,7 +62,12 @@ namespace UGRS.InvRevaluationAddOn {
             this.btnCancel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCancel_ClickBefore);
             this.btnAcept2 = ((SAPbouiCOM.Button)(this.GetItem("btnAcept2").Specific));
             this.btnAcept2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAcept2_ClickBefore);
+            this.cboType = ((SAPbouiCOM.ComboBox)(this.GetItem("cboType").Specific));
+            this.lblType = ((SAPbouiCOM.StaticText)(this.GetItem("lblType").Specific));
             this.OnCustomInitialize();
+
+            this.cboType.Select("E");
+            this.cboType.Item.DisplayDesc = true;
 
         }
 
@@ -87,14 +94,14 @@ namespace UGRS.InvRevaluationAddOn {
             BubbleEvent = true;
 
             if (!String.IsNullOrEmpty(txtExit.Value))
-                Search(txtExit.Value, "1");
+                Search(txtExit.Value, cboType.Selected.Value);
         }
 
         private void Search(string docNum, string type) {
             try {
 
                 var count = sapB1.DAO.RevaluationsCount(docNum);
-                items = sapB1.DAO.GetInvRevaluationItems(docNum);
+                items = sapB1.DAO.GetInvRevaluationItems(docNum, type);
                 grid0.DataTable.Rows.Clear();
 
                 if (items.Length > 0) {
@@ -115,18 +122,18 @@ namespace UGRS.InvRevaluationAddOn {
         private void btnAcept_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
             BubbleEvent = true;
             if (btnAcept.Item.Enabled) {
-                InsertRevaluation(1);
+                InsertRevaluation(1, cboType.Selected.Value);
             }
         }
 
         private void btnAcept2_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent) {
             BubbleEvent = true;
             if (btnAcept2.Item.Enabled) {
-                InsertRevaluation(2);
+                InsertRevaluation(2, cboType.Selected.Value);
             }
         }
 
-        private void InsertRevaluation(int type) {
+        private void InsertRevaluation(int type, string docTypeES) {
 
             var revValue = type.Equals(1) ? items.FirstOrDefault().Rev1.Equals(0) : items.FirstOrDefault().Rev2.Equals(0);
             if (revValue) {
@@ -151,9 +158,10 @@ namespace UGRS.InvRevaluationAddOn {
 
                 if (revItems != null && revItems.Length > 0) {
 
-                    var result = sapB1.InventoryRevaluation.Insert(txtExit.Value, items, type);
+                    var result = sapB1.InventoryRevaluation.Insert(txtExit.Value, items, type, docTypeES);
+                    string docMsg = docTypeES == "E" ? "Entrada" : "Salida";
                     if (result) {
-                        UIApplication.ShowMessageBox($"Se ha creado la revalorización {type} para la salida {txtExit.Value}");
+                        UIApplication.ShowMessageBox($"Se ha creado la revalorización {type} para la {docMsg} {txtExit.Value}");
                         if (type.Equals(1)) {
                             btnAcept.Item.Enabled = false;
                             btnAcept2.Item.Enabled = true;
@@ -164,7 +172,7 @@ namespace UGRS.InvRevaluationAddOn {
                         }
                     }
                     else
-                        UIApplication.ShowMessageBox($"Fallo en insertarse la revalorización para la salida {txtExit.Value}");
+                        UIApplication.ShowMessageBox($"Fallo en insertarse la revalorización para la {docMsg} {txtExit.Value}");
                 }
                 else {
                     UIApplication.ShowMessageBox($"No hay artículos para revalorizar");
