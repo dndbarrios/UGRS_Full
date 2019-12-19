@@ -40,8 +40,8 @@ namespace UGRS.AddOnn.Expogan
                 UIApplication.ShowSuccess(string.Format("Inicializar las tablas"));
                 ExpoganServiceFactory lObjExpoganFactory = new ExpoganServiceFactory();
                 lObjExpoganFactory.GetSetupService().InitializeTables();
-                UIApplication.ShowSuccess(string.Format("AddonExpogan 0.0.6 iniciado correctamente"));
-                LogService.WriteSuccess(string.Format("AddonExpogan 0.0.6 iniciado correctamente"));
+                UIApplication.ShowSuccess(string.Format("AddonExpogan 0.0.12 iniciado correctamente"));
+                LogService.WriteSuccess(string.Format("AddonExpogan 0.0.12 iniciado correctamente"));
 
                 oApp.Run();
             }
