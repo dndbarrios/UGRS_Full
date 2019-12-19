@@ -13,6 +13,8 @@
         public System.DateTime DocDateRev2 { get; set; }
         public double CostoRev1 { get; set; }
         public double CostoRev2 { get; set; }
+        public int HasRev1 { get; set; }
+        public int HasRev2 { get; set; }
 
     }
 }

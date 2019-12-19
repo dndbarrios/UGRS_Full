@@ -63,6 +63,7 @@ namespace UGRS.InvRevaluationAddOn {
             this.btnAcept2 = ((SAPbouiCOM.Button)(this.GetItem("btnAcept2").Specific));
             this.btnAcept2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAcept2_ClickBefore);
             this.cboType = ((SAPbouiCOM.ComboBox)(this.GetItem("cboType").Specific));
+            //this.cboType.ComboSelectBefore += new SAPbouiCOM._IComboBoxEvents_ComboSelectBeforeEventHandler(this.cboType_ComboSelectBefore);
             this.lblType = ((SAPbouiCOM.StaticText)(this.GetItem("lblType").Specific));
             this.OnCustomInitialize();
 
@@ -100,6 +101,9 @@ namespace UGRS.InvRevaluationAddOn {
         private void Search(string docNum, string type) {
             try {
 
+                //if (grid0.DataTable == null) return;
+                //grid0.DataTable.Clear();
+
                 var count = sapB1.DAO.RevaluationsCount(docNum);
                 items = sapB1.DAO.GetInvRevaluationItems(docNum, type);
                 grid0.DataTable.Rows.Clear();
@@ -108,7 +112,20 @@ namespace UGRS.InvRevaluationAddOn {
                     this.UIAPIRawForm.Freeze(true);
                     UIGrid.Fill(grid0, items, gridColumns.Keys.ToArray());
                     grid0.AutoResizeColumns();
-                    btnAcept.Item.Enabled = true;
+                    //btnAcept.Item.Enabled = true;
+
+                    bool enableRev1 = items[0].HasRev1 == 0 ? true : false;
+                    bool enableRev2 = items[0].HasRev2 == 0 ? true : false;
+                    if (type.Equals("E"))
+                    {
+                        btnAcept.Item.Enabled = enableRev1;
+                        btnAcept2.Item.Enabled = enableRev2;
+                    }
+                    else
+                    {
+                        btnAcept.Item.Enabled = enableRev1;
+                        btnAcept2.Item.Enabled = enableRev2;
+                    }
                 }
             }
             catch (Exception ex) {
@@ -131,6 +148,19 @@ namespace UGRS.InvRevaluationAddOn {
             if (btnAcept2.Item.Enabled) {
                 InsertRevaluation(2, cboType.Selected.Value);
             }
+        }
+
+        private void cboType_ComboSelectBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+
+            //if (grid0.DataTable == null) return;
+
+            //grid0.DataTable.Clear();
+            //UIGrid.SetHeaders(grid0, gridHeaders);
+
+            //InitializeGrid("grid0");
+            //grid0.AutoResizeColumns();
         }
 
         private void InsertRevaluation(int type, string docTypeES) {

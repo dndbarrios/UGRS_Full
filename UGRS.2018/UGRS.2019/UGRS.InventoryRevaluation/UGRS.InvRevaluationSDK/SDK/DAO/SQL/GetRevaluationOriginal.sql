@@ -7,6 +7,7 @@
               declare @DocDate as date, @Cantidad as decimal(14,6), @Costo as decimal(14,6), @Valor as decimal(14,6), @DocType as int, @DocEntry as int;
               declare @ItemCode as nvarchar(10), @whCode as nvarchar(10), @DocEntrySal as int;
               Declare @CantidadAcum as decimal(14,6), @ValorAcum as decimal(14,6), @CostoV as decimal(14,6), @CostoVR1 as decimal(14,6), @Reg as int; 
+			  Declare @TotRev1 as decimal(30,6), @TotRev2 as decimal(30,6);
               Declare @ValorAcum2 as decimal(14,6);
               Declare @ValorRev1 as decimal(14,6), @ValorRev2 as decimal(14,6); 
 
