@@ -1151,11 +1151,12 @@ namespace UGRS.AddOn.Transports.Forms
             List<CommissionDebtDTO> lLstDebt = new List<CommissionDebtDTO>();
             int i = 0;
             List<CommissionDebtDTO> lLstCommissionDebt;
+            string lStrLastFolio = pStrFolio;
             do
             {
                 i++;
                 lLstCommissionDebt = new List<CommissionDebtDTO>();
-                string lStrLastFolio = GetLastFolio(pStrFolio, i);
+                lStrLastFolio = GetLastFolio(lStrLastFolio, i);
                 if (!string.IsNullOrEmpty(lStrLastFolio))
                 {
                     string lStrAccountFunEmp = mObjTransportsFactory.GetCommissionService().GetAccountConfig("TR_ACC_FUNCEMPL");
