@@ -76,8 +76,6 @@ namespace UGRS.AddOn.Purchases.Forms
                 {
                     txtObs.Value = pObjVoucher.Coments;
                 }
-              
-
             }
             catch (Exception ex)
             {
@@ -706,7 +704,7 @@ namespace UGRS.AddOn.Purchases.Forms
                     if (lBolSuccess)
                     {
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
-                        UIApplication.ShowMessageBox(string.Format("Documento realizado correctamente"));
+                        UIApplication.ShowMessageBox(string.Format("Documento preliminar realizado correctamente, Generando factura..."));
 
                         DraftToDocument(lObjPurchaseXmlDTO, true);
                         if (mObjBaseForm != null && lObjPurchaseXmlDTO != null && !lObjPurchaseXmlDTO.IsDraft )
@@ -795,6 +793,17 @@ namespace UGRS.AddOn.Purchases.Forms
                     }
                     DeleteDraft(lIntDraftEntry); 
                 }
+                else
+                {
+                    this.UIAPIRawForm.Close();
+                    pObjPurchase.IsDraft = true;
+                    UIApplication.ShowMessageBox(string.Format("No fue posible generar la factura a partir de la factura preliminar"+
+                                                    "\n Se abrirá la pantalla de borrador "+
+                                                    "\n Error: {0}", DIApplication.Company.GetLastErrorDescription()));
+                    SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                    SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
+                    mFormDraftInv = lObjFormDraft;
+                }
             }
             else
             {
@@ -804,9 +813,6 @@ namespace UGRS.AddOn.Purchases.Forms
                  SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
                 SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
                 mFormDraftInv = lObjFormDraft;
-               
-        
-               
               
             }
         }
