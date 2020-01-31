@@ -715,13 +715,13 @@ namespace UGRS.AddOn.Purchases.Forms
                         //open invoice draft form
                         else
                         {
-                           
+                            SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
+                            this.UIAPIRawForm.Close();
+                            mFormDraftInv = lObjFormDraft;
+                            SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
                         }
 
-                        //SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
-                        //this.UIAPIRawForm.Close();
-                        //mFormDraftInv = lObjFormDraft;
-                        //SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                        
                     }
                     else
                     {
