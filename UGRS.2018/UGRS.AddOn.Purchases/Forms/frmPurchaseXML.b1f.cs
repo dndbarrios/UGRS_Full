@@ -704,7 +704,7 @@ namespace UGRS.AddOn.Purchases.Forms
                     if (lBolSuccess)
                     {
                         DIApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
-                        UIApplication.ShowMessageBox(string.Format("Documento preliminar realizado correctamente, Generando factura..."));
+                        UIApplication.ShowSuccess(string.Format("Documento preliminar realizado correctamente, Generando factura..."));
 
                         DraftToDocument(lObjPurchaseXmlDTO, true);
                         if (mObjBaseForm != null && lObjPurchaseXmlDTO != null && !lObjPurchaseXmlDTO.IsDraft )
@@ -713,15 +713,13 @@ namespace UGRS.AddOn.Purchases.Forms
                             mObjBaseForm.UpdateMatriz();
                         }
                         //open invoice draft form
-                        else
-                        {
-                            SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
-                            this.UIAPIRawForm.Close();
-                            mFormDraftInv = lObjFormDraft;
-                            SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
-                        }
-
-                        
+                        //else
+                        //{
+                        //    SAPbouiCOM.Form lObjFormDraft = SAPbouiCOM.Framework.Application.SBO_Application.OpenForm((SAPbouiCOM.BoFormObjectEnum)112, "", lStrDocEntry);
+                        //    this.UIAPIRawForm.Close();
+                        //    mFormDraftInv = lObjFormDraft;
+                        //    SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                        //}
                     }
                     else
                     {
@@ -807,12 +805,15 @@ namespace UGRS.AddOn.Purchases.Forms
             }
             else
             {
-                this.UIAPIRawForm.Close();
-                pObjPurchase.IsDraft = true;
-                UIApplication.ShowMessageBox(string.Format("El redondeo {0} es mayor al indicado en configuración \n Se abrirá la pantalla de borrador", lFlDif));
-                 SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
-                SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
-                mFormDraftInv = lObjFormDraft;
+                if (this.UIAPIRawForm != null)
+                {
+                    this.UIAPIRawForm.Close();
+                    pObjPurchase.IsDraft = true;
+                    UIApplication.ShowMessageBox(string.Format("El redondeo {0} es mayor al indicado en configuración \n Se abrirá la pantalla de borrador", lFlDif));
+                    SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                    SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
+                    mFormDraftInv = lObjFormDraft;
+                }
               
             }
         }
