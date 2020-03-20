@@ -18,7 +18,9 @@ FROM
        INNER JOIN [@UG_GLO_VOUC] T1 with (Nolock) ON T0.U_CodeVoucher = T1.Code
        INNER JOIN OJDT T2 with (Nolock) on (T1.U_Folio = T2.Ref1 or T1.U_CodeMov = T2.Ref1) and T0.U_DocEntry = T2.TransId
        INNER JOIN JDT1 T3 with (Nolock) on T2.TransId = T3.TransId and T3.Debit > 0
+        full outer join OJDT A5 with (Nolock) on A5.StornoToTr = T2.TransId 
        WHERE T0.U_Type = 'Nota' AND T1.U_TypeVoucher = '0'
+        and  T2.AutoStorno='N' and A5.TransId is null
        group by T1.Code, T1.U_Folio
    UNION ALL
     select T3.Code, T3.U_Folio,
