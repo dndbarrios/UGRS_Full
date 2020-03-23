@@ -335,7 +335,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 }
                 bool lBolMaqui = txtArea.Value == "MQ_MAQUI" ? true : false;
 
-                List<PaymentDTO> lLstPaymentDTO = mObjPurchasesServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, cboStatus.Value).ToList();
+                List<PaymentDTO> lLstPaymentDTO = mObjPurchasesServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, cboStatus.Value, lBolMaqui).ToList();
 
                 int i = 0;
 

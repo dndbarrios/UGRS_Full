@@ -21,7 +21,7 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
         /// <summary>
         /// Obtener Pagos.
         /// </summary>
-        public IList<PaymentDTO> GetPayment(string pStrCostCenter, string pStrStatus)//, bool pBolMQ_Maqui)
+        public IList<PaymentDTO> GetPayment(string pStrCostCenter, string pStrStatus, bool pBolMQ_Maqui)
         {
          
             SAPbobsCOM.Recordset lObjRecordset = null;
@@ -39,10 +39,10 @@ namespace UGRS.Core.SDK.DI.Purchases.DAO
                     lStrQuery += " and U_GLO_CostCenter = '{CostCenter}'";
                 }
 
-                //if (!pBolMQ_Maqui)
-                //{
-                //    lStrQuery += " and U_GLO_CostCenter != 'MQ_Maqui'";
-                //}
+                if (!pBolMQ_Maqui)
+                {
+                    lStrQuery += " and U_GLO_CostCenter != 'MQ_Maqui'";
+                }
 
 
                 if (!string.IsNullOrEmpty(pStrStatus) && Convert.ToInt16(pStrStatus) > 0)

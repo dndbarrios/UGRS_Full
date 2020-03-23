@@ -1184,7 +1184,7 @@ namespace UGRS.AddOn.Purchases.Forms
                 }
 
 
-                List<PaymentDTO> lLstPayment = mObjPurchaseServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, "").Where(x => x.EmpId == pStrEmpId).ToList();
+                List<PaymentDTO> lLstPayment = mObjPurchaseServiceFactory.GetPurchaseCheeckingCostService().GetPayment(txtArea.Value, "", false).Where(x => x.EmpId == pStrEmpId).ToList();
                 cboMovement.ValidValues.Add("", "");
                 foreach (PaymentDTO lObjPayment in lLstPayment)
                 {

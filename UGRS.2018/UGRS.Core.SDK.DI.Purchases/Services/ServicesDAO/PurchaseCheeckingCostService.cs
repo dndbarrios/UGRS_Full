@@ -13,9 +13,9 @@ namespace UGRS.Core.SDK.DI.Purchases.Services.ServicesDAO
             lObjPurchaseCheeckingCost = new PurchaseCheeckingCostDAO();
         }
 
-        public IList<PaymentDTO> GetPayment(string pStrCostCenter, string pStrStatus)
+        public IList<PaymentDTO> GetPayment(string pStrCostCenter, string pStrStatus, bool pBolIsMaq)
         {
-            return lObjPurchaseCheeckingCost.GetPayment(pStrCostCenter, pStrStatus);
+            return lObjPurchaseCheeckingCost.GetPayment(pStrCostCenter, pStrStatus, pBolIsMaq);
         }
 
         public string CheckingCost(string pStrCodeMov)
