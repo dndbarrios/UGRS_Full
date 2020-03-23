@@ -1657,7 +1657,7 @@ namespace UGRS.AddOn.Transports.Forms
             {
                 switch (pObjAuthEnum)
                 {
-                    case AuthorizerEnum.AutTrans:
+                    case AuthorizerEnum.AutTrans://TRANSPORTE
                         if (!pObjCommissions.AutTrans && !pObjCommissions.AutOperations && !pObjCommissions.AutBanks)
                         {
                             VisibleAuthControls(true);
@@ -1668,7 +1668,7 @@ namespace UGRS.AddOn.Transports.Forms
                         }
                         break;
 
-                    case AuthorizerEnum.AutOperations:
+                    case AuthorizerEnum.AutOperations: //OPERACIONES 
                         if (pObjCommissions.AutTrans && !pObjCommissions.AutOperations && !pObjCommissions.AutBanks)
                         {
                             VisibleAuthControls(true);
@@ -1679,7 +1679,7 @@ namespace UGRS.AddOn.Transports.Forms
                         }
                         break;
 
-                    case AuthorizerEnum.AutBanks:
+                    case AuthorizerEnum.AutBanks://AUXCONTA5
                         if (pObjCommissions.AutTrans && pObjCommissions.AutOperations && !pObjCommissions.AutBanks)
                         {
                             VisibleAuthControls(true);
