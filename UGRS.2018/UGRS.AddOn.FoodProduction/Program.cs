@@ -26,7 +26,7 @@ namespace UGRS_AddOn.FoodProduction
                try
                {
                    LogService.Filename("FoodProduction");
-                   LogService.WriteInfo("Inicio del addon 1.3.31");
+                   LogService.WriteInfo("Inicio del addon 1.3.32");
 
                      CultureInfo culture = CultureInfo.CurrentCulture;
                      LogService.WriteInfo(string.Format("The current culture is {0} [{1}]",
