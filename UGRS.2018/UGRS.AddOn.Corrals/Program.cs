@@ -19,13 +19,14 @@ namespace UGRS.AddOn.Corrals {
                 else {
                     oApp = new Application(args[0]);
                 }
+             
                 LogService.Filename("AddOnCorrals");
                 Menu MyMenu = new Menu();
                 MyMenu.AddMenuItems();
                 oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 DIApplication.DIConnect((SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany());
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
-                LogService.WriteInfo("AddOnCorrals initialized successfully");
+                LogService.WriteInfo("AddOnCorrals 1.0.30 initialized successfully");
 
                 oApp.Run();
             }

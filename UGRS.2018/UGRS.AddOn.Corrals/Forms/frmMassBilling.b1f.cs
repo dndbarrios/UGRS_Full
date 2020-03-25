@@ -411,6 +411,7 @@ namespace UGRS.AddOn.Corrals.Forms {
 
             var tasks = new List<Task<ResultDTO>>();
             var results = new List<string>();
+
             //try {
             LogService.WriteInfo("Begin Mass Billing " + type);
             DraftService lObjDraftService = new DraftService();
@@ -531,8 +532,15 @@ namespace UGRS.AddOn.Corrals.Forms {
                 if(UIApplication.GetApplication().MessageBox("¿Desea procesar los preliminares y convertirlos a facturas?", 2, "Si", "No", "") != 1) {
                     return;
                 }
-
-                string lStrInvoiceProcessorPath = new QueryManager().GetValue("U_VALUE", "Name", "GLO_InvoiceProcessorAppPath", "[@UG_Config]");
+                string lStrInvoiceProcessorPath;
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    lStrInvoiceProcessorPath = new QueryManager().GetValue("U_VALUE", "Name", "GLO_InvoiceProcessorAppPath", "[@UG_Config]");
+                }
+                else
+                {
+                    lStrInvoiceProcessorPath = new QueryManager().GetValue("U_VALUE", "Name", "GLO_InvoiceProcessorAppPathx86", "[@UG_Config]");
+                }
                 if(string.IsNullOrEmpty(lStrInvoiceProcessorPath)) {
                     UIApplication.ShowError("Agregue un valor en la configuración para el campo GLO_InvoiceProcessorAppPath");
                     return;
