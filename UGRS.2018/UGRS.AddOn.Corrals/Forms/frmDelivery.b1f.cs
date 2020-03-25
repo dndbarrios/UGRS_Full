@@ -27,6 +27,7 @@ namespace UGRS.AddOn.Corrals.Forms {
         #region Properties
         bool requireBagsField = false;
         int changedRow = 0;
+        int mIntRowId = 0;
         string defaultUserWhs = String.Empty;
         string defaultUserArea = String.Empty;
         int series = 0;
@@ -212,7 +213,7 @@ namespace UGRS.AddOn.Corrals.Forms {
             if(changedRow > 0) {
                 string column = (fieldName == "C_Food") ? "C_Food" : "C_Bags";
                 oEdit = (SAPbouiCOM.EditText)mtx0.Columns.Item(fieldName).Cells.Item(changedRow).Specific;
-                dt0.SetValue(column, changedRow - 1, oEdit.Value);
+                dt0.SetValue(column, mIntRowId - 1, oEdit.Value);
             }
         }
 
@@ -472,6 +473,8 @@ namespace UGRS.AddOn.Corrals.Forms {
 
         private void mtx0_ValidateAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal) {
             changedRow = pVal.Row;
+            SAPbouiCOM.EditText lObjTxt = (SAPbouiCOM.EditText)mtx0.Columns.Item("C_#").Cells.Item(pVal.Row).Specific;
+            mIntRowId = Convert.ToInt32(dt0.GetValue("C_#", Convert.ToInt32(lObjTxt.Value) - 1).ToString());
         }
 
 
@@ -565,23 +568,26 @@ namespace UGRS.AddOn.Corrals.Forms {
             var processed = false;
 
             try {
-
+                      
                 for(int i = 0; i < dt0.Rows.Count; i++) {
-
-                    if(String.IsNullOrEmpty(dt0.GetValue("C_Food", i).ToString()) || dt0.GetValue("C_Food", i).ToString().Equals("0")) {
+                    int lIntRowId = Convert.ToInt32(dt0.GetValue("C_#", i).ToString());
+                    lIntRowId--;
+                    var ss = dt0.GetValue("C_Food", lIntRowId).ToString();
+                    if (String.IsNullOrEmpty(dt0.GetValue("C_Food", lIntRowId).ToString()) || dt0.GetValue("C_Food", lIntRowId).ToString().Equals("0"))
+                    {
                         continue;
                     }
 
-                    currentClient = dt0.GetValue("C_Code", i).ToString();
-                    lastClient = (i == 0) ? String.Empty : dt0.GetValue("C_Code", i - 1).ToString();
-                    lastClientValue = (i == 0) ? String.Empty : dt0.GetValue("C_Food", i - 1).ToString();
-                    nextClient = (i < dt0.Rows.Count - 1) ? dt0.GetValue("C_Code", i + 1).ToString() : String.Empty;
-                    nextClientValue = (i < dt0.Rows.Count - 1) ? dt0.GetValue("C_Food", i + 1).ToString() : String.Empty;
+                    currentClient = dt0.GetValue("C_Code", lIntRowId).ToString();
+                    lastClient = (lIntRowId == 0) ? String.Empty : dt0.GetValue("C_Code", lIntRowId - 1).ToString();
+                    lastClientValue = (lIntRowId == 0) ? String.Empty : dt0.GetValue("C_Food", lIntRowId - 1).ToString();
+                    nextClient = (lIntRowId < dt0.Rows.Count - 1) ? dt0.GetValue("C_Code", lIntRowId + 1).ToString() : String.Empty;
+                    nextClientValue = (lIntRowId < dt0.Rows.Count - 1) ? dt0.GetValue("C_Food", lIntRowId + 1).ToString() : String.Empty;
 
                     if(currentClient != lastClient || (currentClient == lastClient && lastClientValue == "0")) {
                         deliveryDTO = new DeliveryDTO();
-                        deliveryDTO.CardCode = dt0.GetValue("C_Code", i).ToString();
-                        deliveryDTO.CardName = dt0.GetValue("C_Name", i).ToString();
+                        deliveryDTO.CardCode = dt0.GetValue("C_Code", lIntRowId).ToString();
+                        deliveryDTO.CardName = dt0.GetValue("C_Name", lIntRowId).ToString();
                         deliveryDTO.DocDate = DateTime.ParseExact(txtDate.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
                         deliveryDTO.Series = series;
                     }
@@ -590,9 +596,9 @@ namespace UGRS.AddOn.Corrals.Forms {
                     deliveryLine.ItemCode = txtCode.Value;
                     deliveryLine.Dscription = txtItem.Value;
                     deliveryLine.WhsCode = defaultUserWhs;
-                    deliveryLine.Corral = dt0.GetValue("C_Whs", i).ToString();
-                    deliveryLine.Quantity = (double)dt0.GetValue("C_Food", i);
-                    deliveryLine.BagsBales = (double)dt0.GetValue("C_Bags", i);
+                    deliveryLine.Corral = dt0.GetValue("C_Whs", lIntRowId).ToString();
+                    deliveryLine.Quantity = (double)dt0.GetValue("C_Food", lIntRowId);
+                    deliveryLine.BagsBales = (double)dt0.GetValue("C_Bags", lIntRowId);
                     deliveryLine.Area = defaultUserArea;
                     deliveryLine.Price = lDicNonLockedItems[txtCode.Value];
                     deliveryDTO.DocLines.Add(deliveryLine);
@@ -606,9 +612,11 @@ namespace UGRS.AddOn.Corrals.Forms {
                             var result = DeliveryDI.CreateDelivery(deliveryDTO);
 
                             for(int j = 0; j < dt0.Rows.Count; j++) {
-                                if(dt0.GetValue("C_Code", j).ToString() == currentClient && !dt0.GetValue("C_Food", j).ToString().Equals("0")) {
-                                    dt0.SetValue("C_Result", j, result.Message);
-                                    dt0.SetValue("C_Deliv", j, (result.Success ? "SI" : "NO"));
+                                int lIntRowIdJ = Convert.ToInt32(dt0.GetValue("C_#", j).ToString());
+                                if (dt0.GetValue("C_Code", lIntRowIdJ - 1).ToString() == currentClient && !dt0.GetValue("C_Food", lIntRowIdJ - 1).ToString().Equals("0"))
+                                {
+                                    dt0.SetValue("C_Result", lIntRowIdJ - 1, result.Message);
+                                    dt0.SetValue("C_Deliv", lIntRowIdJ - 1, (result.Success ? "SI" : "NO"));
                                 }
                             }
                         }
@@ -691,6 +699,7 @@ namespace UGRS.AddOn.Corrals.Forms {
         private SAPbouiCOM.EditText oEdit;
         private SAPbouiCOM.Button btnNew;
         #endregion
+
 
     }
 }
