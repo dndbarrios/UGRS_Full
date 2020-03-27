@@ -1,0 +1,1 @@
+SELECT "Series" FROM "NNM1" WHERE "ObjectCode" = '{ObjectCode}' AND "SeriesName" = '{SeriesName}'

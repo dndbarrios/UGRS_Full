@@ -1,0 +1,1 @@
+SELECT "{SelectFieldName}" FROM "{TableName}" WHERE "{WhereFieldName}" = '{WhereFieldValue}'
