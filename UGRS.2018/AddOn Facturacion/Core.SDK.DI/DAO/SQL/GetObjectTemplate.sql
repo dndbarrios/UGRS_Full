@@ -1,1 +1,0 @@
-SELECT * FROM {TableName} WHERE {WhereFieldName} = '{WhereFieldValue}'

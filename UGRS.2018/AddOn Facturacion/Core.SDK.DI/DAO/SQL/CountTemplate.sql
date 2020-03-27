@@ -1,1 +1,0 @@
-SELECT COUNT(*) AS Count FROM {TableName} WHERE {WhereFieldName} = '{WhereFieldValue}'
