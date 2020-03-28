@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
+namespace Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -19,120 +19,120 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
         [System.ServiceModel.OperationContractAttribute(Action="timbrado", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoResponse timbrado(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoResponse timbrado(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbrado", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoResponse> timbradoAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoResponse> timbradoAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbradoPrueba", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoPruebaResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse timbradoPrueba(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse timbradoPrueba(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbradoPrueba", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoPruebaResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse> timbradoPruebaAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse> timbradoPruebaAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="responderSolicitudCancelacionConOpciones", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/responderSolicitudCancelacionConOpcionesR" +
             "esponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse responderSolicitudCancelacionConOpciones(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse responderSolicitudCancelacionConOpciones(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="responderSolicitudCancelacionConOpciones", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/responderSolicitudCancelacionConOpcionesR" +
             "esponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse> responderSolicitudCancelacionConOpcionesAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse> responderSolicitudCancelacionConOpcionesAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="consultarEstatusComprobante", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarEstatusComprobanteResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse consultarEstatusComprobante(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse consultarEstatusComprobante(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="consultarEstatusComprobante", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarEstatusComprobanteResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse> consultarEstatusComprobanteAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse> consultarEstatusComprobanteAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="consultarCfdiRelacionados", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarCfdiRelacionadosResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse consultarCfdiRelacionados(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse consultarCfdiRelacionados(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="consultarCfdiRelacionados", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarCfdiRelacionadosResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse> consultarCfdiRelacionadosAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse> consultarCfdiRelacionadosAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/acuseCancelacionRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/acuseCancelacionResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse acuseCancelacion(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse acuseCancelacion(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/acuseCancelacionRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/acuseCancelacionResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse> acuseCancelacionAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse> acuseCancelacionAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/cancelarResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse cancelar(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarResponse cancelar(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/cancelarResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse> cancelarAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarResponse> cancelarAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/cfdiPorUUIDRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/cfdiPorUUIDResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse cfdiPorUUID(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse cfdiPorUUID(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/cfdiPorUUIDRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/cfdiPorUUIDResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse> cfdiPorUUIDAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse> cfdiPorUUIDAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarConOpcionesRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/cancelarConOpcionesResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse cancelarConOpciones(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse cancelarConOpciones(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarConOpcionesRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/cancelarConOpcionesResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse> cancelarConOpcionesAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse> cancelarConOpcionesAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarDisponibilidadServicioRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarDisponibilidadServicioResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse consultarDisponibilidadServicio(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse consultarDisponibilidadServicio(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarDisponibilidadServicioRequest", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarDisponibilidadServicioResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse> consultarDisponibilidadServicioAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse> consultarDisponibilidadServicioAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbradoBase64", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoBase64Response")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response timbradoBase64(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response timbradoBase64(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbradoBase64", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoBase64Response")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response> timbradoBase64Async(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response> timbradoBase64Async(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="timbradoBase64Prueba", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoBase64PruebaResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse timbradoBase64Prueba(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse timbradoBase64Prueba(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="timbradoBase64Prueba", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/timbradoBase64PruebaResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse> timbradoBase64PruebaAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse> timbradoBase64PruebaAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="consultarPeticionesPendientes", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarPeticionesPendientesResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse consultarPeticionesPendientes(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request);
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse consultarPeticionesPendientes(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="consultarPeticionesPendientes", ReplyAction="timbrado.ws.pade.mx/PadeTimbradoService/consultarPeticionesPendientesResponse")]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse> consultarPeticionesPendientesAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request);
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse> consultarPeticionesPendientesAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -806,12 +806,12 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="timbrado.ws.pade.mx", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.resultDisponibilidadServicio @return;
+        public Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.resultDisponibilidadServicio @return;
         
         public consultarDisponibilidadServicioResponse() {
         }
         
-        public consultarDisponibilidadServicioResponse(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.resultDisponibilidadServicio @return) {
+        public consultarDisponibilidadServicioResponse(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.resultDisponibilidadServicio @return) {
             this.@return = @return;
         }
     }
@@ -985,12 +985,12 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface PadeTimbradoServiceChannel : Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService, System.ServiceModel.IClientChannel {
+    public interface PadeTimbradoServiceChannel : Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class PadeTimbradoServiceClient : System.ServiceModel.ClientBase<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService>, Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService {
+    public partial class PadeTimbradoServiceClient : System.ServiceModel.ClientBase<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService>, Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService {
         
         public PadeTimbradoServiceClient() {
         }
@@ -1012,74 +1012,74 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbrado(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbrado(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request) {
             return base.Channel.timbrado(request);
         }
         
         public string timbrado(string contrato, string usuario, string passwd, string cfdiXml, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXml = cfdiXml;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbrado(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbrado(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest request) {
             return base.Channel.timbradoAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoResponse> timbradoAsync(string contrato, string usuario, string passwd, string cfdiXml, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoResponse> timbradoAsync(string contrato, string usuario, string passwd, string cfdiXml, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXml = cfdiXml;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoPrueba(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoPrueba(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request) {
             return base.Channel.timbradoPrueba(request);
         }
         
         public string timbradoPrueba(string contrato, string usuario, string passwd, string cfdiXml, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXml = cfdiXml;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoPrueba(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoPrueba(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoPruebaAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoPruebaAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest request) {
             return base.Channel.timbradoPruebaAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse> timbradoPruebaAsync(string contrato, string usuario, string passwd, string cfdiXml, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaResponse> timbradoPruebaAsync(string contrato, string usuario, string passwd, string cfdiXml, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoPruebaRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXml = cfdiXml;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoPruebaAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoPruebaAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.responderSolicitudCancelacionConOpciones(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.responderSolicitudCancelacionConOpciones(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request) {
             return base.Channel.responderSolicitudCancelacionConOpciones(request);
         }
         
         public string responderSolicitudCancelacionConOpciones(string contrato, string usuario, string passwd, string rfcReceptor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1089,17 +1089,17 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.key = key;
             inValue.keyPass = keyPass;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).responderSolicitudCancelacionConOpciones(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).responderSolicitudCancelacionConOpciones(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.responderSolicitudCancelacionConOpcionesAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.responderSolicitudCancelacionConOpcionesAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest request) {
             return base.Channel.responderSolicitudCancelacionConOpcionesAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse> responderSolicitudCancelacionConOpcionesAsync(string contrato, string usuario, string passwd, string rfcReceptor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse> responderSolicitudCancelacionConOpcionesAsync(string contrato, string usuario, string passwd, string rfcReceptor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1109,16 +1109,16 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.key = key;
             inValue.keyPass = keyPass;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).responderSolicitudCancelacionConOpcionesAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).responderSolicitudCancelacionConOpcionesAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarEstatusComprobante(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarEstatusComprobante(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request) {
             return base.Channel.consultarEstatusComprobante(request);
         }
         
         public string consultarEstatusComprobante(string contrato, string usuario, string passwd, string uuid, string rfcEmisor, string rfcReceptor, string total, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1127,17 +1127,17 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.rfcReceptor = rfcReceptor;
             inValue.total = total;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarEstatusComprobante(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarEstatusComprobante(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarEstatusComprobanteAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarEstatusComprobanteAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest request) {
             return base.Channel.consultarEstatusComprobanteAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse> consultarEstatusComprobanteAsync(string contrato, string usuario, string passwd, string uuid, string rfcEmisor, string rfcReceptor, string total, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse> consultarEstatusComprobanteAsync(string contrato, string usuario, string passwd, string uuid, string rfcEmisor, string rfcReceptor, string total, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1146,16 +1146,16 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.rfcReceptor = rfcReceptor;
             inValue.total = total;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarEstatusComprobanteAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarEstatusComprobanteAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarCfdiRelacionados(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarCfdiRelacionados(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request) {
             return base.Channel.consultarCfdiRelacionados(request);
         }
         
         public string consultarCfdiRelacionados(string contrato, string usuario, string passwd, string rfcEmisor, string rfcReceptor, string uuid, byte[] cert, byte[] key, string keyPass, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1166,17 +1166,17 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.key = key;
             inValue.keyPass = keyPass;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarCfdiRelacionados(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarCfdiRelacionados(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarCfdiRelacionadosAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarCfdiRelacionadosAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest request) {
             return base.Channel.consultarCfdiRelacionadosAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse> consultarCfdiRelacionadosAsync(string contrato, string usuario, string passwd, string rfcEmisor, string rfcReceptor, string uuid, byte[] cert, byte[] key, string keyPass, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse> consultarCfdiRelacionadosAsync(string contrato, string usuario, string passwd, string rfcEmisor, string rfcReceptor, string uuid, byte[] cert, byte[] key, string keyPass, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1187,45 +1187,45 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.key = key;
             inValue.keyPass = keyPass;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarCfdiRelacionadosAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarCfdiRelacionadosAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.acuseCancelacion(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.acuseCancelacion(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request) {
             return base.Channel.acuseCancelacion(request);
         }
         
         public string acuseCancelacion(string contrato, string usuario, string passwd, string uuid) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.uuid = uuid;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).acuseCancelacion(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).acuseCancelacion(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.acuseCancelacionAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.acuseCancelacionAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest request) {
             return base.Channel.acuseCancelacionAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse> acuseCancelacionAsync(string contrato, string usuario, string passwd, string uuid) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse> acuseCancelacionAsync(string contrato, string usuario, string passwd, string uuid) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.uuid = uuid;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).acuseCancelacionAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).acuseCancelacionAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelar(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelar(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request) {
             return base.Channel.cancelar(request);
         }
         
         public string cancelar(string contrato, string usuario, string passwd, string rfcEmisor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1234,17 +1234,17 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.cert = cert;
             inValue.key = key;
             inValue.keyPass = keyPass;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelar(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelar(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelarAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelarAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest request) {
             return base.Channel.cancelarAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse> cancelarAsync(string contrato, string usuario, string passwd, string rfcEmisor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarResponse> cancelarAsync(string contrato, string usuario, string passwd, string rfcEmisor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1253,45 +1253,45 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.cert = cert;
             inValue.key = key;
             inValue.keyPass = keyPass;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelarAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelarAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cfdiPorUUID(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cfdiPorUUID(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request) {
             return base.Channel.cfdiPorUUID(request);
         }
         
         public string cfdiPorUUID(string contrato, string usuario, string passwd, string uuid) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.uuid = uuid;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cfdiPorUUID(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cfdiPorUUID(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cfdiPorUUIDAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cfdiPorUUIDAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest request) {
             return base.Channel.cfdiPorUUIDAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse> cfdiPorUUIDAsync(string contrato, string usuario, string passwd, string uuid) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse> cfdiPorUUIDAsync(string contrato, string usuario, string passwd, string uuid) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.uuid = uuid;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cfdiPorUUIDAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cfdiPorUUIDAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelarConOpciones(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelarConOpciones(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request) {
             return base.Channel.cancelarConOpciones(request);
         }
         
         public string cancelarConOpciones(string contrato, string usuario, string passwd, string rfcEmisor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1301,17 +1301,17 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.key = key;
             inValue.keyPass = keyPass;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelarConOpciones(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelarConOpciones(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelarConOpcionesAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.cancelarConOpcionesAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest request) {
             return base.Channel.cancelarConOpcionesAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse> cancelarConOpcionesAsync(string contrato, string usuario, string passwd, string rfcEmisor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse> cancelarConOpcionesAsync(string contrato, string usuario, string passwd, string rfcEmisor, string[] arregloUUID, byte[] cert, byte[] key, string keyPass, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
@@ -1321,127 +1321,127 @@ namespace Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia {
             inValue.key = key;
             inValue.keyPass = keyPass;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelarConOpcionesAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).cancelarConOpcionesAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarDisponibilidadServicio(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarDisponibilidadServicio(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request) {
             return base.Channel.consultarDisponibilidadServicio(request);
         }
         
-        public Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.resultDisponibilidadServicio consultarDisponibilidadServicio(string contrato, string usuario, string passwd) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest();
+        public Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.resultDisponibilidadServicio consultarDisponibilidadServicio(string contrato, string usuario, string passwd) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarDisponibilidadServicio(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarDisponibilidadServicio(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarDisponibilidadServicioAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarDisponibilidadServicioAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest request) {
             return base.Channel.consultarDisponibilidadServicioAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse> consultarDisponibilidadServicioAsync(string contrato, string usuario, string passwd) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioResponse> consultarDisponibilidadServicioAsync(string contrato, string usuario, string passwd) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarDisponibilidadServicioRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarDisponibilidadServicioAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarDisponibilidadServicioAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request) {
             return base.Channel.timbradoBase64(request);
         }
         
         public string timbradoBase64(string contrato, string usuario, string passwd, string cfdiXmlBase64, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXmlBase64 = cfdiXmlBase64;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64Async(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64Async(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request request) {
             return base.Channel.timbradoBase64Async(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response> timbradoBase64Async(string contrato, string usuario, string passwd, string cfdiXmlBase64, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response> timbradoBase64Async(string contrato, string usuario, string passwd, string cfdiXmlBase64, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Request();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXmlBase64 = cfdiXmlBase64;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64Async(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64Async(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64Prueba(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64Prueba(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request) {
             return base.Channel.timbradoBase64Prueba(request);
         }
         
         public string timbradoBase64Prueba(string contrato, string usuario, string passwd, string cfdiXmlBase64, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXmlBase64 = cfdiXmlBase64;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64Prueba(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64Prueba(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64PruebaAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.timbradoBase64PruebaAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest request) {
             return base.Channel.timbradoBase64PruebaAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse> timbradoBase64PruebaAsync(string contrato, string usuario, string passwd, string cfdiXmlBase64, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse> timbradoBase64PruebaAsync(string contrato, string usuario, string passwd, string cfdiXmlBase64, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.cfdiXmlBase64 = cfdiXmlBase64;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64PruebaAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).timbradoBase64PruebaAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarPeticionesPendientes(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request) {
+        Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarPeticionesPendientes(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request) {
             return base.Channel.consultarPeticionesPendientes(request);
         }
         
         public string consultarPeticionesPendientes(string contrato, string usuario, string passwd, string rfcReceptor, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest();
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.rfcReceptor = rfcReceptor;
             inValue.opciones = opciones;
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse retVal = ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarPeticionesPendientes(inValue);
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse retVal = ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarPeticionesPendientes(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse> Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarPeticionesPendientesAsync(Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request) {
+        System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse> Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService.consultarPeticionesPendientesAsync(Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest request) {
             return base.Channel.consultarPeticionesPendientesAsync(request);
         }
         
-        public System.Threading.Tasks.Task<Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse> consultarPeticionesPendientesAsync(string contrato, string usuario, string passwd, string rfcReceptor, string[] opciones) {
-            Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest inValue = new Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest();
+        public System.Threading.Tasks.Task<Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse> consultarPeticionesPendientesAsync(string contrato, string usuario, string passwd, string rfcReceptor, string[] opciones) {
+            Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest inValue = new Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesRequest();
             inValue.contrato = contrato;
             inValue.usuario = usuario;
             inValue.passwd = passwd;
             inValue.rfcReceptor = rfcReceptor;
             inValue.opciones = opciones;
-            return ((Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarPeticionesPendientesAsync(inValue);
+            return ((Addon.CFDI_Facturacion.ServicioTimbrado33Prodigia.PadeTimbradoService)(this)).consultarPeticionesPendientesAsync(inValue);
         }
     }
 }

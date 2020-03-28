@@ -36,6 +36,8 @@ namespace Addon.CFDI_Facturacion
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
                 Application.SBO_Application.ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
 
+                new BtnTimbradoControl();
+
                 UIApplication.ShowSuccess(string.Format("Addon de [Facturación CFDI] iniciado correctamente."));
 
                 oApp.Run();
@@ -56,9 +58,9 @@ namespace Addon.CFDI_Facturacion
                 {
                     SAPbouiCOM.Form lObjForm = Application.SBO_Application.Forms.GetFormByTypeAndCount(pVal.FormType, pVal.FormTypeCount);
 
-                    if (pVal.FormTypeEx.Equals(Constants.STR_AR_INVOICE_FORM))
+                    if (pVal.FormTypeEx.Equals(Constants.STR_AR_INVOICE_FORM) || pVal.FormTypeEx.Equals(Constants.STR_AR_RESERVE_FORM))
                     {
-                        new BtnTimbradoControl(lObjForm);
+                        //new BtnTimbradoControl(lObjForm);
                     }
                 }
             }

@@ -100,31 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.acuseCancelacionResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarConOpcionesResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cancelarResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.cfdiPorUUIDResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarCfdiRelacionadosResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarEstatusComprobanteResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.consultarPeticionesPendientesResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.responderSolicitudCancelacionConOpcionesResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64PruebaResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioTimbrado33Prodigia\Core.SDK.DI.Facturacion.ServicioTimbrado33Prodigia.timbradoBase64Response.datasource">
@@ -145,21 +124,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ServicioTimbrado33Prodigia\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioTimbrado33Prodigia\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioTimbrado33Prodigia\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioTimbrado33Prodigia\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Core.SDK.DI\Core.SDK.DI.csproj">
       <Project>{909b9975-2b24-41ef-abb0-d90b904d75dd}</Project>
       <Name>Core.SDK.DI</Name>
@@ -176,6 +140,21 @@
   <ItemGroup>
     <Folder Include="DAO\HANA\" />
     <Folder Include="DAO\SQL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServicioTimbrado33Prodigia\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioTimbrado33Prodigia\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioTimbrado33Prodigia\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioTimbrado33Prodigia\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
