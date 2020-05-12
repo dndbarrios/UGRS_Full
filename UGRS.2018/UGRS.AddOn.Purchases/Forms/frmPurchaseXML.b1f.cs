@@ -629,66 +629,74 @@ namespace UGRS.AddOn.Purchases.Forms
             PurchaseXMLDTO lObjPurchaseXmlDTO = null;
             try
             {
+
+
                 InvoiceDI lObjInvioceDI = new InvoiceDI();
 
                 //if(ValidateTotals()){ Cambio por factura preliminar
-                if (true)
+                //if (true)
+                //{
+                lObjPurchaseXmlDTO = GetInvoiceInfo();
+                ReadXMLService lObjReadXMLSErvice = new ReadXMLService();
+                if (lObjReadXMLSErvice.ValidateUUID(lObjPurchaseXmlDTO.FolioFiscal))
                 {
-                    lObjPurchaseXmlDTO = GetInvoiceInfo();
-                    lObjPurchaseXmlDTO.Folio = txtFolio.Value;
+                    UIApplication.ShowError(" El folio fiscal ya existe en la base de datos");
+                    return;
+                }
+                lObjPurchaseXmlDTO.Folio = txtFolio.Value;
 
-                    DIApplication.Company.StartTransaction();
+                DIApplication.Company.StartTransaction();
 
 
-                    //if (string.IsNullOrEmpty(lObjPurchaseXmlDTO.CodeVoucher) || Convert.ToInt32(lObjPurchaseXmlDTO.CodeVoucher) < 0)
-                    //{
-                    //     mStrCodeVoucher= SaveVoucher(mObjVoucher);
-                    //     lObjPurchaseXmlDTO.CodeVoucher = mStrCodeVoucher;
+                //if (string.IsNullOrEmpty(lObjPurchaseXmlDTO.CodeVoucher) || Convert.ToInt32(lObjPurchaseXmlDTO.CodeVoucher) < 0)
+                //{
+                //     mStrCodeVoucher= SaveVoucher(mObjVoucher);
+                //     lObjPurchaseXmlDTO.CodeVoucher = mStrCodeVoucher;
 
-                    //}
+                //}
 
-                    if (!string.IsNullOrEmpty(lObjPurchaseXmlDTO.CodeVoucher) || Convert.ToInt32(lObjPurchaseXmlDTO.CodeVoucher) > 0 || !mFlagPurshaseAddon)
+                if (!string.IsNullOrEmpty(lObjPurchaseXmlDTO.CodeVoucher) || Convert.ToInt32(lObjPurchaseXmlDTO.CodeVoucher) > 0 || !mFlagPurshaseAddon)
+                {
+
+
+                    lObjPurchaseXmlDTO.Type = mStrType;
+                    lBolSuccess = lObjInvioceDI.CreateDocument(lObjPurchaseXmlDTO, mFlagPurshaseAddon);
+
+
+                    if (lBolSuccess)
                     {
-
-
-                        lObjPurchaseXmlDTO.Type = mStrType;
-                        lBolSuccess = lObjInvioceDI.CreateDocument(lObjPurchaseXmlDTO, mFlagPurshaseAddon);
-
-
-                        if (lBolSuccess)
+                        LogService.WriteSuccess("Factura generada correctamente");
+                        lStrDocEntry = lObjPurchaseXmlDTO.DocEntry.ToString();
+                        if (mFlagPurshaseAddon)
                         {
-                            LogService.WriteSuccess("Factura generada correctamente");
-                            lStrDocEntry = lObjPurchaseXmlDTO.DocEntry.ToString();
-                            if (mFlagPurshaseAddon)
-                            {
 
-                                //SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
-                                //lObjDocInvoice.GetByKey(Convert.ToInt32(lObjPurchaseXmlDTO.DocEntry));
-                                //lObjPurchaseXmlDTO.Total = lObjDocInvoice.DocTotal.ToString();
-                                lBolSuccess = AddVoucherDetail(lObjPurchaseXmlDTO);
+                            //SAPbobsCOM.Documents lObjDocInvoice = (SAPbobsCOM.Documents)DIApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
+                            //lObjDocInvoice.GetByKey(Convert.ToInt32(lObjPurchaseXmlDTO.DocEntry));
+                            //lObjPurchaseXmlDTO.Total = lObjDocInvoice.DocTotal.ToString();
+                            lBolSuccess = AddVoucherDetail(lObjPurchaseXmlDTO);
 
-                            }
-
-                            if (!lBolSuccess)
-                            {
-                                UIApplication.ShowWarning("No fue posible guardar el detalle del comprobante debido a un error interno favor de intentarlo de nuevo o revisar el log");
-                                LogService.WriteError("(btnSave_ClickBefore): " + "No fue posible guardar el detalle del comprobante: " + lObjPurchaseXmlDTO.CodeVoucher);
-                            }
                         }
-                        else
+
+                        if (!lBolSuccess)
                         {
-                            UIApplication.ShowWarning("No fue posible crear la factura debido a un error interno favor de intentarlo de nuevo o revisar el log");
-                            LogService.WriteError("(btnSave_ClickBefore): " + " No fue posible crear la factura: " + lObjPurchaseXmlDTO.CodeVoucher);
-                            lBolSuccess = false;
+                            UIApplication.ShowWarning("No fue posible guardar el detalle del comprobante debido a un error interno favor de intentarlo de nuevo o revisar el log");
+                            LogService.WriteError("(btnSave_ClickBefore): " + "No fue posible guardar el detalle del comprobante: " + lObjPurchaseXmlDTO.CodeVoucher);
                         }
                     }
                     else
                     {
-                        UIApplication.ShowWarning(" No fue posible crear el comprobante debido a un error interno favor de intentarlo de nuevo o revisar el log");
-                        LogService.WriteError("(btnSave_ClickBefore): " + " No fue posible crear el comprobante: " + lObjPurchaseXmlDTO.CodeVoucher);
+                        UIApplication.ShowWarning("No fue posible crear la factura debido a un error interno favor de intentarlo de nuevo o revisar el log");
+                        LogService.WriteError("(btnSave_ClickBefore): " + " No fue posible crear la factura: " + lObjPurchaseXmlDTO.CodeVoucher);
                         lBolSuccess = false;
                     }
                 }
+                else
+                {
+                    UIApplication.ShowWarning(" No fue posible crear el comprobante debido a un error interno favor de intentarlo de nuevo o revisar el log");
+                    LogService.WriteError("(btnSave_ClickBefore): " + " No fue posible crear el comprobante: " + lObjPurchaseXmlDTO.CodeVoucher);
+                    lBolSuccess = false;
+                }
+                // }
             }
             catch (Exception ex)
             {
@@ -707,11 +715,19 @@ namespace UGRS.AddOn.Purchases.Forms
                         UIApplication.ShowSuccess(string.Format("Documento preliminar realizado correctamente, Generando factura..."));
 
                         DraftToDocument(lObjPurchaseXmlDTO, true);
-                        if (mObjBaseForm != null && lObjPurchaseXmlDTO != null && !lObjPurchaseXmlDTO.IsDraft )
+
+                        if (!lObjPurchaseXmlDTO.IsDraft)
+                        {
+                            ClearControls();
+                            UIApplication.ShowSuccess("Factura generada correctamente");
+                        }
+
+                        if (mObjBaseForm != null && lObjPurchaseXmlDTO != null && !lObjPurchaseXmlDTO.IsDraft)
                         {
                             this.UIAPIRawForm.Close();
                             mObjBaseForm.UpdateMatriz();
                         }
+
                         //open invoice draft form
                         //else
                         //{
@@ -798,7 +814,10 @@ namespace UGRS.AddOn.Purchases.Forms
                     UIApplication.ShowMessageBox(string.Format("No fue posible generar la factura a partir de la factura preliminar"+
                                                     "\n Se abrirá la pantalla de borrador "+
                                                     "\n Error: {0}", DIApplication.Company.GetLastErrorDescription()));
-                    SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                    if (mObjBaseForm != null)
+                    {
+                        SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                    }
                     SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
                     mFormDraftInv = lObjFormDraft;
                 }
@@ -810,7 +829,10 @@ namespace UGRS.AddOn.Purchases.Forms
                     this.UIAPIRawForm.Close();
                     pObjPurchase.IsDraft = true;
                     UIApplication.ShowMessageBox(string.Format("El redondeo {0} es mayor al indicado en configuración \n Se abrirá la pantalla de borrador", lFlDif));
-                    SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                    if (mObjBaseForm != null)
+                    {
+                        SAPbouiCOM.Framework.Application.SBO_Application.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(SBO_Application_FormDataEventDraft);
+                    }
                     SAPbouiCOM.Form lObjFormDraft = AddRoundByUI(pObjPurchase.DocEntry, lFlDif);
                     mFormDraftInv = lObjFormDraft;
                 }

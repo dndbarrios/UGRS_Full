@@ -387,7 +387,7 @@ namespace UGRS.AddOn.Purchases.Services {
             LogService.WriteError("ReadXMLService (ValidationCallback) " + args.Message);
         }
 
-        private bool ValidateUUID(string UUID) {
+        public bool ValidateUUID(string UUID) {
             return mObjPurchasesServiceFactory.GetPurchaseXmlService().ValidateUUID(UUID);
         }
 
