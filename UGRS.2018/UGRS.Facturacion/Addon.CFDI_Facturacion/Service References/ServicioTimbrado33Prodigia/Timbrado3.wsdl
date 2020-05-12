@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="timbrado.ws.pade.mx" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" name="Timbrado3.3" targetNamespace="timbrado.ws.pade.mx" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="http://timbrado.pade.mx:80/servicio/Timbrado3.3?xsd=1" namespace="timbrado.ws.pade.mx" />
+    </xsd:schema>
+  </types>
+  <message name="timbrado">
+    <part name="parameters" element="tns:timbrado" />
+  </message>
+  <message name="timbradoResponse">
+    <part name="parameters" element="tns:timbradoResponse" />
+  </message>
+  <message name="timbradoPrueba">
+    <part name="parameters" element="tns:timbradoPrueba" />
+  </message>
+  <message name="timbradoPruebaResponse">
+    <part name="parameters" element="tns:timbradoPruebaResponse" />
+  </message>
+  <message name="responderSolicitudCancelacionConOpciones">
+    <part name="parameters" element="tns:responderSolicitudCancelacionConOpciones" />
+  </message>
+  <message name="responderSolicitudCancelacionConOpcionesResponse">
+    <part name="parameters" element="tns:responderSolicitudCancelacionConOpcionesResponse" />
+  </message>
+  <message name="consultarEstatusComprobante">
+    <part name="parameters" element="tns:consultarEstatusComprobante" />
+  </message>
+  <message name="consultarEstatusComprobanteResponse">
+    <part name="parameters" element="tns:consultarEstatusComprobanteResponse" />
+  </message>
+  <message name="consultarCfdiRelacionados">
+    <part name="parameters" element="tns:consultarCfdiRelacionados" />
+  </message>
+  <message name="consultarCfdiRelacionadosResponse">
+    <part name="parameters" element="tns:consultarCfdiRelacionadosResponse" />
+  </message>
+  <message name="acuseCancelacion">
+    <part name="parameters" element="tns:acuseCancelacion" />
+  </message>
+  <message name="acuseCancelacionResponse">
+    <part name="parameters" element="tns:acuseCancelacionResponse" />
+  </message>
+  <message name="cancelar">
+    <part name="parameters" element="tns:cancelar" />
+  </message>
+  <message name="cancelarResponse">
+    <part name="parameters" element="tns:cancelarResponse" />
+  </message>
+  <message name="cfdiPorUUID">
+    <part name="parameters" element="tns:cfdiPorUUID" />
+  </message>
+  <message name="cfdiPorUUIDResponse">
+    <part name="parameters" element="tns:cfdiPorUUIDResponse" />
+  </message>
+  <message name="cancelarConOpciones">
+    <part name="parameters" element="tns:cancelarConOpciones" />
+  </message>
+  <message name="cancelarConOpcionesResponse">
+    <part name="parameters" element="tns:cancelarConOpcionesResponse" />
+  </message>
+  <message name="consultarDisponibilidadServicio">
+    <part name="parameters" element="tns:consultarDisponibilidadServicio" />
+  </message>
+  <message name="consultarDisponibilidadServicioResponse">
+    <part name="parameters" element="tns:consultarDisponibilidadServicioResponse" />
+  </message>
+  <message name="timbradoBase64">
+    <part name="parameters" element="tns:timbradoBase64" />
+  </message>
+  <message name="timbradoBase64Response">
+    <part name="parameters" element="tns:timbradoBase64Response" />
+  </message>
+  <message name="timbradoBase64Prueba">
+    <part name="parameters" element="tns:timbradoBase64Prueba" />
+  </message>
+  <message name="timbradoBase64PruebaResponse">
+    <part name="parameters" element="tns:timbradoBase64PruebaResponse" />
+  </message>
+  <message name="consultarPeticionesPendientes">
+    <part name="parameters" element="tns:consultarPeticionesPendientes" />
+  </message>
+  <message name="consultarPeticionesPendientesResponse">
+    <part name="parameters" element="tns:consultarPeticionesPendientesResponse" />
+  </message>
+  <portType name="PadeTimbradoService">
+    <operation name="timbrado">
+      <input wsam:Action="timbrado" message="tns:timbrado" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/timbradoResponse" message="tns:timbradoResponse" />
+    </operation>
+    <operation name="timbradoPrueba">
+      <input wsam:Action="timbradoPrueba" message="tns:timbradoPrueba" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/timbradoPruebaResponse" message="tns:timbradoPruebaResponse" />
+    </operation>
+    <operation name="responderSolicitudCancelacionConOpciones">
+      <input wsam:Action="responderSolicitudCancelacionConOpciones" message="tns:responderSolicitudCancelacionConOpciones" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/responderSolicitudCancelacionConOpcionesResponse" message="tns:responderSolicitudCancelacionConOpcionesResponse" />
+    </operation>
+    <operation name="consultarEstatusComprobante">
+      <input wsam:Action="consultarEstatusComprobante" message="tns:consultarEstatusComprobante" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarEstatusComprobanteResponse" message="tns:consultarEstatusComprobanteResponse" />
+    </operation>
+    <operation name="consultarCfdiRelacionados">
+      <input wsam:Action="consultarCfdiRelacionados" message="tns:consultarCfdiRelacionados" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarCfdiRelacionadosResponse" message="tns:consultarCfdiRelacionadosResponse" />
+    </operation>
+    <operation name="acuseCancelacion">
+      <input wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/acuseCancelacionRequest" message="tns:acuseCancelacion" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/acuseCancelacionResponse" message="tns:acuseCancelacionResponse" />
+    </operation>
+    <operation name="cancelar">
+      <input wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarRequest" message="tns:cancelar" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarResponse" message="tns:cancelarResponse" />
+    </operation>
+    <operation name="cfdiPorUUID">
+      <input wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/cfdiPorUUIDRequest" message="tns:cfdiPorUUID" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/cfdiPorUUIDResponse" message="tns:cfdiPorUUIDResponse" />
+    </operation>
+    <operation name="cancelarConOpciones">
+      <input wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarConOpcionesRequest" message="tns:cancelarConOpciones" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/cancelarConOpcionesResponse" message="tns:cancelarConOpcionesResponse" />
+    </operation>
+    <operation name="consultarDisponibilidadServicio">
+      <input wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarDisponibilidadServicioRequest" message="tns:consultarDisponibilidadServicio" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarDisponibilidadServicioResponse" message="tns:consultarDisponibilidadServicioResponse" />
+    </operation>
+    <operation name="timbradoBase64">
+      <input wsam:Action="timbradoBase64" message="tns:timbradoBase64" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/timbradoBase64Response" message="tns:timbradoBase64Response" />
+    </operation>
+    <operation name="timbradoBase64Prueba">
+      <input wsam:Action="timbradoBase64Prueba" message="tns:timbradoBase64Prueba" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/timbradoBase64PruebaResponse" message="tns:timbradoBase64PruebaResponse" />
+    </operation>
+    <operation name="consultarPeticionesPendientes">
+      <input wsam:Action="consultarPeticionesPendientes" message="tns:consultarPeticionesPendientes" />
+      <output wsam:Action="timbrado.ws.pade.mx/PadeTimbradoService/consultarPeticionesPendientesResponse" message="tns:consultarPeticionesPendientesResponse" />
+    </operation>
+  </portType>
+  <binding name="PadeTimbradoServicePortBinding" type="tns:PadeTimbradoService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="timbrado">
+      <soap:operation soapAction="timbrado" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="timbradoPrueba">
+      <soap:operation soapAction="timbradoPrueba" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="responderSolicitudCancelacionConOpciones">
+      <soap:operation soapAction="responderSolicitudCancelacionConOpciones" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="consultarEstatusComprobante">
+      <soap:operation soapAction="consultarEstatusComprobante" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="consultarCfdiRelacionados">
+      <soap:operation soapAction="consultarCfdiRelacionados" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="acuseCancelacion">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="cancelar">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="cfdiPorUUID">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="cancelarConOpciones">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="consultarDisponibilidadServicio">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="timbradoBase64">
+      <soap:operation soapAction="timbradoBase64" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="timbradoBase64Prueba">
+      <soap:operation soapAction="timbradoBase64Prueba" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="consultarPeticionesPendientes">
+      <soap:operation soapAction="consultarPeticionesPendientes" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="Timbrado3.3">
+    <port name="PadeTimbradoServicePort" binding="tns:PadeTimbradoServicePortBinding">
+      <soap:address location="http://timbrado.pade.mx:80/servicio/Timbrado3.3" />
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,1 @@
+SELECT MAX("{FieldName}") AS Max FROM "{TableName}" WHERE "{WhereFieldName}" = '{WhereFieldValue}'
